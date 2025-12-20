@@ -1,0 +1,131 @@
+// ============================================
+// Theme System - Light & Dark Modes
+// ============================================
+
+:root {
+  // Light Theme (Default)
+  --bg-primary: #f0f4f8;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e2e8f0;
+  --text-primary: #1a202c;
+  --text-secondary: #4a5568;
+  --text-tertiary: #718096;
+  --text-inverse: #ffffff;
+
+  // Accent Colors
+  --accent-primary: #3182ce;
+  --accent-secondary: #63b3ed;
+  --accent-tertiary: #90cdf4;
+  --accent-hover: #2c5282;
+
+  // Status Colors
+  --color-success: #48bb78;
+  --color-warning: #f6ad55;
+  --color-error: #f56565;
+  --color-info: #4299e1;
+
+  // Glassmorphism Light
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-bg-hover: rgba(255, 255, 255, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-shadow: rgba(0, 0, 0, 0.1);
+  --glass-blur: 10px;
+
+  // Gradient Background
+  --gradient-start: #667eea;
+  --gradient-middle: #764ba2;
+  --gradient-end: #f093fb;
+
+  // Border Colors
+  --border-primary: #e2e8f0;
+  --border-secondary: #cbd5e0;
+
+  // Overlay
+  --overlay-bg: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme='dark'] {
+  // Dark Theme
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --text-inverse: #0f172a;
+
+  // Accent Colors
+  --accent-primary: #60a5fa;
+  --accent-secondary: #3b82f6;
+  --accent-tertiary: #2563eb;
+  --accent-hover: #93c5fd;
+
+  // Status Colors
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-error: #f87171;
+  --color-info: #60a5fa;
+
+  // Glassmorphism Dark
+  --glass-bg: rgba(15, 23, 42, 0.4);
+  --glass-bg-hover: rgba(15, 23, 42, 0.6);
+  --glass-border: rgba(148, 163, 184, 0.2);
+  --glass-shadow: rgba(0, 0, 0, 0.3);
+  --glass-blur: 16px;
+
+  // Gradient Background
+  --gradient-start: #1e3a8a;
+  --gradient-middle: #312e81;
+  --gradient-end: #581c87;
+
+  // Border Colors
+  --border-primary: #334155;
+  --border-secondary: #475569;
+
+  // Overlay
+  --overlay-bg: rgba(0, 0, 0, 0.7);
+}
+
+// Theme Transition
+* {
+  transition: background-color 0.3s ease,
+              color 0.3s ease,
+              border-color 0.3s ease;
+}
+
+// Base Background
+body {
+  background: linear-gradient(
+    135deg,
+    var(--gradient-start) 0%,
+    var(--gradient-middle) 50%,
+    var(--gradient-end) 100%
+  );
+  background-attachment: fixed;
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+// Scrollbar Styling
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-primary);
+  border-radius: 6px;
+
+  &:hover {
+    background: var(--accent-hover);
+  }
+}
+
+// Firefox scrollbar
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-primary) var(--bg-primary);
+}

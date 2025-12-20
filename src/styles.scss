@@ -1,1 +1,95 @@
-/* You can add global styles to this file, and also import other style files */
+// ============================================
+// Global Styles - Portfolio Angular
+// ============================================
+
+// Import SCSS Modules
+@use 'styles/variables' as *;
+@use 'styles/mixins' as *;
+@use 'styles/themes';
+@use 'styles/typography';
+@use 'styles/glassmorphism';
+@use 'styles/animations';
+@use 'styles/utilities';
+
+// CSS Reset & Base Styles
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+// Remove default list styles
+ul,
+ol {
+  list-style: none;
+}
+
+// Remove default button styles
+button {
+  @include button-reset();
+}
+
+// Remove default link styles
+a {
+  @include link-reset();
+}
+
+// Image defaults
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+// Selection
+::selection {
+  background: var(--accent-primary);
+  color: var(--text-inverse);
+}
+
+::-moz-selection {
+  background: var(--accent-primary);
+  color: var(--text-inverse);
+}
+
+// Focus Visible
+:focus-visible {
+  @include focus-visible();
+}
+
+// Animations - Respect user preferences
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// Print Styles
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
