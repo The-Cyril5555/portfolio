@@ -1,0 +1,320 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+.contact {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 120px 80px;
+
+  @media (max-width: 768px) {
+    min-height: auto;
+    padding: 80px 20px;
+  }
+}
+
+.section-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+}
+
+// Creative label (inspired by hero)
+.creative-label {
+  display: block;
+  font-family: 'Migra', sans-serif;
+  font-size: 30px;
+  color: #F5EEE6;
+  text-transform: lowercase;
+  font-weight: 300;
+  margin-bottom: 20px;
+  margin-left: 15px;
+  text-align: left;
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+}
+
+// Main typography section (inspired by hero)
+.contact-typography {
+  margin-bottom: 60px;
+
+  .contact-main-heading {
+    font-family: 'Tusker Grotesk', sans-serif;
+    font-weight: 400;
+    font-size: clamp(60px, 12vw, 180px);
+    line-height: 0.75;
+    letter-spacing: 0.02em;
+    color: #F5EEE6;
+    text-transform: uppercase;
+    margin: 0;
+    text-align: left;
+
+    @media (max-width: 768px) {
+      font-size: clamp(48px, 14vw, 100px);
+      line-height: 0.8;
+    }
+
+    .line-1,
+    .line-2 {
+      display: block;
+    }
+
+    .tusker {
+      font-family: 'Tusker Grotesk', sans-serif;
+      font-weight: 400;
+      text-transform: uppercase;
+      transform: scaleX(0.95);
+      display: inline-block;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .line-1 .tusker {
+      font-size: clamp(80px, 12vw, 240px);
+      line-height: 0.65;
+      letter-spacing: 0.00000001em;
+    }
+
+    .line-2 .tusker {
+      font-size: clamp(60px, 10vw, 200px);
+      line-height: 0.7;
+      letter-spacing: 0.05em;
+    }
+  }
+}
+
+// Contact badge (inspired by availability badge)
+.contact-badge {
+  position: absolute;
+  top: 80px;
+  right: 200px;
+  background: transparent;
+  color: #F5EEE6;
+  padding: 30px 40px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    position: relative;
+    top: auto;
+    right: auto;
+    padding: 20px 30px;
+    gap: 15px;
+    margin-bottom: 40px;
+    justify-content: flex-start;
+  }
+
+  .badge-star {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+
+    @media (max-width: 768px) {
+      top: 8px;
+      left: 8px;
+    }
+  }
+
+  .badge-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding-left: 30px;
+  }
+
+  .badge-status {
+    font-family: 'Migra', sans-serif;
+    font-size: 16px;
+    text-transform: lowercase;
+    font-weight: 400;
+    margin-bottom: 5px;
+
+    @media (max-width: 768px) {
+      font-size: 14px;
+    }
+  }
+
+  .badge-text {
+    font-family: 'Maelstrom Sans', sans-serif;
+    font-size: 24px;
+    text-transform: lowercase;
+    line-height: 1.3;
+    font-weight: 900;
+
+    @media (max-width: 768px) {
+      font-size: 18px;
+    }
+  }
+}
+
+// Description section
+.contact-description {
+  max-width: 900px;
+  margin: 60px auto 80px;
+
+  @media (max-width: 768px) {
+    margin: 40px auto 60px;
+  }
+
+  p {
+    font-family: 'Montserrat', sans-serif;
+    color: #F5EEE6;
+    font-size: 24px;
+    line-height: 1.6;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    text-align: center;
+
+    @media (max-width: 768px) {
+      font-size: 18px;
+    }
+  }
+}
+
+// Email section
+.contact-email-section {
+  text-align: center;
+  margin-bottom: 80px;
+
+  @media (max-width: 768px) {
+    margin-bottom: 60px;
+  }
+
+  .email-label {
+    display: block;
+    font-family: 'Neue Montreal', sans-serif;
+    font-size: 14px;
+    color: #F5EEE6;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 15px;
+    opacity: 0.7;
+  }
+
+  .contact-email {
+    font-family: 'Migra', sans-serif;
+    font-size: clamp(24px, 4vw, 48px);
+    font-weight: 400;
+    text-transform: lowercase;
+    color: #F5EEE6;
+    text-decoration: underline;
+    text-underline-offset: 8px;
+    text-decoration-thickness: 2px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      text-decoration: none;
+      background: rgba(245, 238, 230, 0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 10px 20px;
+      border-radius: 4px;
+    }
+  }
+}
+
+// Social links with icons
+.social-links {
+  display: flex;
+  gap: 60px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 60px 0;
+  border-top: 2px solid rgba(245, 238, 230, 0.2);
+  border-bottom: 2px solid rgba(245, 238, 230, 0.2);
+  margin-bottom: 80px;
+
+  @media (max-width: 768px) {
+    gap: 40px;
+    padding: 40px 0;
+    margin-bottom: 60px;
+  }
+
+  .social-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+    color: #F5EEE6;
+    transition: all 0.3s ease;
+    padding: 20px;
+    border-radius: 8px;
+
+    &:hover {
+      background: rgba(245, 238, 230, 0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transform: translateY(-5px);
+
+      .social-name {
+        opacity: 1;
+      }
+    }
+
+    .social-name {
+      font-family: 'Neue Montreal', sans-serif;
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+    }
+  }
+}
+
+// CTA Buttons
+.contact-actions {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .contact-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 45px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+
+    .button-text {
+      display: inline-block;
+    }
+  }
+}
+
+// Glassmorphism enhancement for buttons
+.brutalist-button--inverse {
+  &:hover {
+    background: rgba(245, 238, 230, 0.15);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px rgba(245, 238, 230, 0.1);
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}

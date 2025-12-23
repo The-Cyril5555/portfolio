@@ -1,0 +1,71 @@
+<section class="about brutalist-section brutalist-section--dark">
+  <div class="section-container">
+    <!-- Section Header -->
+    <h2 class="section-title brutalist-title">
+      <span class="title-label">03.</span>
+      À PROPOS
+    </h2>
+
+    <!-- About Grid -->
+    <div class="about-grid">
+      <!-- Left: About Me Content -->
+      <div class="about-content">
+        <div class="about-text">
+          <h3 class="about-subtitle">{{ aboutText.intro }}</h3>
+          <p>{{ aboutText.description }}</p>
+          <p>{{ aboutText.experience }}</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="about-stats">
+          @for (stat of stats; track stat.label) {
+            <div class="stat-item brutalist-card">
+              <div class="stat-value">{{ stat.value }}</div>
+              <div class="stat-label">{{ stat.label }}</div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Right: Skills -->
+      <div class="about-skills">
+        @for (group of skillGroups(); track group.category) {
+          <div class="skill-group">
+            <h4 class="skill-group-title">{{ group.title }}</h4>
+            <div class="skills-list">
+              @for (skill of group.skills; track skill.id) {
+                <div class="skill-item" [attr.data-level]="skill.level">
+                  <span class="skill-icon">{{ skill.icon }}</span>
+                  <div class="skill-info">
+                    <span class="skill-name">{{ skill.name }}</span>
+                    <span class="skill-level">{{ skill.level }}</span>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Optional: Additional Info Section -->
+    <div class="about-footer">
+      <div class="footer-highlight brutalist-card">
+        <h3 class="highlight-title">Mon Approche</h3>
+        <p class="highlight-text">
+          Je privilégie une approche pragmatique et centrée sur l'utilisateur.
+          Chaque projet est l'occasion d'apprendre, d'innover et de repousser
+          les limites du web moderne.
+        </p>
+      </div>
+
+      <div class="footer-highlight brutalist-card">
+        <h3 class="highlight-title">Mes Valeurs</h3>
+        <p class="highlight-text">
+          Code propre, performance optimale, accessibilité universelle et
+          expérience utilisateur fluide sont au cœur de mes priorités.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

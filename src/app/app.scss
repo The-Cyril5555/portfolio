@@ -1,0 +1,80 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+:host {
+  display: block;
+}
+
+main {
+  // Pas de padding-top : la peinture du hero doit toucher le haut
+  padding-top: 0;
+  position: relative;
+}
+
+// Section #home - Hero avec fond paint.png (déjà géré dans hero.component)
+#home {
+  position: relative;
+  z-index: 1;
+}
+
+// Section #work - Gradient de transition progressif
+#work {
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    rgba(245, 238, 230, 0.8) 0%,
+    rgba(163, 142, 121, 0.6) 20%,
+    rgba(82, 71, 61, 0.4) 50%,
+    rgba(41, 35, 30, 0.2) 80%,
+    #0A1119 100%
+  );
+  padding: 150px 0;
+  min-height: 60vh;
+  z-index: 2;
+
+  @media (max-width: 768px) {
+    padding: 80px 0;
+    min-height: 40vh;
+  }
+}
+
+// Section #about - Pleine couleur #0A1119
+#about {
+  position: relative;
+  background-color: #0A1119;
+  padding: 100px 0;
+  z-index: 2;
+
+  @media (max-width: 768px) {
+    padding: 60px 0;
+  }
+}
+
+// Section #contact - Fond paint.png inversé
+#contact {
+  position: relative;
+  background-color: #0A1119;
+  padding: 100px 0 0;
+  z-index: 2;
+
+  // Paint background inversé
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/paint.png');
+    background-size: cover;
+    background-position: center bottom;
+    transform: rotate(180deg);
+    opacity: 1;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  @media (max-width: 768px) {
+    padding: 60px 0 0;
+  }
+}

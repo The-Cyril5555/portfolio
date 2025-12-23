@@ -1,0 +1,34 @@
+<footer class="footer-glass">
+  <div class="footer-container">
+    <!-- Section Tech Stack -->
+    <div class="footer-section tech-stack-section">
+      <h3 class="section-title">Développé avec</h3>
+      <div class="tech-stack-grid">
+        <div class="tech-item" *ngFor="let tech of techStack">
+          <span class="tech-icon">{{ tech.icon }}</span>
+          <span class="tech-name">{{ tech.name }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Links -->
+    <div class="footer-section links-section">
+      <h3 class="section-title">Liens</h3>
+      <div class="social-links">
+        <a *ngFor="let link of socialLinks" [href]="link.url" class="social-link">
+          <span class="link-icon">{{ link.icon }}</span>
+          <span class="link-name">{{ link.name }}</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Section Copyright -->
+    <div class="footer-bottom">
+      <p class="copyright">
+        &copy; {{ currentYear }} <span class="name">Cyril Bizouarn</span>
+        <span class="separator">•</span>
+        <span class="role">Développeur Full-Stack</span>
+      </p>
+    </div>
+  </div>
+</footer>

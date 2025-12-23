@@ -1,0 +1,18 @@
+<header class="header brutalist-nav" [class.scrolled]="isScrolled()">
+  <nav class="nav-container">
+    <!-- Logo/Nom -->
+    <div class="logo-container">
+      <a href="#home" class="logo-name" (click)="onNavClick($event, 'home')">
+        Cyril Bizouarn
+      </a>
+      <span class="logo-subtitle">UX/UI DESIGNER, DEVELOPER</span>
+    </div>
+
+    <!-- Navigation simple -->
+    <ul class="nav-links">
+      <li><a href="#work" (click)="onNavClick($event, 'work')">Travaux</a></li>
+      <li><a href="#about" (click)="onNavClick($event, 'about')">à propos</a></li>
+      <li><a href="#contact" (click)="onNavClick($event, 'contact')">contact</a></li>
+    </ul>
+  </nav>
+</header>

@@ -1,0 +1,126 @@
+// Brutalist Components
+// =====================
+
+@use 'variables' as *;
+
+// Boutons Brutalist
+.brutalist-button {
+  display: inline-block;
+  padding: 20px 40px;
+  background: white;
+  color: black;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  border: 3px solid black;
+  transition: all 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    background: black;
+    color: white;
+  }
+
+  &--inverse {
+    position: relative;
+    background: transparent;
+    color: #F5EEE6;
+    border: 3px solid #F5EEE6;
+    border-radius: 50px;
+    padding: 15px 40px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(245, 238, 230, 0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+  }
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+// Sections Brutalist
+.brutalist-section {
+  padding: 120px 80px;
+  background: transparent;
+  color: black;
+
+  @media (max-width: 768px) {
+    padding: 60px 20px;
+  }
+
+  &--dark {
+    background: transparent;
+    color: white;
+
+    .brutalist-heading {
+      color: white;
+    }
+  }
+}
+
+.section-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+// Headings Brutalist
+.brutalist-heading {
+  font-size: clamp(48px, 8vw, 96px);
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 80px;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: black;
+
+  @media (max-width: 768px) {
+    margin-bottom: 40px;
+  }
+}
+
+// Lignes de séparation
+.brutalist-divider {
+  width: 100%;
+  height: 2px;
+  background: currentColor;
+  margin: 60px 0;
+}
+
+// Liens Brutalist
+.brutalist-link {
+  font-size: 24px;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font-weight: 600;
+  transition: text-decoration 0.2s;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+// Cartes brutales
+.brutalist-card {
+  border: 2px solid black;
+  padding: 40px;
+  background: white;
+
+  &--dark {
+    background: black;
+    color: white;
+    border-color: white;
+  }
+}

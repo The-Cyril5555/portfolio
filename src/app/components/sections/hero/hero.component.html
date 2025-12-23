@@ -1,0 +1,45 @@
+<section class="hero">
+  <div class="hero-background" [style.transform]="'translateY(' + parallaxOffset() + 'px)'"></div>
+  <div class="hero-overlay">
+    <!-- Badge disponibilité -->
+    <div class="availability-badge">
+      <img src="/star.png" alt="star" class="badge-star" />
+      <span class="badge-day">{{ currentDay }}</span>
+      <div class="badge-info">
+        <span class="badge-month">{{ currentMonth }}</span>
+        <span class="badge-text">disponible<br>pour travailler</span>
+      </div>
+    </div>
+
+    <!-- Typographie principale superposée -->
+    <div class="hero-typography">
+      <span class="creative-label">creative</span>
+      <h1 class="hero-main-text">
+        <span class="line-1">
+          <span class="tusker">DESIGNER</span> <span class="ampersand">&</span>
+        </span>
+        <span class="line-2"><span class="tusker">DEVELOPER</span></span>
+      </h1>
+    </div>
+
+    <!-- Conteneur flex pour description et bouton -->
+    <div class="hero-content-right">
+      <!-- Description -->
+      <div class="hero-description">
+        <p>
+          DÉVELOPPEUR WEB FULL-STACK JUNIOR SPÉCIALISÉ EN REACT, NODE.JS ET SQL.
+          EXPÉRIENCE EN CRÉATION D'APPLICATIONS WEB, SITES E-COMMERCE ET PLATEFORMES MÉTIERS.
+          PROFIL ORIENTÉ SOLUTIONS, DU FRONT-END AU BACK-END.
+        </p>
+      </div>
+
+      <!-- CTA -->
+      <a href="#contact" class="hero-cta brutalist-button brutalist-button--inverse">
+        <span class="button-text-wrapper">
+          <span class="button-text">ME CONTACTER</span>
+          <span class="button-text" aria-hidden="true">ME CONTACTER</span>
+        </span>
+      </a>
+    </div>
+  </div>
+</section>

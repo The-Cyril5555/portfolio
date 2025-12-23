@@ -1,79 +1,59 @@
-// ============================================
 // Glassmorphism Effects
-// ============================================
+// ======================
 
 @use 'variables' as *;
 
-// Base Glass Effect Mixin
-@mixin glass-effect($opacity: 0.1, $blur: null) {
+// Base Glass Effect
+@mixin glass-base {
   background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
   border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 32px 0 var(--glass-shadow);
-
-  @if $blur {
-    backdrop-filter: blur($blur);
-    -webkit-backdrop-filter: blur($blur);
-  }
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
 }
 
 // Glass Card
-@mixin glass-card {
-  @include glass-effect();
-  border-radius: $radius-lg;
-  padding: $spacing-xl;
+@mixin glass-card($padding: $spacing-lg, $radius: $radius-lg) {
+  @include glass-base;
+  padding: $padding;
+  border-radius: $radius;
   transition: all $transition-base;
-
-  &:hover {
-    background: var(--glass-bg-hover);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px 0 var(--glass-shadow);
-  }
 }
 
-// Glass Panel (no hover effect)
-@mixin glass-panel {
-  @include glass-effect();
-  border-radius: $radius-xl;
-  padding: $spacing-2xl;
-}
-
-// Glass Header/Nav
-@mixin glass-header {
-  @include glass-effect();
-  border-radius: 0;
-  border-left: none;
-  border-right: none;
-  border-top: none;
-  padding: $spacing-md $spacing-xl;
+// Glass Panel (for larger sections)
+@mixin glass-panel($padding: $spacing-xl, $radius: $radius-xl) {
+  @include glass-base;
+  padding: $padding;
+  border-radius: $radius;
 }
 
 // Glass Button
-@mixin glass-button {
-  @include glass-effect();
-  border-radius: $radius-md;
-  padding: $spacing-sm $spacing-lg;
-  cursor: pointer;
+@mixin glass-button($padding-x: $spacing-lg, $padding-y: $spacing-md, $radius: $radius-md) {
+  @include glass-base;
+  padding: $padding-y $padding-x;
+  border-radius: $radius;
   font-weight: $font-weight-medium;
-  transition: all $transition-fast;
+  cursor: pointer;
+  transition: all $transition-base;
 
   &:hover {
-    background: var(--glass-bg-hover);
-    transform: scale(1.05);
+    background: rgba(var(--glass-bg), 0.9);
+    transform: translateY(-2px);
+    box-shadow: $shadow-lg;
   }
 
   &:active {
-    transform: scale(0.95);
+    transform: translateY(0);
   }
 }
 
 // Glass Input
-@mixin glass-input {
-  @include glass-effect();
-  border-radius: $radius-md;
-  padding: $spacing-md;
+@mixin glass-input($padding: $spacing-md, $radius: $radius-md) {
+  @include glass-base;
+  padding: $padding;
+  border-radius: $radius;
   color: var(--text-primary);
+  transition: all $transition-base;
 
   &::placeholder {
     color: var(--text-tertiary);
@@ -82,90 +62,62 @@
   &:focus {
     outline: none;
     border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px rgba(var(--accent-primary), 0.1);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
   }
 }
 
-// Glass Badge
-@mixin glass-badge {
-  @include glass-effect();
-  border-radius: $radius-full;
-  padding: $spacing-xs $spacing-md;
+// Glass Badge/Tag
+@mixin glass-badge($padding-x: $spacing-md, $padding-y: $spacing-sm, $radius: $radius-full) {
+  @include glass-base;
+  padding: $padding-y $padding-x;
+  border-radius: $radius;
   font-size: $font-size-sm;
   font-weight: $font-weight-medium;
-  display: inline-flex;
-  align-items: center;
-  gap: $spacing-xs;
+  display: inline-block;
 }
 
-// Utility Classes
-.glass-card {
-  @include glass-card();
-}
-
-.glass-panel {
-  @include glass-panel();
-}
-
-.glass-header {
-  @include glass-header();
-}
-
-.glass-button {
-  @include glass-button();
-}
-
-.glass-input {
-  @include glass-input();
-}
-
-.glass-badge {
-  @include glass-badge();
-}
-
-// Glass Overlay
-.glass-overlay {
+// Glass Overlay (for modals, mobile menus)
+@mixin glass-overlay {
+  @include glass-base;
   position: fixed;
   inset: 0;
-  background: var(--overlay-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   z-index: $z-index-modal-backdrop;
 }
 
-// Glass Container with Glow Effect
-.glass-glow {
-  @include glass-card();
+// Glass Glow Effect (for hover states)
+@mixin glass-glow($color: var(--accent-primary)) {
   position: relative;
 
   &::before {
     content: '';
     position: absolute;
     inset: -2px;
-    border-radius: $radius-lg;
-    padding: 2px;
-    background: linear-gradient(
-      45deg,
-      var(--accent-primary),
-      var(--accent-secondary),
-      var(--accent-tertiary)
-    );
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
+    background: linear-gradient(135deg, $color, transparent);
+    border-radius: inherit;
     opacity: 0;
     transition: opacity $transition-base;
+    z-index: -1;
+    filter: blur(10px);
   }
 
   &:hover::before {
-    opacity: 0.6;
+    opacity: 0.5;
   }
 }
 
-// Frosted Glass Effect (stronger blur)
-.glass-frosted {
-  @include glass-effect();
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: $radius-xl;
+// Utility Classes
+.glass-card {
+  @include glass-card;
+}
+
+.glass-panel {
+  @include glass-panel;
+}
+
+.glass-button {
+  @include glass-button;
+}
+
+.glass-badge {
+  @include glass-badge;
 }

@@ -1,15 +1,16 @@
-// ============================================
-// Global Styles - Portfolio Angular
-// ============================================
+// Global Styles
+// ==============
 
-// Import SCSS Modules
+// Import Design System
+@use 'styles/fonts';
 @use 'styles/variables' as *;
 @use 'styles/mixins' as *;
 @use 'styles/themes';
 @use 'styles/typography';
-@use 'styles/glassmorphism';
+// @use 'styles/glassmorphism';  // Désactivé pour design brutalist
 @use 'styles/animations';
 @use 'styles/utilities';
+@use 'styles/brutalist-components';  // Nouveau: Composants brutalist
 
 // CSS Reset & Base Styles
 *,
@@ -21,75 +22,58 @@
 }
 
 html {
-  font-size: 16px;
   scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color $transition-base, color $transition-base;
   overflow-x: hidden;
 }
 
-// Remove default list styles
-ul,
-ol {
-  list-style: none;
+// Custom Scrollbar
+body {
+  @include custom-scrollbar(10px, var(--bg-secondary), var(--border-primary));
 }
 
-// Remove default button styles
-button {
-  @include button-reset();
+// Selection
+::selection {
+  background-color: var(--accent-primary);
+  color: white;
 }
 
-// Remove default link styles
-a {
-  @include link-reset();
+// Focus Styles
+:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
 }
 
-// Image defaults
-img {
+// Images & Media
+img,
+svg,
+video {
   max-width: 100%;
   height: auto;
   display: block;
 }
 
-// Selection
-::selection {
-  background: var(--accent-primary);
-  color: var(--text-inverse);
-}
+// Buttons
+button {
+  font-family: inherit;
+  cursor: pointer;
 
-::-moz-selection {
-  background: var(--accent-primary);
-  color: var(--text-inverse);
-}
-
-// Focus Visible
-:focus-visible {
-  @include focus-visible();
-}
-
-// Animations - Respect user preferences
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
   }
 }
 
-// Print Styles
-@media print {
-  body {
-    background: white;
-    color: black;
-  }
-
-  .no-print {
-    display: none !important;
-  }
+// Inputs
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
 }

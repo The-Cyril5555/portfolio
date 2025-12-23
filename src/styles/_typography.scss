@@ -1,17 +1,52 @@
-// ============================================
 // Typography Styles
-// ============================================
+// =================
 
 @use 'variables' as *;
+@use 'mixins' as *;
 
-// Import Google Fonts
+// Font Imports (Google Fonts)
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
+
+// Tusker Grotesk (local assets) — include available TTFs and fallbacks
+@font-face {
+  font-family: 'Tusker Grotesk';
+  src: url('/assets/fonts/Tusker Grotesk 2600 Semibold-normal-400-100.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tusker Grotesk';
+  src: url('/assets/fonts/Tusker Grotesk 2600 Semibold-normal-500-100.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tusker Grotesk';
+  src: url('/assets/fonts/TuskerGrotesk.woff2') format('woff2'),
+       url('/assets/fonts/TuskerGrotesk.woff') format('woff');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+// Utility class to force Tusker Grotesk where desired.
+.tusker {
+  font-family: 'Tusker Grotesk', $font-family-heading;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  display: inline-block;
+}
 
 // Base Typography
 body {
-  font-family: $font-primary;
+  font-family: $font-family-base;
   font-size: $font-size-base;
-  font-weight: $font-weight-normal;
+  font-weight: $font-weight-regular;
   line-height: $line-height-normal;
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
@@ -20,67 +55,71 @@ body {
 
 // Headings
 h1, h2, h3, h4, h5, h6 {
-  font-family: $font-heading;
+  font-family: $font-family-heading;
   font-weight: $font-weight-bold;
   line-height: $line-height-tight;
   color: var(--text-primary);
-  margin: 0;
+  margin: 0 0 $spacing-md;
 }
 
 h1 {
-  font-size: $font-size-4xl;
+  font-size: $font-size-3xl;
   font-weight: $font-weight-extrabold;
 
-  @media (min-width: $breakpoint-md) {
+  @include respond-to('md') {
     font-size: $font-size-5xl;
   }
 
-  @media (min-width: $breakpoint-lg) {
+  @include respond-to('lg') {
     font-size: $font-size-6xl;
   }
 }
 
 h2 {
-  font-size: $font-size-3xl;
+  font-size: $font-size-2xl;
 
-  @media (min-width: $breakpoint-md) {
+  @include respond-to('md') {
+    font-size: $font-size-3xl;
+  }
+
+  @include respond-to('lg') {
     font-size: $font-size-4xl;
   }
 }
 
 h3 {
-  font-size: $font-size-2xl;
-
-  @media (min-width: $breakpoint-md) {
-    font-size: $font-size-3xl;
-  }
-}
-
-h4 {
   font-size: $font-size-xl;
 
-  @media (min-width: $breakpoint-md) {
+  @include respond-to('md') {
     font-size: $font-size-2xl;
   }
 }
 
-h5 {
+h4 {
   font-size: $font-size-lg;
 
-  @media (min-width: $breakpoint-md) {
+  @include respond-to('md') {
     font-size: $font-size-xl;
   }
 }
 
-h6 {
+h5 {
   font-size: $font-size-base;
 
-  @media (min-width: $breakpoint-md) {
+  @include respond-to('md') {
     font-size: $font-size-lg;
   }
 }
 
-// Paragraphs
+h6 {
+  font-size: $font-size-sm;
+
+  @include respond-to('md') {
+    font-size: $font-size-base;
+  }
+}
+
+// Paragraph
 p {
   margin: 0 0 $spacing-md;
   color: var(--text-secondary);
@@ -98,13 +137,11 @@ a {
   transition: color $transition-fast;
 
   &:hover {
-    color: var(--accent-hover);
-    text-decoration: underline;
+    color: var(--accent-highlight);
   }
 
   &:focus-visible {
-    outline: 2px solid var(--accent-primary);
-    outline-offset: 2px;
+    @include focus-visible;
   }
 }
 
@@ -112,40 +149,28 @@ a {
 ul, ol {
   margin: 0 0 $spacing-md;
   padding-left: $spacing-xl;
-  color: var(--text-secondary);
 
-  &:last-child {
-    margin-bottom: 0;
+  li {
+    margin-bottom: $spacing-sm;
+    color: var(--text-secondary);
   }
-}
-
-li {
-  margin-bottom: $spacing-xs;
-}
-
-// Blockquote
-blockquote {
-  margin: 0 0 $spacing-md;
-  padding-left: $spacing-lg;
-  border-left: 4px solid var(--accent-primary);
-  font-style: italic;
-  color: var(--text-tertiary);
 }
 
 // Code
 code {
-  font-family: $font-mono;
-  font-size: 0.9em;
+  font-family: $font-family-mono;
+  font-size: $font-size-sm;
   background: var(--bg-tertiary);
-  padding: $spacing-xs $spacing-sm;
+  padding: 2px 6px;
   border-radius: $radius-sm;
   color: var(--accent-primary);
 }
 
 pre {
-  font-family: $font-mono;
+  font-family: $font-family-mono;
+  font-size: $font-size-sm;
   background: var(--bg-tertiary);
-  padding: $spacing-lg;
+  padding: $spacing-md;
   border-radius: $radius-md;
   overflow-x: auto;
   margin: 0 0 $spacing-md;
@@ -156,31 +181,7 @@ pre {
   }
 }
 
-// Strong & Bold
-strong, b {
-  font-weight: $font-weight-bold;
-  color: var(--text-primary);
-}
-
-// Emphasis
-em, i {
-  font-style: italic;
-}
-
-// Small Text
-small {
-  font-size: $font-size-sm;
-}
-
-// Mark/Highlight
-mark {
-  background: var(--accent-tertiary);
-  color: var(--text-inverse);
-  padding: 2px 4px;
-  border-radius: $radius-sm;
-}
-
-// Utility Text Classes
+// Utility Classes
 .text-xs { font-size: $font-size-xs; }
 .text-sm { font-size: $font-size-sm; }
 .text-base { font-size: $font-size-base; }
@@ -192,70 +193,43 @@ mark {
 .text-5xl { font-size: $font-size-5xl; }
 .text-6xl { font-size: $font-size-6xl; }
 
-// Font Weights
 .font-light { font-weight: $font-weight-light; }
-.font-normal { font-weight: $font-weight-normal; }
+.font-regular { font-weight: $font-weight-regular; }
 .font-medium { font-weight: $font-weight-medium; }
 .font-semibold { font-weight: $font-weight-semibold; }
 .font-bold { font-weight: $font-weight-bold; }
 .font-extrabold { font-weight: $font-weight-extrabold; }
 
-// Text Alignment
-.text-left { text-align: left; }
-.text-center { text-align: center; }
-.text-right { text-align: right; }
-.text-justify { text-align: justify; }
-
-// Text Colors
-.text-primary { color: var(--text-primary); }
-.text-secondary { color: var(--text-secondary); }
-.text-tertiary { color: var(--text-tertiary); }
-.text-accent { color: var(--accent-primary); }
-.text-success { color: var(--color-success); }
-.text-warning { color: var(--color-warning); }
-.text-error { color: var(--color-error); }
-.text-info { color: var(--color-info); }
-
-// Line Heights
 .leading-tight { line-height: $line-height-tight; }
 .leading-normal { line-height: $line-height-normal; }
 .leading-relaxed { line-height: $line-height-relaxed; }
 
-// Text Decorations
-.uppercase { text-transform: uppercase; }
-.lowercase { text-transform: lowercase; }
-.capitalize { text-transform: capitalize; }
-.no-underline { text-decoration: none; }
-.underline { text-decoration: underline; }
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
 
-// Text Truncation
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-tertiary { color: var(--text-tertiary); }
+
+.text-gradient {
+  @include gradient-text;
+}
+
+.text-uppercase { text-transform: uppercase; }
+.text-lowercase { text-transform: lowercase; }
+.text-capitalize { text-transform: capitalize; }
+
 .truncate {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-// Gradient Text
-.text-gradient {
-  background: linear-gradient(
-    90deg,
-    var(--gradient-start),
-    var(--gradient-middle),
-    var(--gradient-end)
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.line-clamp-2 {
+  @include line-clamp(2);
 }
 
-.text-gradient-accent {
-  background: linear-gradient(
-    90deg,
-    var(--accent-primary),
-    var(--accent-secondary),
-    var(--accent-tertiary)
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.line-clamp-3 {
+  @include line-clamp(3);
 }

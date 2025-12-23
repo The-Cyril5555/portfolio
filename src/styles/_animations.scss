@@ -1,8 +1,9 @@
-// ============================================
 // Animations & Keyframes
-// ============================================
+// =======================
 
-// Fade In
+@use 'variables' as *;
+
+// Keyframe Animations
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -12,7 +13,6 @@
   }
 }
 
-// Fade In Up
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -24,7 +24,6 @@
   }
 }
 
-// Fade In Down
 @keyframes fadeInDown {
   from {
     opacity: 0;
@@ -36,31 +35,6 @@
   }
 }
 
-// Fade In Left
-@keyframes fadeInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-// Fade In Right
-@keyframes fadeInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-// Scale In
 @keyframes scaleIn {
   from {
     opacity: 0;
@@ -72,27 +46,28 @@
   }
 }
 
-// Slide In Up
-@keyframes slideInUp {
+@keyframes slideInLeft {
   from {
-    transform: translateY(100%);
+    opacity: 0;
+    transform: translateX(-30px);
   }
   to {
-    transform: translateY(0);
-  }
-}
-
-// Pulse
-@keyframes pulse {
-  0%, 100% {
     opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
+    transform: translateX(0);
   }
 }
 
-// Bounce
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 @keyframes bounce {
   0%, 100% {
     transform: translateY(0);
@@ -102,7 +77,15 @@
   }
 }
 
-// Spin
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
 @keyframes spin {
   from {
     transform: rotate(0deg);
@@ -112,17 +95,15 @@
   }
 }
 
-// Float
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
   }
-  50% {
-    transform: translateY(-20px);
+  100% {
+    background-position: 1000px 0;
   }
 }
 
-// Gradient Animation
 @keyframes gradientShift {
   0% {
     background-position: 0% 50%;
@@ -135,57 +116,46 @@
   }
 }
 
-// Shimmer Effect
-@keyframes shimmer {
-  0% {
-    background-position: -1000px 0;
-  }
-  100% {
-    background-position: 1000px 0;
-  }
-}
-
-// Glow Pulse
-@keyframes glowPulse {
+@keyframes float {
   0%, 100% {
-    box-shadow: 0 0 20px var(--accent-primary);
+    transform: translateY(0);
   }
   50% {
-    box-shadow: 0 0 40px var(--accent-primary), 0 0 60px var(--accent-secondary);
+    transform: translateY(-20px);
   }
 }
 
 // Utility Animation Classes
-.animate-fadeIn {
-  animation: fadeIn 0.5s ease-out;
+.animate-fade-in {
+  animation: fadeIn $transition-slow ease-out;
 }
 
-.animate-fadeInUp {
-  animation: fadeInUp 0.6s ease-out;
+.animate-fade-in-up {
+  animation: fadeInUp $transition-slow ease-out;
 }
 
-.animate-fadeInDown {
-  animation: fadeInDown 0.6s ease-out;
+.animate-fade-in-down {
+  animation: fadeInDown $transition-slow ease-out;
 }
 
-.animate-fadeInLeft {
-  animation: fadeInLeft 0.6s ease-out;
+.animate-scale-in {
+  animation: scaleIn $transition-base ease-out;
 }
 
-.animate-fadeInRight {
-  animation: fadeInRight 0.6s ease-out;
+.animate-slide-in-left {
+  animation: slideInLeft $transition-slow ease-out;
 }
 
-.animate-scaleIn {
-  animation: scaleIn 0.5s ease-out;
+.animate-slide-in-right {
+  animation: slideInRight $transition-slow ease-out;
+}
+
+.animate-bounce {
+  animation: bounce 2s ease-in-out infinite;
 }
 
 .animate-pulse {
   animation: pulse 2s ease-in-out infinite;
-}
-
-.animate-bounce {
-  animation: bounce 1s ease-in-out infinite;
 }
 
 .animate-spin {
@@ -196,79 +166,34 @@
   animation: float 3s ease-in-out infinite;
 }
 
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradientShift 5s ease infinite;
+// Delay Utilities
+.animation-delay-100 {
+  animation-delay: 100ms;
 }
 
-.animate-shimmer {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.1) 50%,
-    transparent 100%
-  );
-  background-size: 1000px 100%;
-  animation: shimmer 2s infinite;
+.animation-delay-200 {
+  animation-delay: 200ms;
 }
 
-.animate-glow {
-  animation: glowPulse 2s ease-in-out infinite;
+.animation-delay-300 {
+  animation-delay: 300ms;
 }
 
-// Delay Classes
-.delay-100 { animation-delay: 100ms; }
-.delay-200 { animation-delay: 200ms; }
-.delay-300 { animation-delay: 300ms; }
-.delay-400 { animation-delay: 400ms; }
-.delay-500 { animation-delay: 500ms; }
-
-// Parallax Smooth Scroll
-html {
-  scroll-behavior: smooth;
+.animation-delay-400 {
+  animation-delay: 400ms;
 }
 
-// Reveal on Scroll Classes (to be used with JS)
-.reveal {
-  opacity: 0;
-  transform: translateY(50px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-
-  &.revealed {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.animation-delay-500 {
+  animation-delay: 500ms;
 }
 
-.reveal-left {
-  opacity: 0;
-  transform: translateX(-50px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-
-  &.revealed {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.reveal-right {
-  opacity: 0;
-  transform: translateX(50px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-
-  &.revealed {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.reveal-scale {
-  opacity: 0;
-  transform: scale(0.8);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-
-  &.revealed {
-    opacity: 1;
-    transform: scale(1);
+// Reduced Motion Support
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

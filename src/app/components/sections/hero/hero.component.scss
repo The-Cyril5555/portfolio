@@ -1,0 +1,298 @@
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
+.hero {
+  min-height: 100vh;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-background {
+  position: absolute;
+  top: -20%;
+  left: 0;
+  width: 100%;
+  height: 140%;
+  background-image: url('/paint.png');
+  background-size: cover;
+  background-position: center top;
+  z-index: 0;
+  will-change: transform;
+}
+
+.hero-overlay {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+}
+
+.creative-label {
+  display: block;
+  font-family: 'Migra', sans-serif;
+  font-size: 30px;
+  color: #F5EEE6;
+  text-transform: lowercase;
+  font-weight: 300;
+  margin-bottom: 10px;
+  margin-left: 15px;
+  text-align: left;
+
+  @media (max-width: 768px) {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+}
+
+.availability-badge {
+  position: absolute;
+  top: 80px;
+  right: 200px;
+  background: transparent;
+  color: #F5EEE6;
+  padding: 30px 40px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    top: 80px;
+    right: 20px;
+    padding: 20px 30px;
+    gap: 15px;
+  }
+
+  .badge-star {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 40px;
+    height: 40px;
+
+    @media (max-width: 768px) {
+      width: 30px;
+      height: 30px;
+      top: 8px;
+      left: 8px;
+    }
+  }
+
+  .badge-day {
+    font-family: 'Maelstrom Sans', sans-serif;
+    font-size: 120px;
+    font-weight: 900;
+    line-height: 0.9;
+
+    @media (max-width: 768px) {
+      font-size: 80px;
+    }
+  }
+
+  .badge-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .badge-month {
+    font-family: 'Migra', sans-serif;
+    font-size: 16px;
+    text-transform: lowercase;
+    font-weight: 400;
+    margin-bottom: 5px;
+
+    @media (max-width: 768px) {
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+  }
+
+  .badge-text {
+    font-family: 'Neue Montreal', sans-serif;
+    font-size: 14px;
+    text-transform: lowercase;
+    line-height: 1.3;
+    font-weight: 400;
+
+    @media (max-width: 768px) {
+      font-size: 12px;
+    }
+  }
+}
+
+.hero-typography {
+  position: absolute;
+  left: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  max-width: 90%;
+  text-align: left;
+
+  @media (max-width: 768px) {
+    left: 20px;
+    right: 20px;
+    max-width: calc(100% - 40px);
+  }
+
+  .hero-main-text {
+    font-family: 'Tusker Grotesk', sans-serif;
+    font-weight: 400;
+    // Typographie réduite et condensée
+    font-size: clamp(60px, 12vw, 180px);
+    line-height: 0.75;
+    letter-spacing: 0.02em;
+    color: #F5EEE6;
+    text-transform: uppercase;
+    margin: 0;
+
+    @media (max-width: 768px) {
+      font-size: clamp(48px, 14vw, 100px);
+      line-height: 0.8;
+    }
+
+    .line-1,
+    .line-2 {
+      display: block;
+    }
+
+    // Tusker overrides for hero headings to match the tall, condensed look
+    .line-1 .tusker {
+      font-size: clamp(80px, 12vw, 240px);
+      line-height: 0.65;
+      letter-spacing: 0.00000001em;
+      transform: scaleX(0.95);
+      display: inline-block;
+    }
+
+    .line-2 .tusker {
+      font-size: clamp(60px, 10vw, 200px);
+      line-height: 0.7;
+      letter-spacing: 0.05em;
+      transform: scaleX(0.95);
+      display: inline-block;
+    }
+
+    // Apply Tusker Grotesk on the .tusker spans
+    .tusker {
+      font-family: 'Tusker Grotesk', sans-serif;
+      font-weight: 400;
+      text-transform: uppercase;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .ampersand {
+      display: inline;
+      font-family: 'Estonia', cursive;
+      font-size: 0.8em;
+      font-weight: 400;
+      margin: 0 0.1em;
+    }
+  }
+}
+
+.hero-content-right {
+  position: absolute;
+  right: 200px;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 900px;
+  z-index: 3;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 30px;
+
+  @media (max-width: 768px) {
+    position: relative;
+    right: auto;
+    top: auto;
+    transform: none;
+    max-width: 100%;
+    padding: 40px 20px;
+    margin-top: 60vh;
+    gap: 25px;
+  }
+}
+
+.hero-description {
+  p {
+    font-family: 'Montserrat', sans-serif;
+    color: #F5EEE6;
+    font-size: 30px;
+    line-height: 1.6;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+
+    @media (max-width: 768px) {
+      font-size: 30px;
+    }
+  }
+}
+
+.hero-cta {
+  position: relative;
+  z-index: 10;
+  align-self: flex-end;
+
+  // Largeur augmentée
+  width: 140px;
+  display: inline-block;
+  overflow: hidden;
+
+  // Padding augmenté
+  padding: 2px 0px 2px 8px !important;
+
+  // Bordure plus fine
+  border-width: 1px !important;
+
+  .button-text-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    white-space: nowrap;
+    will-change: transform;
+  }
+
+  .button-text {
+    display: inline-block;
+    flex-shrink: 0;
+    padding: 0 15px 0 0;
+
+    // Typographie Neue Montreal - taille augmentée
+    font-family: 'Neue Montreal', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    letter-spacing: 0.01em;
+    text-align: left;
+    line-height: 1.1;
+  }
+
+  // Animation au hover - défilement du texte dupliqué
+  &:hover {
+    .button-text-wrapper {
+      animation: scroll-seamless 3s linear infinite;
+    }
+  }
+
+  @media (max-width: 768px) {
+    align-self: flex-start;
+    width: auto;
+  }
+}
+
+// Animation seamless - translateX de 50% pour faire défiler vers le texte dupliqué
+@keyframes scroll-seamless {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}

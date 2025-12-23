@@ -1,0 +1,118 @@
+<section class="portfolio brutalist-section">
+  <div class="section-container">
+    <!-- Section Header -->
+    <div class="section-header">
+      <h2 class="section-title brutalist-title">
+        <span class="title-label">02.</span>
+        MES PROJETS
+      </h2>
+
+      <!-- Filter Toggle -->
+      <button
+        (click)="toggleView()"
+        class="filter-toggle brutalist-button brutalist-button--small"
+        [class.active]="!showingFeatured()"
+      >
+        <span class="button-text-wrapper">
+          <span class="button-text">
+            {{ showingFeatured() ? 'TOUS LES PROJETS' : 'PROJETS PHARES' }}
+          </span>
+          <span class="button-text" aria-hidden="true">
+            {{ showingFeatured() ? 'TOUS LES PROJETS' : 'PROJETS PHARES' }}
+          </span>
+        </span>
+      </button>
+    </div>
+
+    <!-- Projects Grid -->
+    <div class="projects-grid">
+      @for (project of displayedProjects; track project.id) {
+        <article class="project-card brutalist-card" [style.--accent-color]="project.color || '#000'">
+          <!-- Project Image -->
+          <div class="project-image">
+            <img
+              [src]="project.images.thumbnail"
+              [alt]="project.title"
+              loading="lazy"
+            />
+            <div class="project-overlay">
+              <span class="project-year">{{ project.year }}</span>
+            </div>
+          </div>
+
+          <!-- Project Content -->
+          <div class="project-content">
+            <div class="project-header">
+              <h3 class="project-title">{{ project.title }}</h3>
+              @if (project.client) {
+                <span class="project-client">{{ project.client }}</span>
+              }
+            </div>
+
+            <p class="project-description">{{ project.description }}</p>
+
+            <!-- Services -->
+            <div class="project-services">
+              @for (service of project.services; track service) {
+                <span class="service-tag">{{ service }}</span>
+              }
+            </div>
+
+            <!-- Tech Tags -->
+            <div class="project-tags">
+              @for (tag of project.tags; track tag) {
+                <span class="tech-tag brutalist-badge">{{ tag }}</span>
+              }
+            </div>
+
+            <!-- Links -->
+            @if (project.links.live || project.links.github) {
+              <div class="project-links">
+                @if (project.links.live) {
+                  <a
+                    [href]="project.links.live"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="project-link brutalist-button brutalist-button--small"
+                  >
+                    <span class="button-text-wrapper">
+                      <span class="button-text">VOIR LE SITE</span>
+                      <span class="button-text" aria-hidden="true">VOIR LE SITE</span>
+                    </span>
+                  </a>
+                }
+                @if (project.links.github) {
+                  <a
+                    [href]="project.links.github"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="project-link brutalist-button brutalist-button--secondary brutalist-button--small"
+                  >
+                    <span class="button-text-wrapper">
+                      <span class="button-text">CODE</span>
+                      <span class="button-text" aria-hidden="true">CODE</span>
+                    </span>
+                  </a>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Featured Badge -->
+          @if (project.featured) {
+            <div class="featured-badge">
+              <img src="/star.png" alt="Featured" class="badge-star" />
+            </div>
+          }
+        </article>
+      }
+    </div>
+
+    <!-- Empty State -->
+    @if (displayedProjects.length === 0) {
+      <div class="empty-state">
+        <p>Aucun projet à afficher pour le moment.</p>
+      </div>
+    }
+  </div>
+</section>

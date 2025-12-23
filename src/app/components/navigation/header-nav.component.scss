@@ -1,0 +1,107 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.brutalist-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px 40px;
+  z-index: 100;
+  background: transparent;
+  transition: all 0.3s ease;
+
+  @media (max-width: 768px) {
+    padding: 15px 20px;
+  }
+
+  // Sur scroll, ajouter glassmorphism et bordure
+  &.scrolled {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid #F5EEE6;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .logo-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+    }
+  }
+
+  .logo-name {
+    font-family: 'Manufacturing Consent', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #F5EEE6;
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 0.7;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 16px;
+    }
+  }
+
+  .logo-subtitle {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: #F5EEE6;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+
+    @media (max-width: 768px) {
+      font-size: 10px;
+    }
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    @media (max-width: 768px) {
+      gap: 20px;
+    }
+
+    a {
+      font-family: 'Montserrat', sans-serif;
+      color: #F5EEE6;
+      text-decoration: none;
+      font-size: 16px;
+      text-transform: lowercase;
+      font-weight: 400;
+      transition: opacity 0.2s;
+
+      &:hover {
+        opacity: 0.7;
+      }
+
+      @media (max-width: 768px) {
+        font-size: 14px;
+      }
+    }
+  }
+}
