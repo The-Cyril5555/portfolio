@@ -77,3 +77,108 @@
     aspect-ratio: 1 / 1;
   }
 }
+
+// Typography styles for About section elements
+.about-subtitle {
+  font-family: 'Migra', serif;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 1.5rem;
+  color: var(--text-inverse);
+}
+
+.skill-group-title {
+  font-family: 'Neue Montreal', sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+  color: var(--text-inverse);
+  border-bottom: 2px solid var(--color-accent);
+  padding-bottom: 0.5rem;
+}
+
+.highlight-title {
+  font-family: 'Migra', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-inverse);
+}
+
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.about-skills {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.skill-group {
+  .skills-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+}
+
+.skill-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--color-accent);
+  }
+
+  .skill-icon {
+    font-size: 1.5rem;
+  }
+
+  .skill-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .skill-name {
+    font-family: 'Neue Montreal', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-inverse);
+  }
+
+  .skill-level {
+    font-size: 0.75rem;
+    text-transform: capitalize;
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+.about-footer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.footer-highlight {
+  .highlight-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-inverse);
+    opacity: 0.9;
+  }
+}
