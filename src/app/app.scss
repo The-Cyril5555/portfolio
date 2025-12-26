@@ -2,10 +2,13 @@
 @use '../styles/mixins' as *;
 
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 main {
+  flex-grow: 1;
   // Pas de padding-top : la peinture du hero doit toucher le haut
   padding-top: 0;
   position: relative;
@@ -17,17 +20,10 @@ main {
   z-index: 1;
 }
 
-// Section #work - Gradient de transition progressif
+// Section #work - Fond beige uni
 #work {
   position: relative;
-  background: linear-gradient(
-    180deg,
-    rgba(245, 238, 230, 0.8) 0%,
-    rgba(163, 142, 121, 0.6) 20%,
-    rgba(82, 71, 61, 0.4) 50%,
-    rgba(41, 35, 30, 0.2) 80%,
-    #0A1119 100%
-  );
+  background: #F4E9E0;  // Fond beige uni
   padding: 150px 0;
   min-height: 60vh;
   z-index: 2;
@@ -55,16 +51,19 @@ main {
   position: relative;
   background-color: #0A1119;
   padding: 100px 0 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
   z-index: 2;
 
-  // Paint background inversé
+  // Paint background inversé - extension pour couvrir le footer
   &::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
+    bottom: -100vh; // S'étend largement vers le bas
     background-image: url('/paint.png');
     background-size: cover;
     background-position: center bottom;

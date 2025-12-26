@@ -1,0 +1,205 @@
+// Timeline Component Styles
+// ==========================
+
+@use '../../../styles/mixins' as *;
+@use '../../../styles/variables' as *;
+
+.timeline-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  padding: 2rem 0;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary) transparent;
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 0;
+  }
+}
+
+.timeline-track {
+  position: relative;
+  display: flex;
+  gap: 4rem;
+  padding: 2rem 1rem;
+  min-width: max-content;
+
+  @include respond-to('tablet') {
+    gap: 6rem;
+    padding: 3rem 2rem;
+  }
+
+  @include respond-to('desktop') {
+    gap: 8rem;
+    padding: 4rem 2rem;
+  }
+}
+
+.timeline-line {
+  position: absolute;
+  top: 4.5rem;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--color-primary);
+  z-index: 0;
+
+  @include respond-to('tablet') {
+    top: 5rem;
+  }
+}
+
+.timeline-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 280px;
+  max-width: 320px;
+
+  @include respond-to('tablet') {
+    min-width: 320px;
+    max-width: 360px;
+  }
+
+  &[data-type="experience"] {
+    .marker-dot {
+      background: var(--color-accent, #3b82f6);
+    }
+
+    .timeline-category {
+      background: var(--color-accent, #3b82f6);
+    }
+  }
+
+  &[data-type="education"] {
+    .marker-dot {
+      background: #10b981;
+    }
+
+    .timeline-category {
+      background: #10b981;
+    }
+  }
+}
+
+.timeline-marker {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 2rem;
+}
+
+.marker-dot {
+  width: 20px;
+  height: 20px;
+  background: var(--color-primary);
+  border: 4px solid var(--color-primary);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px var(--color-background);
+  transition: all 0.3s ease;
+
+  .timeline-item:hover & {
+    transform: scale(1.3);
+    box-shadow: 0 0 0 6px var(--color-background);
+  }
+}
+
+.timeline-content {
+  padding: 1.5rem;
+  width: 100%;
+  text-align: left;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 8px 8px 0 var(--color-primary);
+  }
+
+  @media (min-width: 768px) {
+    padding: 2rem;
+  }
+}
+
+.timeline-year {
+  font-family: 'Neue Montreal', sans-serif;
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-accent, var(--color-primary));
+  margin-bottom: 0.75rem;
+
+  @include respond-to('tablet') {
+    font-size: 1rem;
+  }
+}
+
+.timeline-title {
+  font-family: 'Migra', serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--color-text);
+
+  @include respond-to('tablet') {
+    font-size: 1.25rem;
+  }
+}
+
+.timeline-subtitle {
+  font-family: 'Neue Montreal', sans-serif;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary, rgba(var(--color-text-rgb), 0.7));
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+
+  @include respond-to('tablet') {
+    font-size: 1rem;
+  }
+}
+
+.timeline-description {
+  font-family: 'Neue Montreal', sans-serif;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary, rgba(var(--color-text-rgb), 0.6));
+  margin-bottom: 1rem;
+  line-height: 1.6;
+
+  @include respond-to('tablet') {
+    font-size: 0.875rem;
+  }
+}
+
+.timeline-category {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-background);
+  background: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  border-radius: 0;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: transparent;
+    color: var(--color-primary);
+  }
+
+  @include respond-to('tablet') {
+    font-size: 0.8125rem;
+    padding: 0.5rem 1rem;
+  }
+}

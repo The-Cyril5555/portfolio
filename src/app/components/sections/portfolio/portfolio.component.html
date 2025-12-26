@@ -1,44 +1,17 @@
 <section class="portfolio brutalist-section">
   <div class="section-container">
-    <!-- Section Header -->
+    <!-- Titre TRAVAUX -->
     <div class="section-header">
-      <h2 class="section-title brutalist-title">
-        <span class="title-label">02.</span>
-        MES PROJETS
-      </h2>
-
-      <!-- Filter Toggle -->
-      <button
-        (click)="toggleView()"
-        class="filter-toggle brutalist-button brutalist-button--small"
-        [class.active]="!showingFeatured()"
-      >
-        <span class="button-text-wrapper">
-          <span class="button-text">
-            {{ showingFeatured() ? 'TOUS LES PROJETS' : 'PROJETS PHARES' }}
-          </span>
-          <span class="button-text" aria-hidden="true">
-            {{ showingFeatured() ? 'TOUS LES PROJETS' : 'PROJETS PHARES' }}
-          </span>
-        </span>
-      </button>
+      <h2 class="work-title">Projet</h2>
     </div>
 
     <!-- Projects Grid -->
-    <div class="projects-grid">
+    <div class="carousel-wrapper">
+      <div class="carousel-track">
       @for (project of displayedProjects; track project.id) {
-        <article class="project-card brutalist-card" [style.--accent-color]="project.color || '#000'">
-          <!-- Project Image -->
-          <div class="project-image">
-            <img
-              [src]="project.images.thumbnail"
-              [alt]="project.title"
-              loading="lazy"
-            />
-            <div class="project-overlay">
-              <span class="project-year">{{ project.year }}</span>
-            </div>
-          </div>
+        <article class="project-card brutalist-card"
+                 [style.--accent-color]="project.color || '#000'"
+                 [style.background-image]="'url(' + project.images.thumbnail + ')'">
 
           <!-- Project Content -->
           <div class="project-content">
@@ -106,13 +79,7 @@
           }
         </article>
       }
-    </div>
-
-    <!-- Empty State -->
-    @if (displayedProjects.length === 0) {
-      <div class="empty-state">
-        <p>Aucun projet à afficher pour le moment.</p>
       </div>
-    }
+    </div>
   </div>
 </section>

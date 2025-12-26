@@ -13,6 +13,7 @@ export type SkillCategory =
   | 'design'
   | 'frontend'
   | 'backend'
+  | 'cms'
   | 'tools'
   | 'soft-skills';
 

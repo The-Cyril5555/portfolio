@@ -1,6 +1,180 @@
 @use '../../../../styles/variables' as *;
 @use '../../../../styles/mixins' as *;
 
+// Titre TRAVAUX avec Manufacturing Consent
+.work-title {
+  font-family: 'Manufacturing Consent', sans-serif;
+  font-size: 120px;
+  font-weight: 400;
+  text-align: center;
+  margin: 0 0 80px;
+  letter-spacing: 0.02em;
+  color: black;
+
+  @media (max-width: 768px) {
+    font-size: 60px;
+    margin: 0 0 40px;
+  }
+}
+
+// Projects Grid
+.carousel-wrapper {
+  width: 100%;
+  padding: 40px 0;
+}
+
+.carousel-track {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 40px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}
+
+.project-card {
+  position: relative;
+  min-height: 600px;
+  border-radius: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  // Peinture en fond complet
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  // Overlay sombre via pseudo-élément
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.4) 0%,
+      rgba(0, 0, 0, 0.7) 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  // Contenu au-dessus de l'overlay
+  .project-content {
+    position: relative;
+    z-index: 2;
+    color: #F4E9E0;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .project-header {
+    margin-bottom: 20px;
+  }
+
+  .project-title {
+    color: #F4E9E0;
+    font-weight: 700;
+    font-size: 28px;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .project-client {
+    color: #F4E9E0;
+    opacity: 0.8;
+    font-size: 14px;
+  }
+
+  .project-description {
+    color: #F4E9E0;
+    opacity: 0.95;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .project-services {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+
+    .service-tag {
+      color: #F4E9E0;
+      border: 1px solid rgba(244, 233, 224, 0.4);
+      background: rgba(244, 233, 224, 0.1);
+      padding: 4px 12px;
+      font-size: 12px;
+      border-radius: 4px;
+    }
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+
+    .tech-tag {
+      color: #F4E9E0;
+      border-color: rgba(244, 233, 224, 0.4);
+      background: rgba(244, 233, 224, 0.1);
+    }
+  }
+
+  .project-links {
+    margin-top: auto;
+    display: flex;
+    gap: 12px;
+
+    .project-link {
+      border-color: #F4E9E0;
+      color: #F4E9E0;
+
+      &:hover {
+        background: rgba(244, 233, 224, 0.2);
+      }
+    }
+  }
+
+  .featured-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 3;
+
+    .badge-star {
+      width: 40px;
+      height: 40px;
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+    }
+  }
+
+  @media (max-width: 768px) {
+    min-height: 500px;
+
+    .project-content {
+      padding: 30px;
+    }
+
+    .project-title {
+      font-size: 24px;
+    }
+  }
+}
+
+// Anciens styles (conservés pour compatibilité si besoin)
 .projects-list {
   display: grid;
   gap: 80px;

@@ -8,20 +8,26 @@
   width: 100%;
   padding: 20px 40px;
   z-index: 100;
-  background: transparent;
-  transition: all 0.3s ease;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
 
   @media (max-width: 768px) {
     padding: 15px 20px;
   }
 
-  // Sur scroll, ajouter glassmorphism et bordure
+  // Sur scroll, ajouter l'effet de verre et changer la couleur du texte
   &.scrolled {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid #F5EEE6;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    -webkit-backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter");
+    backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter");
+
+    .logo-name,
+    .logo-subtitle,
+    .nav-links a {
+      color: #E40037;
+    }
   }
 
   .nav-container {
@@ -51,7 +57,7 @@
     color: #F5EEE6;
     text-decoration: none;
     text-transform: capitalize;
-    transition: opacity 0.2s;
+    transition: color 0.3s ease, opacity 0.2s;
 
     &:hover {
       opacity: 0.7;
@@ -63,12 +69,13 @@
   }
 
   .logo-subtitle {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Neue Montreal', sans-serif;
     font-size: 12px;
-    font-weight: 400;
+    font-weight: bold;
     color: #F5EEE6;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    transition: color 0.3s ease;
 
     @media (max-width: 768px) {
       font-size: 10px;
@@ -87,13 +94,13 @@
     }
 
     a {
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'Neue Montreal', sans-serif;
       color: #F5EEE6;
       text-decoration: none;
       font-size: 16px;
       text-transform: lowercase;
-      font-weight: 400;
-      transition: opacity 0.2s;
+      font-weight: bold;
+      transition: color 0.3s ease, opacity 0.2s;
 
       &:hover {
         opacity: 0.7;

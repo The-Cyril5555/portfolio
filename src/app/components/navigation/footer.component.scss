@@ -1,216 +1,107 @@
 @use '../../../styles/variables' as *;
 @use '../../../styles/mixins' as *;
-@use '../../../styles/glassmorphism' as *;
 
-.footer-glass {
+.brutalist-footer {
   position: relative;
   width: 100%;
-  padding: 60px 40px 30px;
-  margin-top: 0;
-  background-color: #0A1119;
+  padding: 20px 40px 0 40px;
+  margin-bottom: 0;
+  z-index: 3;
 
-  // Paint background inversé qui continue du contact
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('/paint.png');
-    background-size: cover;
-    background-position: center bottom;
-    transform: rotate(180deg);
-    opacity: 1;
-    z-index: 0;
-    pointer-events: none;
+  background-color: rgba(10, 17, 25, 0.3);
+
+  // Glass Effect (same as navbar)
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.1);
+  -webkit-backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter");
+  backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter");
+
+  @media (max-width: 768px) {
+    padding: 15px 20px 0 20px;
   }
 
-  // Glassmorphism par-dessus le paint
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-top: 1px solid #F5EEE6;
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
-    z-index: 1;
-    pointer-events: none;
-  }
-
-  // Contenu au-dessus des backgrounds
   .footer-container {
-    position: relative;
-    z-index: 2;
-  }
-
-  @media (max-width: 768px) {
-    padding: 40px 20px 20px;
-  }
-}
-
-.footer-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-
-  @media (max-width: 968px) {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-}
-
-.footer-section {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-}
-
-.section-title {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 18px;
-  font-weight: 600;
-  color: #F5EEE6;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin: 0;
-
-  @media (max-width: 768px) {
-    font-size: 16px;
-  }
-}
-
-// Tech Stack Grid
-.tech-stack-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
-}
-
-.tech-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(245, 238, 230, 0.2);
-  border-radius: 8px;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(245, 238, 230, 0.4);
-    transform: translateY(-2px);
-  }
-
-  .tech-icon {
-    font-size: 24px;
-    flex-shrink: 0;
-  }
-
-  .tech-name {
-    font-family: 'Neue Montreal', sans-serif;
-    font-size: 15px;
-    font-weight: 400;
-    color: #F5EEE6;
-    letter-spacing: 0.01em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
 
     @media (max-width: 768px) {
-      font-size: 14px;
+      flex-direction: column;
+      gap: 15px;
+      align-items: flex-start;
     }
   }
-}
 
-// Social Links
-.links-section {
-  @media (max-width: 968px) {
-    order: -1;
-  }
-}
-
-.social-links {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.social-link {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(245, 238, 230, 0.2);
-  border-radius: 8px;
-  text-decoration: none;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(245, 238, 230, 0.4);
-    transform: translateX(5px);
-  }
-
-  .link-icon {
-    font-size: 20px;
-    flex-shrink: 0;
-  }
-
-  .link-name {
-    font-family: 'Neue Montreal', sans-serif;
-    font-size: 15px;
-    font-weight: 400;
-    color: #F5EEE6;
-    letter-spacing: 0.01em;
+  .footer-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 
     @media (max-width: 768px) {
-      font-size: 14px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
     }
   }
-}
 
-// Footer Bottom
-.footer-bottom {
-  grid-column: 1 / -1;
-  padding-top: 30px;
-  margin-top: 30px;
-  border-top: 1px solid rgba(245, 238, 230, 0.2);
-  text-align: center;
-}
+  .copyright-text {
+    font-family: 'Manufacturing Consent', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #F5EEE6;
+    transition: opacity 0.2s;
 
-.copyright {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  color: #F5EEE6;
-  margin: 0;
+    &:hover {
+      opacity: 0.7;
+    }
 
-  @media (max-width: 768px) {
+    @media (max-width: 768px) {
+      font-size: 16px;
+    }
+  }
+
+  .footer-subtitle {
+    font-family: 'Neue Montreal', sans-serif;
     font-size: 12px;
+    font-weight: bold;
+    color: #F5EEE6;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+
+    @media (max-width: 768px) {
+      font-size: 10px;
+    }
   }
 
-  .name {
-    font-weight: 500;
-  }
+  .footer-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 
-  .separator {
-    margin: 0 8px;
-    opacity: 0.5;
-  }
+    @media (max-width: 768px) {
+      gap: 20px;
+    }
 
-  .role {
-    font-style: italic;
-    opacity: 0.8;
+    a {
+      font-family: 'Neue Montreal', sans-serif;
+      color: #F5EEE6;
+      text-decoration: none;
+      font-size: 16px;
+      text-transform: lowercase;
+      font-weight: bold;
+      transition: opacity 0.2s;
+
+      &:hover {
+        opacity: 0.7;
+      }
+
+      @media (max-width: 768px) {
+        font-size: 14px;
+      }
+    }
   }
 }
