@@ -1,0 +1,28 @@
+<div class="timeline-wrapper">
+
+  <!-- Timeline Track -->
+  <div class="timeline-track">
+
+    <!-- Timeline Line (visual continuous line) -->
+    <div class="timeline-line"></div>
+
+    <!-- Timeline Items -->
+    @for (item of items(); track item.id; let i = $index) {
+      <div class="timeline-item" [attr.data-index]="i">
+
+        <!-- Marker à gauche -->
+        <div class="timeline-marker">
+          <div class="marker-dot"></div>
+        </div>
+
+        <!-- Contenu à droite -->
+        <div class="timeline-content">
+          <div class="timeline-year">{{ item.year }}</div>
+          <div class="timeline-title">{{ item.title }}</div>
+        </div>
+
+      </div>
+    }
+  </div>
+
+</div>

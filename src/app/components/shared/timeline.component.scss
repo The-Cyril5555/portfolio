@@ -1,205 +1,176 @@
 // Timeline Component Styles
 // ==========================
 
-@use '../../../styles/mixins' as *;
 @use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+// TIMELINE WRAPPER
+// ================
 
 .timeline-wrapper {
+  position: relative;
   width: 100%;
-  overflow-x: auto;
-  overflow-y: visible;
-  padding: 2rem 0;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-primary) transparent;
-
-  &::-webkit-scrollbar {
-    height: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: var(--color-primary);
-    border-radius: 0;
-  }
+  overflow: hidden;
 }
+
+// TIMELINE TRACK
+// ==============
 
 .timeline-track {
   position: relative;
-  display: flex;
-  gap: 4rem;
-  padding: 2rem 1rem;
-  min-width: max-content;
+  padding: 40px 0 40px 40px;
 
-  @include respond-to('tablet') {
-    gap: 6rem;
-    padding: 3rem 2rem;
-  }
-
-  @include respond-to('desktop') {
-    gap: 8rem;
-    padding: 4rem 2rem;
+  @media (max-width: 768px) {
+    padding: 30px 0 30px 30px;
   }
 }
+
+// TIMELINE LINE (Vertical)
+// =========================
 
 .timeline-line {
   position: absolute;
-  top: 4.5rem;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: var(--color-primary);
-  z-index: 0;
+  left: 55px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-primary, #0A1119);
+  z-index: 1;
 
-  @include respond-to('tablet') {
-    top: 5rem;
+  @media (max-width: 768px) {
+    left: 41px;
   }
 }
+
+// TIMELINE ITEM
+// =============
 
 .timeline-item {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 280px;
-  max-width: 320px;
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 24px;
+  margin-bottom: 70px;
+  align-items: start;
 
-  @include respond-to('tablet') {
-    min-width: 320px;
-    max-width: 360px;
+  &:last-child {
+    margin-bottom: 0;
   }
 
-  &[data-type="experience"] {
-    .marker-dot {
-      background: var(--color-accent, #3b82f6);
-    }
-
-    .timeline-category {
-      background: var(--color-accent, #3b82f6);
-    }
+  // Scroll-triggered animation
+  &.animate-in {
+    animation: timelineSlideIn 0.5s ease-out forwards;
   }
 
-  &[data-type="education"] {
-    .marker-dot {
-      background: #10b981;
-    }
-
-    .timeline-category {
-      background: #10b981;
-    }
+  @media (max-width: 768px) {
+    grid-template-columns: 24px 1fr;
+    gap: 16px;
+    margin-bottom: 50px;
   }
 }
+
+// Staggered animation delays
+@for $i from 0 through 10 {
+  .timeline-item[data-index="#{$i}"].animate-in {
+    animation-delay: #{$i * 0.08}s;
+  }
+}
+
+// TIMELINE MARKER
+// ===============
 
 .timeline-marker {
   position: relative;
-  z-index: 1;
-  margin-bottom: 2rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+
+  @media (max-width: 768px) {
+    width: 24px;
+    height: 24px;
+  }
 }
 
 .marker-dot {
-  width: 20px;
-  height: 20px;
-  background: var(--color-primary);
-  border: 4px solid var(--color-primary);
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  box-shadow: 0 0 0 4px var(--color-background);
-  transition: all 0.3s ease;
+  background: #0A1119;
+  border: none;
+  box-shadow: none;
+  transition: transform 0.3s ease;
 
+  // Hover effect
   .timeline-item:hover & {
-    transform: scale(1.3);
-    box-shadow: 0 0 0 6px var(--color-background);
+    transform: scale(1.2);
+  }
+
+  @media (max-width: 768px) {
+    width: 14px;
+    height: 14px;
   }
 }
 
+// TIMELINE CONTENT
+// ================
+
 .timeline-content {
-  padding: 1.5rem;
-  width: 100%;
-  text-align: left;
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 8px 8px 0 var(--color-primary);
-  }
-
-  @media (min-width: 768px) {
-    padding: 2rem;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 4px;
 }
 
 .timeline-year {
-  font-family: 'Neue Montreal', sans-serif;
-  font-weight: 700;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-accent, var(--color-primary));
-  margin-bottom: 0.75rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.875rem; // 14px
+  font-weight: 500;
+  color: var(--color-text, #0A1119);
+  opacity: 0.6;
+  line-height: 1.2;
+  margin: 0;
 
-  @include respond-to('tablet') {
-    font-size: 1rem;
+  @media (max-width: 768px) {
+    font-size: 0.8125rem; // 13px
   }
 }
 
 .timeline-title {
-  font-family: 'Migra', serif;
-  font-size: 1.125rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: var(--color-text);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.125rem; // 18px
+  font-weight: 600;
+  color: var(--color-text, #0A1119);
+  line-height: 1.3;
+  margin: 0;
 
-  @include respond-to('tablet') {
-    font-size: 1.25rem;
+  @media (max-width: 768px) {
+    font-size: 1rem; // 16px
   }
 }
 
-.timeline-subtitle {
-  font-family: 'Neue Montreal', sans-serif;
-  font-size: 0.875rem;
-  color: var(--color-text-secondary, rgba(var(--color-text-rgb), 0.7));
-  margin-bottom: 0.75rem;
-  line-height: 1.5;
+// ANIMATIONS
+// ==========
 
-  @include respond-to('tablet') {
-    font-size: 1rem;
+@keyframes timelineSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 
-.timeline-description {
-  font-family: 'Neue Montreal', sans-serif;
-  font-size: 0.8125rem;
-  color: var(--color-text-secondary, rgba(var(--color-text-rgb), 0.6));
-  margin-bottom: 1rem;
-  line-height: 1.6;
+// ACCESSIBILITY
+// =============
 
-  @include respond-to('tablet') {
-    font-size: 0.875rem;
-  }
-}
-
-.timeline-category {
-  display: inline-block;
-  padding: 0.375rem 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-background);
-  background: var(--color-primary);
-  border: 2px solid var(--color-primary);
-  border-radius: 0;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: transparent;
-    color: var(--color-primary);
-  }
-
-  @include respond-to('tablet') {
-    font-size: 0.8125rem;
-    padding: 0.5rem 1rem;
+@media (prefers-reduced-motion: reduce) {
+  .timeline-item.animate-in {
+    animation: none;
+    opacity: 1;
   }
 }

@@ -125,6 +125,123 @@
   }
 }
 
+// 3D Floating Animations for Portfolio Cards
+@keyframes float3d-variant1 {
+  0%, 100% {
+    transform: translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg);
+  }
+  25% {
+    transform: translateY(-12px) translateZ(15px) rotateX(2deg) rotateY(-1deg);
+  }
+  50% {
+    transform: translateY(-20px) translateZ(25px) rotateX(3deg) rotateY(0deg);
+  }
+  75% {
+    transform: translateY(-12px) translateZ(15px) rotateX(2deg) rotateY(1deg);
+  }
+}
+
+@keyframes float3d-variant2 {
+  0%, 100% {
+    transform: translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg);
+  }
+  30% {
+    transform: translateY(-15px) translateZ(20px) rotateX(-1deg) rotateY(2deg);
+  }
+  60% {
+    transform: translateY(-18px) translateZ(22px) rotateX(1deg) rotateY(-2deg);
+  }
+  90% {
+    transform: translateY(-8px) translateZ(10px) rotateX(-1deg) rotateY(1deg);
+  }
+}
+
+@keyframes float3d-variant3 {
+  0%, 100% {
+    transform: translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg);
+  }
+  20% {
+    transform: translateY(-10px) translateZ(12px) rotateX(1.5deg) rotateY(1.5deg);
+  }
+  50% {
+    transform: translateY(-22px) translateZ(28px) rotateX(-2deg) rotateY(-2deg);
+  }
+  80% {
+    transform: translateY(-14px) translateZ(18px) rotateX(1deg) rotateY(-1deg);
+  }
+}
+
+@keyframes float3d-variant4 {
+  0%, 100% {
+    transform: translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg);
+  }
+  33% {
+    transform: translateY(-8px) translateZ(10px) rotateX(-1deg) rotateY(-1.5deg);
+  }
+  66% {
+    transform: translateY(-16px) translateZ(20px) rotateX(1.5deg) rotateY(1deg);
+  }
+}
+
+@keyframes float3d-variant5 {
+  0%, 100% {
+    transform: translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg);
+  }
+  40% {
+    transform: translateY(-18px) translateZ(30px) rotateX(2.5deg) rotateY(-1deg);
+  }
+  70% {
+    transform: translateY(-12px) translateZ(18px) rotateX(-1.5deg) rotateY(2deg);
+  }
+}
+
+@keyframes float3d-variant6 {
+  0%, 100% {
+    transform: translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg);
+  }
+  25% {
+    transform: translateY(-14px) translateZ(16px) rotateX(-2deg) rotateY(1.5deg);
+  }
+  50% {
+    transform: translateY(-24px) translateZ(32px) rotateX(1deg) rotateY(-2deg);
+  }
+  75% {
+    transform: translateY(-10px) translateZ(14px) rotateX(2deg) rotateY(0.5deg);
+  }
+}
+
+// Simplified mobile versions for better performance
+@keyframes float3d-variant1-mobile {
+  0%, 100% {
+    transform: translateY(0px) translateZ(0px) rotateX(0deg);
+  }
+  50% {
+    transform: translateY(-12px) translateZ(10px) rotateX(1deg);
+  }
+}
+
+@keyframes float3d-variant2-mobile {
+  0%, 100% {
+    transform: translateY(0px) translateZ(0px) rotateX(0deg);
+  }
+  50% {
+    transform: translateY(-10px) translateZ(8px) rotateX(-1deg);
+  }
+}
+
+// Hover-triggered 3D floating animation
+@keyframes float3d-hover {
+  0% {
+    transform: translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg);
+  }
+  50% {
+    transform: translateY(-25px) translateZ(40px) rotateX(-5deg) rotateY(2deg) scale(1.02);
+  }
+  100% {
+    transform: translateY(-20px) translateZ(35px) rotateX(-4deg) rotateY(1deg) scale(1.02);
+  }
+}
+
 // Utility Animation Classes
 .animate-fade-in {
   animation: fadeIn $transition-slow ease-out;

@@ -1,32 +1,58 @@
 @use '../../../../styles/variables' as *;
 @use '../../../../styles/mixins' as *;
 
+// Portfolio Section
+.portfolio {
+  padding-top: 0px !important;
+
+  @media (max-width: 768px) {
+    padding-top: 0px !important;
+  }
+
+  .section-container {
+    padding-top: 0 !important;
+  }
+
+  .section-header {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+}
+
 // Titre TRAVAUX avec Manufacturing Consent
 .work-title {
   font-family: 'Manufacturing Consent', sans-serif;
   font-size: 120px;
   font-weight: 400;
   text-align: center;
-  margin: 0 0 80px;
+  margin: 0 0 30px;
   letter-spacing: 0.02em;
   color: black;
 
   @media (max-width: 768px) {
     font-size: 60px;
-    margin: 0 0 40px;
+    margin: 0 0 20px;
   }
 }
 
-// Projects Grid
+// Projects Grid - SOLUTION COMPLÈTE
 .carousel-wrapper {
   width: 100%;
-  padding: 40px 0;
+  padding: 0 0 40px;
 }
 
 .carousel-track {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 40px;
+
+  // CORRECTION: Utiliser 1fr au lieu de auto pour forcer la même hauteur
+  grid-auto-rows: 1fr;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -36,18 +62,37 @@
 
 .project-card {
   position: relative;
-  min-height: 600px;
-  border-radius: 16px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-  // Peinture en fond complet
+  // Flexbox pour le contenu interne
+  display: flex;
+  flex-direction: column;
+
+  // CRITIQUE: La card doit remplir la cellule du grid
+  min-height: 550px;
+
+  // Border radius
+  border-radius: 16px;
+
+  // Overflow pour respecter border-radius
+  overflow: hidden;
+
+  // Transition smooth
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+
+  // Background image
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 
+  // Box shadow par défaut
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  // HOVER: Effet de levée verticale
   &:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    transform: translateY(-12px);
+    box-shadow:
+      0 28px 50px rgba(0, 0, 0, 0.4),
+      0 14px 25px rgba(0, 0, 0, 0.3);
   }
 
   // Overlay sombre via pseudo-élément
@@ -65,7 +110,15 @@
     );
     z-index: 1;
     pointer-events: none;
-    border-radius: inherit;
+    transition: background 0.3s ease;
+  }
+
+  &:hover::before {
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.6) 100%
+    );
   }
 
   // Contenu au-dessus de l'overlay
@@ -74,8 +127,11 @@
     z-index: 2;
     color: #F4E9E0;
     padding: 40px;
+
+    // IMPORTANT: flex: 1 pour remplir toute la hauteur
     display: flex;
     flex-direction: column;
+    flex: 1;
     height: 100%;
   }
 
@@ -84,6 +140,7 @@
   }
 
   .project-title {
+    font-family: 'Migra', sans-serif;
     color: #F4E9E0;
     font-weight: 700;
     font-size: 28px;
@@ -98,6 +155,7 @@
   }
 
   .project-description {
+    font-family: 'Montserrat', sans-serif;
     color: #F4E9E0;
     opacity: 0.95;
     margin-bottom: 20px;
@@ -128,22 +186,62 @@
 
     .tech-tag {
       color: #F4E9E0;
-      border-color: rgba(244, 233, 224, 0.4);
+      border: 1px solid rgba(244, 233, 224, 0.4);
       background: rgba(244, 233, 224, 0.1);
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 500;
+      backdrop-filter: blur(4px);
     }
   }
 
   .project-links {
+    // IMPORTANT: margin-top auto pousse les liens en bas
     margin-top: auto;
     display: flex;
-    gap: 12px;
+    gap: 10px;
 
     .project-link {
-      border-color: #F4E9E0;
+      position: relative;
+      display: inline-block;
+      padding: 0px 4px;
+      background: transparent;
       color: #F4E9E0;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      border: 1px solid #F4E9E0;
+      border-radius: 50px;
+      overflow: hidden;
+      cursor: pointer;
+      width: fit-content;
+      max-width: 135px;
+      transition: all 0.3s ease;
 
       &:hover {
-        background: rgba(244, 233, 224, 0.2);
+        background: rgba(244, 233, 224, 0.15);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        box-shadow: 0 8px 32px rgba(244, 233, 224, 0.1);
+
+        .button-text-wrapper {
+          animation: scroll-text 3.5s linear infinite;
+        }
+      }
+
+      .button-text-wrapper {
+        display: inline-flex;
+        gap: 0;
+
+        .button-text {
+          display: inline-block;
+          white-space: nowrap;
+          padding-right: 40px;
+        }
       }
     }
   }
@@ -174,109 +272,22 @@
   }
 }
 
-// Anciens styles (conservés pour compatibilité si besoin)
-.projects-list {
-  display: grid;
-  gap: 80px;
-
-  @media (max-width: 768px) {
-    gap: 60px;
+// Animation de défilement du texte
+@keyframes scroll-text {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
   }
 }
 
-.project-item {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: center;
-  border-top: 2px solid black;
-  padding-top: 40px;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 30px;
-    padding-top: 30px;
-  }
-
-  &:nth-child(even) {
-    .project-image {
-      order: 2;
-
-      @media (max-width: 768px) {
-        order: 0;
-      }
-    }
-  }
-
-  .project-link {
-    display: contents;
-    text-decoration: none;
-    color: inherit;
-  }
-
-  .project-image {
-    aspect-ratio: 4 / 3;
-    overflow: hidden;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.4s ease;
-    }
-  }
-
-  &:hover img {
-    transform: scale(1.05);
-  }
-
-  .project-info {
-    .project-title {
-      font-size: 42px;
-      font-weight: 900;
-      margin-bottom: 20px;
-      text-transform: uppercase;
-      line-height: 1;
-
-      @media (max-width: 768px) {
-        font-size: 32px;
-      }
-    }
-
-    .project-meta {
-      font-size: 16px;
-      margin-bottom: 20px;
-      text-transform: uppercase;
-      color: var(--text-secondary);
-
-      @media (max-width: 768px) {
-        font-size: 14px;
-      }
-
-      .project-client::after {
-        content: ' — ';
-      }
-    }
-
-    .project-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-
-      @media (max-width: 768px) {
-        gap: 10px;
-      }
-
-      .tag {
-        font-size: 14px;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--text-primary);
-
-        @media (max-width: 768px) {
-          font-size: 12px;
-        }
-      }
+// Reduced Motion Support (Accessibility)
+@media (prefers-reduced-motion: reduce) {
+  .project-card {
+    &:hover {
+      transform: translateY(-6px) !important;
+      transition: all 0.3s ease !important;
     }
   }
 }

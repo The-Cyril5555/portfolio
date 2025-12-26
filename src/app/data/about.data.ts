@@ -1,26 +1,60 @@
 // About Data
 // ===========
 
-import { Education, Experience, Quality } from '../models/about.model';
+import { Education, Experience, Quality, Statistic } from '../models/about.model';
+
+export const BIO_PARAGRAPHS = [
+  "Développeur web full-stack, je conçois des applications web modernes en alliant performance, clarté du code et expérience utilisateur. J'interviens aussi bien sur le front-end que sur le back-end, avec une spécialisation en React, Node.js et SQL.",
+  "Au fil de mes projets, j'ai développé des plateformes métiers, des sites e-commerce et des applications connectées à des API, en prenant en charge des fonctionnalités complètes, de la conception à la mise en production. J'accorde une attention particulière à la structure des applications, à la maintenabilité du code et à la fluidité des interfaces.",
+  "Curieux et orienté solutions, j'aime comprendre les besoins techniques et fonctionnels afin de proposer des implémentations efficaces et évolutives. Habitué au travail en équipe et aux méthodes agiles, je sais m'adapter rapidement à de nouveaux environnements techniques.",
+  "Aujourd'hui, je recherche un poste de développeur web au sein d'une équipe où je pourrai continuer à monter en compétences, contribuer activement aux projets et partager une culture de qualité et de collaboration."
+];
+
+export const STATISTICS: Statistic[] = [
+  {
+    id: 'experience',
+    label: 'Années d\'expérience',
+    value: '7+',
+    icon: '📅'
+  },
+  {
+    id: 'projects',
+    label: 'Projets réalisés',
+    value: '15+',
+    icon: '💼'
+  },
+  {
+    id: 'technologies',
+    label: 'Technologies maîtrisées',
+    value: '20+',
+    icon: '⚡'
+  },
+  {
+    id: 'clients',
+    label: 'Clients satisfaits',
+    value: '10+',
+    icon: '🤝'
+  }
+];
 
 export const QUALITIES: Quality[] = [
   {
     id: 'rigor',
     name: 'Rigueur',
-    icon: 'check-circle',
-    description: 'Approche méthodique et attention aux détails dans chaque projet'
+    icon: '🎯',
+    description: 'Approche méthodique et attention aux détails dans chaque projet. Code propre, documentation claire, tests systématiques.'
   },
   {
     id: 'versatility',
     name: 'Polyvalence',
-    icon: 'layers',
-    description: 'Capacité d\'adaptation à différentes technologies et contextes'
+    icon: '🔄',
+    description: 'Capacité d\'adaptation à différentes technologies et contextes. Full-stack avec expertise front et back-end.'
   },
   {
     id: 'perseverance',
     name: 'Persévérance',
-    icon: 'trending-up',
-    description: 'Détermination face aux défis techniques et apprentissage continu'
+    icon: '💪',
+    description: 'Détermination face aux défis techniques et apprentissage continu. Résolution de problèmes complexes avec créativité.'
   }
 ];
 

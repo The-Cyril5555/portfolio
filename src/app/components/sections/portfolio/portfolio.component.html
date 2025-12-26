@@ -9,7 +9,7 @@
     <div class="carousel-wrapper">
       <div class="carousel-track">
       @for (project of displayedProjects; track project.id) {
-        <article class="project-card brutalist-card"
+        <article class="project-card"
                  [style.--accent-color]="project.color || '#000'"
                  [style.background-image]="'url(' + project.images.thumbnail + ')'">
 
@@ -62,8 +62,8 @@
                     class="project-link brutalist-button brutalist-button--secondary brutalist-button--small"
                   >
                     <span class="button-text-wrapper">
-                      <span class="button-text">CODE</span>
-                      <span class="button-text" aria-hidden="true">CODE</span>
+                      <span class="button-text">VERS LE CODE</span>
+                      <span class="button-text" aria-hidden="true">VERS LE CODE</span>
                     </span>
                   </a>
                 }
@@ -81,5 +81,8 @@
       }
       </div>
     </div>
+
+    <!-- Skills Section - Tech Grid Component -->
+    <app-tech-grid></app-tech-grid>
   </div>
 </section>

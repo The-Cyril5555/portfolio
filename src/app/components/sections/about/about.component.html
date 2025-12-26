@@ -1,108 +1,28 @@
-<section class="about brutalist-section brutalist-section--dark">
+<section class="about brutalist-section brutalist-section--light">
   <div class="section-container">
-    <!-- Section Header -->
-    <h2 class="section-title brutalist-title">
-      <span class="title-label">03.</span>
-      À PROPOS
-    </h2>
 
-    <!-- Introduction -->
-    <div class="about-intro">
-      <h3 class="about-subtitle">{{ aboutText.intro }}</h3>
-      <p>{{ aboutText.description }}</p>
-      <p>{{ aboutText.experience }}</p>
-    </div>
+    <!-- Grid 2 colonnes -->
+    <div class="about-grid">
 
-    <!-- Stats -->
-    <div class="about-stats">
-      @for (stat of stats; track stat.label) {
-        <div class="stat-item brutalist-card">
-          <div class="stat-value">{{ stat.value }}</div>
-          <div class="stat-label">{{ stat.label }}</div>
+      <!-- Colonne gauche : Introduction -->
+      <div class="about-intro">
+        <h2 class="column-heading">À propos</h2>
+        <div class="bio-content">
+          @for (paragraph of bioParagraphs(); track $index) {
+            <p class="bio-paragraph">{{ paragraph }}</p>
+          }
         </div>
-      }
-    </div>
-
-    <!-- Qualités Section -->
-    <div class="qualities-section">
-      <h3 class="subsection-title">Mes Qualités</h3>
-      <div class="qualities-grid">
-        @for (quality of qualities(); track quality.id) {
-          <div class="quality-card brutalist-card">
-            <div class="quality-icon">
-              <span class="icon-placeholder">{{ quality.icon }}</span>
-            </div>
-            <h4 class="quality-name">{{ quality.name }}</h4>
-            <p class="quality-description">{{ quality.description }}</p>
-          </div>
-        }
-      </div>
-    </div>
-
-    <!-- Formation Section -->
-    <div class="education-section">
-      <h3 class="subsection-title">Formation</h3>
-      <div class="education-list">
-        @for (edu of education(); track edu.id) {
-          <div class="education-item brutalist-card">
-            <div class="edu-header">
-              <div class="edu-year">{{ edu.startYear }} - {{ edu.endYear }}</div>
-              <div class="edu-type">{{ edu.type === 'formation' ? 'Formation' : 'Certification' }}</div>
-            </div>
-            <h4 class="edu-degree">{{ edu.degree }}</h4>
-            <p class="edu-institution">{{ edu.institution }} - {{ edu.location }}</p>
-            @if (edu.description) {
-              <p class="edu-description">{{ edu.description }}</p>
-            }
-          </div>
-        }
-      </div>
-    </div>
-
-    <!-- Timeline Section -->
-    <div class="timeline-section">
-      <h3 class="subsection-title">Parcours Professionnel</h3>
-      <app-timeline [timelineItems]="buildTimelineItems()"></app-timeline>
-    </div>
-
-    <!-- Skills Section -->
-    <div class="skills-section">
-      <h3 class="subsection-title">Compétences & Expertises</h3>
-      <div class="skills-grid">
-        @for (group of skillGroups(); track group.category) {
-          <div class="skill-group brutalist-card">
-            <h4 class="skill-group-title">{{ group.title }}</h4>
-            <div class="skills-list">
-              @for (skill of group.skills; track skill.id) {
-                <div class="skill-badge" [attr.data-level]="skill.level">
-                  <span class="skill-icon">{{ skill.icon }}</span>
-                  <span class="skill-name">{{ skill.name }}</span>
-                </div>
-              }
-            </div>
-          </div>
-        }
-      </div>
-    </div>
-
-    <!-- Values & Approach -->
-    <div class="about-footer">
-      <div class="footer-highlight brutalist-card">
-        <h3 class="highlight-title">Mon Approche</h3>
-        <p class="highlight-text">
-          Je privilégie une approche pragmatique et centrée sur l'utilisateur.
-          Chaque projet est l'occasion d'apprendre, d'innover et de repousser
-          les limites du web moderne.
-        </p>
       </div>
 
-      <div class="footer-highlight brutalist-card">
-        <h3 class="highlight-title">Mes Valeurs</h3>
-        <p class="highlight-text">
-          Code propre, performance optimale, accessibilité universelle et
-          expérience utilisateur fluide sont au cœur de mes priorités.
-        </p>
+      <!-- Colonne droite : Timeline -->
+      <div class="about-timeline-column">
+        <h2 class="column-heading">Timeline</h2>
+        <div class="timeline-wrapper">
+          <app-timeline [timelineItems]="timelineItems()"></app-timeline>
+        </div>
       </div>
+
     </div>
+
   </div>
 </section>

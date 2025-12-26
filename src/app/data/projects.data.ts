@@ -80,7 +80,7 @@ export const PROJECTS: Project[] = [
       featured: '/assets/images/paintings/art-institute-of-chicago-bINu9vWYpLM-unsplash.jpg'
     },
     links: {},
-    featured: false,
+    featured: true,
     color: '#dc2626'
   },
   {
@@ -91,11 +91,11 @@ export const PROJECTS: Project[] = [
     services: ['Administration', 'Support'],
     tags: ['GLPI', 'Support IT', 'Administration', 'Helpdesk'],
     images: {
-      thumbnail: '/assets/images/paintings/fallen_angel.jpg',
-      featured: '/assets/images/paintings/fallen_angel.jpg'
+      thumbnail: '/assets/images/paintings/europeana-TjegK_z-0j8-unsplash.jpg',
+      featured: '/assets/images/paintings/europeana-TjegK_z-0j8-unsplash.jpg'
     },
     links: {},
-    featured: false,
+    featured: true,
     color: '#f59e0b'
   }
 ];

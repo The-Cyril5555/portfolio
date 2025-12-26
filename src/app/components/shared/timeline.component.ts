@@ -1,7 +1,7 @@
 // Timeline Component
 // ===================
 
-import { Component, Input, signal } from '@angular/core';
+import { Component, Input, signal, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TimelineItem } from '../../models/about.model';
 
@@ -9,39 +9,45 @@ import { TimelineItem } from '../../models/about.model';
   selector: 'app-timeline',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div class="timeline-wrapper">
-      <div class="timeline-track">
-        <div class="timeline-line"></div>
-
-        @for (item of items(); track item.id) {
-          <div class="timeline-item" [attr.data-type]="item.type">
-            <div class="timeline-marker">
-              <div class="marker-dot"></div>
-            </div>
-
-            <div class="timeline-content brutalist-card">
-              <div class="timeline-year">{{ item.year }}</div>
-              <h4 class="timeline-title">{{ item.title }}</h4>
-              <p class="timeline-subtitle">{{ item.subtitle }}</p>
-              @if (item.description) {
-                <p class="timeline-description">{{ item.description }}</p>
-              }
-              @if (item.category) {
-                <span class="timeline-category brutalist-badge">{{ item.category }}</span>
-              }
-            </div>
-          </div>
-        }
-      </div>
-    </div>
-  `,
+  templateUrl: './timeline.component.html',
   styleUrl: './timeline.component.scss'
 })
-export class TimelineComponent {
+export class TimelineComponent implements AfterViewInit, OnDestroy {
   @Input() set timelineItems(items: TimelineItem[]) {
     this.items.set(items);
   }
 
   items = signal<TimelineItem[]>([]);
+
+  // Intersection Observer for scroll animations
+  private observer?: IntersectionObserver;
+
+  ngAfterViewInit() {
+    this.setupScrollAnimations();
+  }
+
+  ngOnDestroy() {
+    this.observer?.disconnect();
+  }
+
+  // Setup Intersection Observer for scroll-triggered animations
+  private setupScrollAnimations() {
+    const options = {
+      root: null, // Viewport observer
+      rootMargin: '0px',
+      threshold: 0.3 // Trigger when 30% visible
+    };
+
+    this.observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+        }
+      });
+    }, options);
+
+    // Observe all timeline items
+    const items = document.querySelectorAll('.timeline-item');
+    items.forEach(item => this.observer?.observe(item));
+  }
 }

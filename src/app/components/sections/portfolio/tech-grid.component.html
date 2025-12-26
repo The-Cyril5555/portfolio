@@ -1,0 +1,11 @@
+<div class="competence-section">
+  <h2 class="competence-title">{{ title }}</h2>
+  <div class="tech-grid">
+    @for (tech of technologies; track tech.id) {
+      <div class="tech-item">
+        <i [class]="tech.iconClass"></i>
+        <span class="tech-label">{{ tech.name }}</span>
+      </div>
+    }
+  </div>
+</div>

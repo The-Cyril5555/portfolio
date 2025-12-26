@@ -40,3 +40,10 @@ export interface Quality {
   icon: string;
   description: string;
 }
+
+export interface Statistic {
+  id: string;
+  label: string;
+  value: string;
+  icon?: string;
+}
