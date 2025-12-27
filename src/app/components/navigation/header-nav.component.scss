@@ -27,8 +27,8 @@ $underline-transition: 0.3s ease; // Durée et courbe de l'animation
 
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    -webkit-backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter");
-    backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter");
+    -webkit-backdrop-filter: url("assets/svg/liquid-glass-filter.svg#liquid-glass-filter");
+    backdrop-filter: url("assets/svg/liquid-glass-filter.svg#liquid-glass-filter");
 
     .logo-name,
     .logo-subtitle,
