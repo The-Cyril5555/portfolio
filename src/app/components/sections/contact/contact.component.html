@@ -1,34 +1,66 @@
+<!--
+  Section Contact
+  ===============
+  Section finale du portfolio avec effet parallax sur le fond et le contenu.
+
+  Structure :
+  1. Fond avec image paint.png retournée (parallax lent)
+  2. Contenu avec titre, email et liens sociaux (parallax très lent)
+  3. Footer avec navigation et stack technique
+
+  L'effet parallax est géré par le TypeScript qui applique des transformations
+  CSS dynamiques lors du scroll (voir contact.component.ts)
+-->
+
 <div class="contact">
-  <!-- Background parallax layer -->
+  <!-- Couche de fond avec parallax -->
+  <!-- La transformation est appliquée dynamiquement via backgroundTransform() -->
+  <!-- scaleY(-1) retourne l'image verticalement pour un effet artistique -->
   <div
     class="contact-background"
     [style.transform]="backgroundTransform()"
+    aria-hidden="true"
   ></div>
 
-  <!-- Content parallax layer -->
+  <!-- Couche de contenu avec parallax -->
+  <!-- Le décalage vertical (translateY) est calculé dynamiquement -->
+  <!-- Défile plus lentement que le fond pour créer l'effet de profondeur -->
   <div
     class="contact-content"
     [style.transform]="'translateY(' + contentOffset() + 'px)'"
   >
+    <!-- Informations de contact centrées -->
     <div class="contact-info">
-      <!-- Main title -->
+      <!-- Titre principal de la section -->
       <h1 class="contact-title">Contact</h1>
 
-      <!-- Email -->
+      <!-- Adresse email de contact -->
+      <!-- Affichée avec une grande taille pour la visibilité -->
       <div class="contact-email">
-        cyril.bizouarn@gmail.com
+        {{ contactEmail }}
       </div>
 
-      <!-- Social links -->
+      <!-- Liens vers les réseaux sociaux -->
+      <!-- Chaque lien affiche une icône et le nom du réseau -->
       <div class="contact-social">
-        @for (link of socialLinks; track link.name) {
+        @for (link of socialLinks; track link.id) {
           <a
             [href]="link.url"
             target="_blank"
             rel="noopener noreferrer"
             class="social-link"
+            [attr.aria-label]="'Visiter mon profil ' + link.name"
+            [attr.title]="link.name"
           >
-            <app-icon [name]="link.icon" [size]="32" color="#F5EEE6"></app-icon>
+            <!-- Icône du réseau social (GitHub, LinkedIn, etc.) -->
+            <app-icon
+              [name]="link.icon"
+              [size]="32"
+              color="#F5EEE6"
+              [attr.aria-hidden]="true"
+            ></app-icon>
+
+            <!-- Nom du réseau affiché sous l'icône -->
             <span class="social-name">{{ link.name }}</span>
           </a>
         }
@@ -36,25 +68,42 @@
     </div>
   </div>
 
-  <!-- Footer -->
+  <!-- Footer du portfolio -->
+  <!-- Contient la navigation, la stack technique et le copyright -->
   <footer class="contact-footer">
+    <!-- Contenu principal du footer (navigation + stack) -->
     <div class="footer-content">
-      <!-- Navigation à gauche -->
-      <nav class="footer-nav">
-        <a href="#home">Accueil</a>
-        <a href="#work">Projets</a>
-        <a href="#skills">Compétences</a>
-        <a href="#about">À Propos</a>
-        <a href="#contact">Contact</a>
+      <!-- Navigation vers les sections du portfolio -->
+      <!-- Affichée à gauche sur desktop, centrée sur mobile -->
+      <nav class="footer-nav" aria-label="Navigation secondaire">
+        @for (navLink of footerNavLinks; track navLink.id) {
+          <a
+            [href]="navLink.href"
+            [attr.aria-label]="'Aller à la section ' + navLink.label"
+          >
+            {{ navLink.label }}
+          </a>
+        }
       </nav>
 
-      <!-- Stack technique à droite -->
+      <!-- Stack technique utilisée pour ce portfolio -->
+      <!-- Affichée à droite sur desktop, centrée sur mobile -->
       <div class="footer-stack">
+        <!-- Label "Built with" au-dessus des icônes -->
         <span class="stack-label">Built with</span>
+
+        <!-- Icônes des technologies avec leurs noms -->
         <div class="stack-icons">
-          @for (tech of techStack; track tech.name) {
+          @for (tech of techStack; track tech.id) {
             <div class="stack-item">
-              <i [class]="tech.icon"></i>
+              <!-- Icône Devicon de la technologie -->
+              <i
+                [class]="tech.icon"
+                [attr.aria-label]="tech.name"
+                role="img"
+              ></i>
+
+              <!-- Nom de la technologie sous l'icône -->
               <span class="stack-name">{{ tech.name }}</span>
             </div>
           }
@@ -62,7 +111,8 @@
       </div>
     </div>
 
-    <!-- Copyright en bas -->
+    <!-- Copyright avec année dynamique -->
+    <!-- L'année est calculée automatiquement dans le TypeScript -->
     <p class="footer-copyright">&copy; {{ currentYear }} Cyril Bizouarn</p>
   </footer>
 </div>

@@ -1,18 +1,46 @@
+<!--
+  Navigation principale (Header)
+  ==============================
+  Barre de navigation fixe en haut de page
+
+  Fonctionnalités :
+  - Affichage du logo et nom
+  - Liens de navigation générés dynamiquement depuis navigation.data.ts
+  - Effet liquid glass au scroll (>50px)
+  - Changement de couleur du texte au scroll
+
+  Les liens sont partagés avec le footer pour garantir la cohérence
+-->
+
 <header class="header brutalist-nav" [class.scrolled]="isScrolled()">
   <nav class="nav-container">
-    <!-- Logo/Nom -->
+    <!-- Logo et nom -->
     <div class="logo-container">
-      <a href="#home" class="logo-name" (click)="onNavClick($event, 'home')">
+      <a
+        href="#home"
+        class="logo-name"
+        (click)="onNavClick($event, 'home')"
+        aria-label="Retour à l'accueil"
+      >
         Cyril Bizouarn
       </a>
       <span class="logo-subtitle">UX/UI DESIGNER, DEVELOPER</span>
     </div>
 
-    <!-- Navigation simple -->
+    <!-- Navigation générée dynamiquement -->
+    <!-- Les liens proviennent de navigation.data.ts (source unique partagée avec le footer) -->
     <ul class="nav-links">
-      <li><a href="#work" (click)="onNavClick($event, 'work')">Travaux</a></li>
-      <li><a href="#about" (click)="onNavClick($event, 'about')">à propos</a></li>
-      <li><a href="#contact" (click)="onNavClick($event, 'contact')">contact</a></li>
+      @for (link of navLinks; track link.id) {
+        <li>
+          <a
+            [href]="link.href"
+            (click)="onNavClick($event, link.id)"
+            [attr.aria-label]="'Aller à la section ' + link.label"
+          >
+            {{ link.label }}
+          </a>
+        </li>
+      }
     </ul>
   </nav>
 </header>

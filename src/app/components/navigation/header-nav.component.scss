@@ -1,6 +1,13 @@
 @use '../../../styles/variables' as *;
 @use '../../../styles/mixins' as *;
 
+// ========================================
+// Variables pour l'animation hover
+// ========================================
+$underline-height: 2px;           // Épaisseur de la ligne de soulignement
+$underline-offset: -2px;          // Distance sous le texte
+$underline-transition: 0.3s ease; // Durée et courbe de l'animation
+
 .brutalist-nav {
   position: fixed;
   top: 0;
@@ -94,6 +101,7 @@
     }
 
     a {
+      position: relative; // Nécessaire pour le positionnement du ::after
       font-family: 'Neue Montreal', sans-serif;
       color: #F5EEE6;
       text-decoration: none;
@@ -102,8 +110,48 @@
       font-weight: bold;
       transition: color 0.3s ease, opacity 0.2s;
 
+      /**
+       * Animation de soulignement au hover
+       *
+       * Utilise un pseudo-élément ::after pour créer une ligne animée
+       * qui apparaît de gauche à droite au survol du lien.
+       *
+       * Performance :
+       * - transform: scaleX() est utilisé plutôt que width pour l'animation
+       * - Plus performant car géré par le GPU (hardware acceleration)
+       * - will-change: transform pré-optimise l'animation
+       *
+       * Comportement :
+       * - La ligne utilise currentColor pour s'adapter automatiquement
+       *   à la couleur du texte (#F5EEE6 par défaut, #E40037 après scroll)
+       * - Animation de gauche à droite grâce à transform-origin: left
+       *
+       * Personnalisation :
+       * - Modifier $underline-height pour changer l'épaisseur
+       * - Modifier $underline-offset pour ajuster la distance sous le texte
+       * - Modifier $underline-transition pour changer la vitesse
+       */
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: $underline-offset;
+        left: 0;
+        width: 100%;
+        height: $underline-height;
+        background-color: currentColor; // S'adapte à la couleur du texte
+        transform: scaleX(0);           // Invisible par défaut
+        transform-origin: left;         // Animation de gauche à droite
+        transition: transform $underline-transition;
+        will-change: transform;         // Optimisation GPU
+      }
+
       &:hover {
-        opacity: 0.7;
+        opacity: 0.7; // Effet d'opacité conservé
+
+        // Afficher la ligne au hover
+        &::after {
+          transform: scaleX(1); // Ligne visible à 100%
+        }
       }
 
       @media (max-width: 768px) {

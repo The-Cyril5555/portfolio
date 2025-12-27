@@ -1,216 +1,424 @@
+// Styles du composant Contact
+// =============================
+// Section de contact avec effet parallax artistique.
+// Le fond (image paint.png retournée) et le contenu défilent à des vitesses différentes
+// pour créer une sensation de profondeur et un effet visuel immersif.
+
 @use '../../../../styles/variables' as *;
 @use '../../../../styles/mixins' as *;
 
+// ========================================
+// Variables locales du composant
+// ========================================
+
+// Configuration du fond parallax
+$contact-background-top: -40vh;      // Commence au-dessus pour couvrir la navbar
+$contact-background-height: 140vh;   // Hauteur supplémentaire pour le scroll parallax
+
+// Espacements de la section
+$contact-padding-desktop: 120px 80px 60px;
+$contact-padding-mobile: 80px 20px 40px;
+
+// Espacements du footer
+$footer-margin-top: 220px;
+$footer-margin-top-mobile: 60px;
+$footer-padding: 25px 80px;
+$footer-padding-mobile: 20px;
+
+// Espacements internes
+$contact-title-margin: 0 0 40px;
+$contact-title-margin-mobile: 0 0 30px;
+$contact-email-margin: 60px;
+$contact-email-margin-mobile: 40px;
+
+// Transitions et effets
+$social-hover-lift: -4px;            // Distance de levée au survol des liens sociaux
+$transition-hover: 0.3s ease;
+
+// ========================================
+// Container principal de la section
+// ========================================
+
+/**
+ * Container principal de la section contact
+ * Utilise position relative pour permettre le positionnement absolu des couches
+ * overflow: hidden pour que l'image de fond ne déborde pas
+ */
 .contact {
   position: relative;
   overflow: hidden;
 }
 
-// Background layer with parallax
+// ========================================
+// Couche de fond avec effet parallax
+// ========================================
+
+/**
+ * Fond de la section avec image paint.png retournée
+ *
+ * Positionnement :
+ * - Position absolue pour permettre le parallax indépendant du contenu
+ * - Commence à -40vh pour couvrir la zone au-dessus (navbar)
+ * - Hauteur de 140vh pour avoir suffisamment d'espace lors du scroll
+ *
+ * Effet parallax :
+ * - La transformation CSS est appliquée dynamiquement via TypeScript
+ * - L'image défile à 30% de la vitesse de scroll (voir contact.component.ts)
+ * - scaleY(-1) retourne l'image verticalement pour un effet artistique
+ *
+ * Performance :
+ * - will-change: transform active l'accélération GPU
+ * - Améliore la fluidité de l'animation parallax
+ */
 .contact-background {
   position: absolute;
-  top: -40vh; // Start higher to cover navbar
+  top: $contact-background-top;
   left: 0;
   width: 100%;
-  height: 140vh; // Extra height for parallax scroll
+  height: $contact-background-height;
 
   background-image: url('/paint.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  z-index: 0;
-  will-change: transform; // GPU acceleration
+  z-index: $z-index-base;
+  will-change: transform; // Accélération GPU pour animation fluide
 }
 
-// Content layer with parallax
+// ========================================
+// Couche de contenu avec effet parallax
+// ========================================
+
+/**
+ * Container du contenu principal (titre, email, liens sociaux)
+ *
+ * Effet parallax :
+ * - Position relative avec z-index pour rester au-dessus du fond
+ * - La transformation translateY est appliquée dynamiquement
+ * - Défile à 15% de la vitesse de scroll (plus lent que le fond)
+ * - Crée un effet de profondeur en se déplaçant différemment du fond
+ *
+ * Responsive :
+ * - Padding réduit sur mobile pour optimiser l'espace
+ */
 .contact-content {
   position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
+  z-index: $z-index-base;
+  @include flex-column;
   justify-content: flex-start;
   align-items: center;
-  padding: 120px 80px 60px;
+  padding: $contact-padding-desktop;
   will-change: transform;
 
-  @media (max-width: 768px) {
-    padding: 80px 20px 40px;
+  @media (max-width: $breakpoint-md) {
+    padding: $contact-padding-mobile;
   }
 }
 
-// Contact info styling
+// ========================================
+// Informations de contact
+// ========================================
+
+/**
+ * Container des informations de contact (titre + email + réseaux)
+ * Centré avec largeur maximale pour une lecture confortable
+ */
 .contact-info {
   text-align: center;
-  color: #F5EEE6; // Light text on dark paint
+  color: $color-contact-text;
   max-width: 800px;
 }
 
+/**
+ * Titre principal "Contact"
+ * Utilise la police Manufacturing Consent pour cohérence avec le design
+ * Taille responsive avec clamp pour s'adapter à tous les écrans
+ */
 .contact-title {
   font-family: 'Manufacturing Consent', sans-serif;
   font-size: clamp(60px, 10vw, 120px);
-  font-weight: 400;
+  font-weight: $font-weight-regular;
   letter-spacing: 0.02em;
-  margin: 0 0 40px;
-  color: #F5EEE6;
+  margin: $contact-title-margin;
+  color: $color-contact-text;
 
-  @media (max-width: 768px) {
+  @media (max-width: $breakpoint-md) {
     font-size: 48px;
-    margin-bottom: 30px;
+    margin: $contact-title-margin-mobile;
   }
 }
 
+/**
+ * Adresse email de contact
+ * Taille de police importante pour la visibilité
+ * Responsive avec clamp pour s'adapter aux petits écrans
+ */
 .contact-email {
   font-family: 'Neue Montreal', sans-serif;
   font-size: clamp(24px, 4vw, 48px);
-  font-weight: 400;
-  color: #F5EEE6;
-  margin-bottom: 60px;
+  font-weight: $font-weight-regular;
+  color: $color-contact-text;
+  margin-bottom: $contact-email-margin;
 
-  @media (max-width: 768px) {
+  @media (max-width: $breakpoint-md) {
     font-size: 20px;
-    margin-bottom: 40px;
+    margin-bottom: $contact-email-margin-mobile;
   }
 }
 
-// Social links
+// ========================================
+// Liens vers les réseaux sociaux
+// ========================================
+
+/**
+ * Container des liens sociaux (GitHub, LinkedIn)
+ * Layout flex horizontal avec espacement entre les éléments
+ */
 .contact-social {
   display: flex;
   gap: 40px;
   justify-content: center;
   margin-top: 20px;
 
-  @media (max-width: 768px) {
+  @media (max-width: $breakpoint-md) {
     gap: 30px;
   }
 }
 
+/**
+ * Lien individuel vers un réseau social
+ *
+ * Structure :
+ * - Flex column pour aligner icône et texte verticalement
+ * - Gap de 12px entre l'icône et le nom
+ *
+ * Effet de survol :
+ * - Légère transparence (opacity: 0.7)
+ * - Levée de 4px vers le haut (translateY)
+ * - Transition fluide de 0.3s
+ */
 .social-link {
-  display: flex;
-  flex-direction: column;
+  @include flex-column;
   align-items: center;
   gap: 12px;
-  color: #F5EEE6;
+  color: $color-contact-text;
   text-decoration: none;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity $transition-hover,
+    transform $transition-hover;
 
   &:hover {
     opacity: 0.7;
-    transform: translateY(-4px);
+    transform: translateY($social-hover-lift);
   }
 }
 
+/**
+ * Nom du réseau social affiché sous l'icône
+ * Utilise une taille de police petite pour rester discret
+ */
 .social-name {
   font-family: 'Neue Montreal', sans-serif;
-  font-size: 14px;
-  font-weight: 400;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-regular;
 }
 
-// Footer
+// ========================================
+// Footer de la page
+// ========================================
+
+/**
+ * Footer du portfolio
+ *
+ * Structure :
+ * - Position relative avec z-index pour rester au-dessus du fond parallax
+ * - Marge supérieure importante pour créer de l'espace
+ *
+ * Effet "liquid glass" (verre liquide) :
+ * - Bordure supérieure semi-transparente
+ * - Ombre portée subtile vers le haut
+ * - Filtre backdrop-filter avec SVG personnalisé pour effet de flou/distorsion
+ * - Crée un effet de "verre déformé" caractéristique du design
+ *
+ * Responsive :
+ * - Marge et padding réduits sur mobile
+ */
 .contact-footer {
   position: relative;
-  z-index: 1;
-  margin-top: 220px;
-  padding: 25px 80px;
+  z-index: $z-index-base;
+  margin-top: $footer-margin-top;
+  padding: $footer-padding;
   text-align: center;
-  color: rgba(245, 238, 230, 0.8);
+  color: rgba($color-contact-text, 0.8);
   font-family: 'Neue Montreal', sans-serif;
 
-  // Liquid glass effect (same as navbar)
+  // Effet "liquid glass" (même style que la navbar)
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.1);
   -webkit-backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter-footer");
   backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter-footer");
 
-  @media (max-width: 768px) {
-    margin-top: 60px;
-    padding: 20px 20px;
+  @media (max-width: $breakpoint-md) {
+    margin-top: $footer-margin-top-mobile;
+    padding: $footer-padding-mobile;
   }
 }
 
-// Conteneur 2 colonnes
+// ========================================
+// Contenu du footer (navigation + stack)
+// ========================================
+
+/**
+ * Container principal du contenu du footer
+ *
+ * Layout :
+ * - Flex horizontal avec space-between (navigation à gauche, stack à droite)
+ * - Marge inférieure avant le copyright
+ *
+ * Responsive :
+ * - Passe en colonne sur mobile
+ * - Gap de 20px entre les éléments
+ * - Centrage des éléments
+ */
 .footer-content {
-  display: flex;
-  justify-content: space-between;
+  @include flex-between;
   align-items: flex-start;
   margin-bottom: 20px;
 
-  @media (max-width: 768px) {
+  @media (max-width: $breakpoint-md) {
     flex-direction: column;
     gap: 20px;
     align-items: center;
   }
 }
 
-// Navigation (gauche)
+// ========================================
+// Navigation du footer
+// ========================================
+
+/**
+ * Navigation du footer (liens vers les sections)
+ *
+ * Layout :
+ * - Flex horizontal avec gap de 30px
+ * - Aligné à gauche sur desktop
+ *
+ * Liens :
+ * - Couleur cohérente avec le thème contact
+ * - Transition d'opacité au survol pour feedback visuel
+ *
+ * Responsive :
+ * - Flex-wrap pour passer à la ligne si nécessaire
+ * - Centré sur mobile
+ */
 .footer-nav {
   display: flex;
   gap: 30px;
   text-align: left;
 
   a {
-    color: #F5EEE6;
+    color: $color-contact-text;
     text-decoration: none;
-    font-size: 14px;
-    transition: opacity 0.3s ease;
+    font-size: $font-size-sm;
+    transition: opacity $transition-hover;
 
     &:hover {
       opacity: 0.7;
     }
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: $breakpoint-md) {
     gap: 20px;
     flex-wrap: wrap;
     justify-content: center;
   }
 }
 
-// Stack technique (droite)
+// ========================================
+// Stack technique du footer
+// ========================================
+
+/**
+ * Section de la stack technique (technologies utilisées)
+ *
+ * Structure :
+ * - Flex column aligné à droite sur desktop
+ * - Label "Built with" en haut
+ * - Icônes des technologies en dessous
+ *
+ * Responsive :
+ * - Centré sur mobile
+ */
 .footer-stack {
-  display: flex;
-  flex-direction: column;
+  @include flex-column;
   align-items: flex-end;
   gap: 10px;
 
-  @media (max-width: 768px) {
+  @media (max-width: $breakpoint-md) {
     align-items: center;
   }
 }
 
+/**
+ * Label "Built with" au-dessus des icônes
+ * Style subtil avec opacité réduite et lettres espacées
+ */
 .stack-label {
-  font-size: 12px;
-  color: rgba(245, 238, 230, 0.6);
+  font-size: $font-size-xs;
+  color: rgba($color-contact-text, 0.6);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
+/**
+ * Container des icônes de technologies
+ * Flex horizontal avec espacement entre les icônes
+ */
 .stack-icons {
   display: flex;
   gap: 20px;
   align-items: center;
 }
 
+/**
+ * Item individuel de la stack (icône + nom)
+ * Flex column pour aligner verticalement l'icône et le nom
+ */
 .stack-item {
-  display: flex;
-  flex-direction: column;
+  @include flex-column;
   align-items: center;
   gap: 6px;
 
   i {
     font-size: 24px;
-    color: #F5EEE6;
+    color: $color-contact-text;
   }
 }
 
+/**
+ * Nom de la technologie sous l'icône
+ * Petite taille et opacité réduite pour rester discret
+ */
 .stack-name {
   font-size: 11px;
-  color: rgba(245, 238, 230, 0.7);
+  color: rgba($color-contact-text, 0.7);
 }
 
-// Copyright (bas, centré)
+// ========================================
+// Copyright
+// ========================================
+
+/**
+ * Ligne de copyright en bas du footer
+ *
+ * Style :
+ * - Séparée visuellement par une bordure supérieure
+ * - Opacité réduite pour rester discret
+ * - Petit padding supérieur pour l'espacement
+ */
 .footer-copyright {
-  font-size: 14px;
-  color: rgba(245, 238, 230, 0.6);
+  font-size: $font-size-sm;
+  color: rgba($color-contact-text, 0.6);
   margin: 0;
   padding-top: 5px;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
