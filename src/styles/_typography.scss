@@ -10,7 +10,7 @@
 // Tusker Grotesk (local assets) — include available TTFs and fallbacks
 @font-face {
   font-family: 'Tusker Grotesk';
-  src: url('~assets/fonts/Tusker Grotesk 2600 Semibold-normal-400-100.ttf') format('truetype');
+  src: url('../assets/fonts/Tusker Grotesk 2600 Semibold-normal-400-100.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -18,7 +18,7 @@
 
 @font-face {
   font-family: 'Tusker Grotesk';
-  src: url('~assets/fonts/Tusker Grotesk 2600 Semibold-normal-500-100.ttf') format('truetype');
+  src: url('../assets/fonts/Tusker Grotesk 2600 Semibold-normal-500-100.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -26,7 +26,7 @@
 
 @font-face {
   font-family: 'Tusker Grotesk';
-  src: url('~assets/fonts/TuskerGrotesk.woff2') format('woff2'),
+  src: url('../assets/fonts/TuskerGrotesk.woff2') format('woff2'),
        url('assets/fonts/TuskerGrotesk.woff') format('woff');
   font-weight: 100 900;
   font-style: normal;
