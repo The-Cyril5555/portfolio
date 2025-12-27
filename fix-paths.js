@@ -20,6 +20,12 @@ function fixPaths(filePath) {
     modified = true;
   }
 
+  // Replace /star.png with /PortFolio/star.png
+  if (content.includes('/star.png')) {
+    content = content.replace(/\/star\.png/g, `${baseHref}/star.png`);
+    modified = true;
+  }
+
   if (modified) {
     fs.writeFileSync(filePath, content, 'utf8');
     console.log(`✓ Fixed paths in: ${path.basename(filePath)}`);
