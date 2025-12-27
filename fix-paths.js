@@ -32,6 +32,28 @@ function fixPaths(filePath) {
   }
 }
 
+// Fix index.html favicon and logo paths
+const indexPath = path.join(distDir, 'index.html');
+if (fs.existsSync(indexPath)) {
+  let indexContent = fs.readFileSync(indexPath, 'utf8');
+  let indexModified = false;
+
+  // Fix favicon.svg, favicon.ico, and logo.png paths
+  if (indexContent.includes('href="favicon.svg"') || indexContent.includes('href="favicon.ico"')) {
+    indexContent = indexContent.replace(/href="favicon\.(svg|ico)"/g, `href="${baseHref}/favicon.$1"`);
+    indexModified = true;
+  }
+  if (indexContent.includes('href="logo.png"')) {
+    indexContent = indexContent.replace(/href="logo\.png"/g, `href="${baseHref}/logo.png"`);
+    indexModified = true;
+  }
+
+  if (indexModified) {
+    fs.writeFileSync(indexPath, indexContent, 'utf8');
+    console.log('✓ Fixed paths in: index.html');
+  }
+}
+
 // Find all CSS and JS files
 const files = fs.readdirSync(distDir);
 for (const file of files) {
