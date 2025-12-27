@@ -57,22 +57,10 @@
     margin-bottom: 0;
   }
 
-  // Scroll-triggered animation
-  &.animate-in {
-    animation: timelineSlideIn 0.5s ease-out forwards;
-  }
-
   @media (max-width: 768px) {
     grid-template-columns: 24px 1fr;
     gap: 16px;
     margin-bottom: 50px;
-  }
-}
-
-// Staggered animation delays
-@for $i from 0 through 10 {
-  .timeline-item[data-index="#{$i}"].animate-in {
-    animation-delay: #{$i * 0.08}s;
   }
 }
 
@@ -148,29 +136,5 @@
 
   @media (max-width: 768px) {
     font-size: 1rem; // 16px
-  }
-}
-
-// ANIMATIONS
-// ==========
-
-@keyframes timelineSlideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-// ACCESSIBILITY
-// =============
-
-@media (prefers-reduced-motion: reduce) {
-  .timeline-item.animate-in {
-    animation: none;
-    opacity: 1;
   }
 }

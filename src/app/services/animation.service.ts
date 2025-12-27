@@ -56,15 +56,16 @@ export class AnimationService {
    */
   private projectCardsAnimation(): void {
     const trigger = ScrollTrigger.create({
-      trigger: '.projects-grid',
+      trigger: '.carousel-track',
       start: 'top 80%',
       onEnter: () => {
-        gsap.from('.project-card', {
-          y: 50,
-          opacity: 0,
+        gsap.to('.project-card', {
+          y: 0,
+          opacity: 1,
           duration: 0.6,
           stagger: 0.15,
-          ease: 'power3.out'
+          ease: 'power3.out',
+          clearProps: 'transform'  // Clear only transform, keep opacity for visibility
         });
       },
       once: true

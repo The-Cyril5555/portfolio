@@ -49,13 +49,14 @@ import { BadgeComponent } from '../../shared/badge.component';
     .skills-grid {
       display: grid;
       gap: $spacing-xl;
+      grid-template-columns: repeat(2, 1fr);
 
       @include respond-to('md') {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
       }
 
       @include respond-to('lg') {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
       }
     }
 

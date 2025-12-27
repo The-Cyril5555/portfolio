@@ -48,6 +48,7 @@
 
   // CORRECTION: Utiliser 1fr au lieu de auto pour forcer la même hauteur
   grid-auto-rows: 1fr;
+  align-items: stretch;
 
   @media (max-width: 1200px) {
     grid-template-columns: repeat(2, 1fr);
@@ -62,13 +63,15 @@
 
 .project-card {
   position: relative;
+  opacity: 0;  // Hide cards initially to prevent FOUC
+  transform: translateY(50px);  // Initial position for GSAP animation
 
   // Flexbox pour le contenu interne
   display: flex;
   flex-direction: column;
 
   // CRITIQUE: La card doit remplir la cellule du grid
-  min-height: 550px;
+  height: 100%;
 
   // Border radius
   border-radius: 16px;
@@ -260,7 +263,7 @@
   }
 
   @media (max-width: 768px) {
-    min-height: 500px;
+    height: 100%;
 
     .project-content {
       padding: 30px;

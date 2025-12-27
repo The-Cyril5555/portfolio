@@ -38,11 +38,16 @@
 // COLONNES
 // ========
 
-.about-intro,
-.about-timeline-column {
+.about-intro {
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+.about-timeline-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
 // HEADINGS (Titres des colonnes)
@@ -91,7 +96,7 @@
 // ================
 
 .timeline-wrapper {
-  margin-top: 8px;
+  margin-top: 0;
 
   // Override timeline component CSS variables for light theme
   --color-primary: #0A1119;

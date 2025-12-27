@@ -24,12 +24,12 @@ main {
 #work {
   position: relative;
   background: #F4E9E0;  // Fond beige uni
-  padding: 0 0 150px 0;
+  padding: 0;
   min-height: 60vh;
   z-index: 2;
 
   @media (max-width: 768px) {
-    padding: 0 0 80px 0;
+    padding: 0;
     min-height: 40vh;
   }
 }
@@ -38,11 +38,11 @@ main {
 #about {
   position: relative;
   background-color: #F4E9E0;
-  padding: 20px 0 100px 0;
+  padding: 0 0 100px 0;
   z-index: 2;
 
   @media (max-width: 768px) {
-    padding: 10px 0 60px 0;
+    padding: 0 0 60px 0;
   }
 }
 
