@@ -1,88 +1,154 @@
 // Skills Component
 // =================
 
-import { Component, signal } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SKILL_GROUPS } from '../../../data/skills.data';
-import { SkillGroup } from '../../../models/skill.model';
-import { BadgeComponent } from '../../shared/badge.component';
+import { Technology } from '../../../models/technology.model';
+import { TECHNOLOGIES } from '../../../data/technologies.data';
 
 @Component({
   selector: 'app-skills',
   standalone: true,
-  imports: [CommonModule, BadgeComponent],
+  imports: [CommonModule],
   template: `
-    <div class="skills-section">
-      <h3 class="text-center mb-2xl">Compétences & Expertises</h3>
-
-      <div class="skills-grid">
-        @for (group of skillGroups(); track group.category) {
-          <div class="skill-group glass-card">
-            <h4>{{ group.title }}</h4>
-            <div class="skill-list">
-              @for (skill of group.skills; track skill.id) {
-                <app-badge
-                  [icon]="skill.icon"
-                  size="md"
-                  class="skill-badge"
-                >
-                  {{ skill.name }}
-                </app-badge>
-              }
+    <div class="competence-section">
+      <h2 class="competence-title">{{ title }}</h2>
+      <div class="grid-container">
+        <div class="tech-grid">
+          @for (tech of technologies; track tech.id) {
+            <div class="tech-item">
+              <i [class]="tech.iconClass"></i>
+              <span class="tech-label">{{ tech.name }}</span>
             </div>
-          </div>
-        }
+          }
+        </div>
       </div>
     </div>
   `,
   styles: [`
-    @use '../../../../styles/variables' as *;
-    @use '../../../../styles/mixins' as *;
-
-    .skills-section {
-      h3 {
-        font-size: $font-size-3xl;
-        margin-bottom: $spacing-2xl;
-      }
+    // Competence Section
+    .competence-section {
+      margin-top: 5rem;
+      margin-bottom: 0;
     }
 
-    .skills-grid {
-      display: grid;
-      gap: $spacing-xl;
-      grid-template-columns: repeat(2, 1fr);
-
-      @include respond-to('md') {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      @include respond-to('lg') {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    .skill-group {
-      h4 {
-        font-size: $font-size-lg;
-        margin-bottom: $spacing-md;
-        color: var(--accent-primary);
-      }
-
-      .skill-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: $spacing-sm;
-      }
-    }
-
-    .mb-2xl {
-      margin-bottom: $spacing-2xl;
-    }
-
-    .text-center {
+    .competence-title {
+      font-family: 'Manufacturing Consent', sans-serif;
+      font-size: clamp(60px, 10vw, 120px);
       text-align: center;
+      margin: 0 0 3rem;
+      letter-spacing: 0.02em;
+      color: black;
+    }
+
+    // Conteneur avec max-width
+    .grid-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 40px;
+
+      @media (max-width: 1480px) {
+        padding: 0 40px;
+      }
+      @media (max-width: 768px) {
+        padding: 0 20px;
+      }
+    }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      background: #F4E9E0;
+
+      @media (max-width: 1200px) { grid-template-columns: repeat(5, 1fr); }
+      @media (max-width: 768px) { grid-template-columns: repeat(3, 1fr); }
+      @media (max-width: 480px) { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .tech-item {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      border-right: 3px solid black;
+      border-bottom: 3px solid black;
+      transition: all 0.3s ease;
+      position: relative;
+
+      &:hover {
+        .tech-label {
+          opacity: 1;
+        }
+      }
+
+      &:nth-child(7n) { border-right: none; }
+      @media (max-width: 1200px) {
+        &:nth-child(7n) { border-right: 3px solid black; }
+        &:nth-child(5n) { border-right: none; }
+      }
+      @media (max-width: 768px) {
+        &:nth-child(5n) { border-right: 3px solid black; }
+        &:nth-child(3n) { border-right: none; }
+      }
+      @media (max-width: 480px) {
+        &:nth-child(3n) { border-right: 3px solid black; }
+        &:nth-child(2n) { border-right: none; }
+      }
+
+      &:nth-last-child(-n+7) { border-bottom: none; }
+      @media (max-width: 1200px) { &:nth-last-child(-n+5) { border-bottom: none; } }
+      @media (max-width: 768px) { &:nth-last-child(-n+3) { border-bottom: none; } }
+      @media (max-width: 480px) { &:nth-last-child(-n+2) { border-bottom: none; } }
+
+      @media (max-width: 768px) { padding: 1.5rem; }
+      @media (max-width: 480px) { padding: 1rem; }
+    }
+
+    i {
+      font-size: 80px;
+      flex-shrink: 0;
+
+      @media (max-width: 768px) { font-size: 60px; }
+      @media (max-width: 480px) { font-size: 40px; }
+    }
+
+    .tech-label {
+      font-family: 'Migra', serif;
+      font-size: 12px;
+      font-weight: 400;
+      color: black;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+
+      position: absolute;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 4rem);
+      max-width: calc(100% - 4rem);
+
+      @media (max-width: 768px) {
+        font-size: 11px;
+        bottom: 0.75rem;
+        width: calc(100% - 3rem);
+        max-width: calc(100% - 3rem);
+      }
+      @media (max-width: 480px) {
+        font-size: 10px;
+        bottom: 0.5rem;
+        width: calc(100% - 2rem);
+        max-width: calc(100% - 2rem);
+      }
     }
   `]
 })
 export class SkillsComponent {
-  skillGroups = signal<SkillGroup[]>(SKILL_GROUPS);
+  @Input() technologies: Technology[] = TECHNOLOGIES;
+  @Input() title: string = 'Compétence';
 }

@@ -34,46 +34,33 @@ main {
   }
 }
 
+// Section #skills - Fond beige (same as #work)
+#skills {
+  position: relative;
+  background: #F4E9E0;
+  padding: 80px 0;
+  z-index: 2;
+
+  @media (max-width: 768px) {
+    padding: 60px 0;
+  }
+}
+
 // Section #about - Fond beige (same as #work)
+// z-index: 3 pour passer AU-DESSUS de Contact
 #about {
   position: relative;
   background-color: #F4E9E0;
   padding: 0 0 100px 0;
-  z-index: 2;
+  z-index: 3;
 
   @media (max-width: 768px) {
     padding: 0 0 60px 0;
   }
 }
 
-// Section #contact - Fond paint.png inversé
+// Section #contact - Passe SOUS About avec parallax
 #contact {
   position: relative;
-  background-color: #0A1119;
-  padding: 100px 0 0;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  z-index: 2;
-
-  // Paint background inversé - extension pour couvrir le footer
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    bottom: -100vh; // S'étend largement vers le bas
-    background-image: url('/paint.png');
-    background-size: cover;
-    background-position: center bottom;
-    transform: rotate(180deg);
-    opacity: 1;
-    z-index: -1;
-    pointer-events: none;
-  }
-
-  @media (max-width: 768px) {
-    padding: 60px 0 0;
-  }
+  z-index: 1;
 }

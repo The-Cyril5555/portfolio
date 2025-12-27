@@ -1,69 +1,68 @@
-<section class="contact brutalist-section brutalist-section--dark" aria-label="Contact section">
-  <div class="section-container">
-    <div class="contact-grid">
-      <!-- Left: Title & Description -->
-      <div class="contact-content">
-        <h2 class="section-title brutalist-title">
-          <span class="title-label">04.</span>
-          CONTACTEZ-MOI
-        </h2>
-        <p class="contact-description">
-          Envie de discuter d'un projet ou d'une opportunité ?
-          N'hésitez pas à me contacter, je serais ravi d'échanger avec vous.
-        </p>
+<div class="contact">
+  <!-- Background parallax layer -->
+  <div
+    class="contact-background"
+    [style.transform]="backgroundTransform()"
+  ></div>
 
-        <!-- Contact Info -->
-        <div class="contact-info">
-          <div class="contact-item">
-            <app-icon name="mail" [size]="20" />
-            <a [href]="'mailto:' + email" class="contact-link">{{ email }}</a>
-          </div>
-        </div>
+  <!-- Content parallax layer -->
+  <div
+    class="contact-content"
+    [style.transform]="'translateY(' + contentOffset() + 'px)'"
+  >
+    <div class="contact-info">
+      <!-- Main title -->
+      <h1 class="contact-title">Contact</h1>
 
-        <!-- CTA Buttons -->
-        <div class="contact-actions">
-          <a [href]="'mailto:' + email" class="brutalist-button brutalist-button--primary">
-            <span class="button-text-wrapper">
-              <span class="button-text">ENVOYER UN EMAIL</span>
-              <span class="button-text" aria-hidden="true">ENVOYER UN EMAIL</span>
-            </span>
-          </a>
-
-          <a [href]="cvLink" target="_blank" rel="noopener noreferrer" class="brutalist-button brutalist-button--secondary">
-            <span class="button-text-wrapper">
-              <span class="button-text">VOIR MON CV</span>
-              <span class="button-text" aria-hidden="true">VOIR MON CV</span>
-            </span>
-          </a>
-        </div>
-
-        <!-- Social Links -->
-        <div class="contact-socials">
-          <p class="socials-label">Retrouvez-moi sur</p>
-          <div class="socials-list">
-            @for (social of socials; track social.name) {
-              <a
-                [href]="social.url"
-                [attr.aria-label]="social.name"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="social-link"
-              >
-                <app-icon [name]="social.icon" [size]="24" />
-                <span>{{ social.name }}</span>
-              </a>
-            }
-          </div>
-        </div>
+      <!-- Email -->
+      <div class="contact-email">
+        cyril.bizouarn@gmail.com
       </div>
 
-      <!-- Right: Decorative Element -->
-      <div class="contact-visual">
-        <div class="visual-box">
-          <div class="box-decoration"></div>
-          <span class="visual-text">LET'S<br>WORK<br>TOGETHER</span>
-        </div>
+      <!-- Social links -->
+      <div class="contact-social">
+        @for (link of socialLinks; track link.name) {
+          <a
+            [href]="link.url"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-link"
+          >
+            <app-icon [name]="link.icon" [size]="32" color="#F5EEE6"></app-icon>
+            <span class="social-name">{{ link.name }}</span>
+          </a>
+        }
       </div>
     </div>
   </div>
-</section>
+
+  <!-- Footer -->
+  <footer class="contact-footer">
+    <div class="footer-content">
+      <!-- Navigation à gauche -->
+      <nav class="footer-nav">
+        <a href="#home">Accueil</a>
+        <a href="#work">Projets</a>
+        <a href="#skills">Compétences</a>
+        <a href="#about">À Propos</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <!-- Stack technique à droite -->
+      <div class="footer-stack">
+        <span class="stack-label">Built with</span>
+        <div class="stack-icons">
+          @for (tech of techStack; track tech.name) {
+            <div class="stack-item">
+              <i [class]="tech.icon"></i>
+              <span class="stack-name">{{ tech.name }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Copyright en bas -->
+    <p class="footer-copyright">&copy; {{ currentYear }} Cyril Bizouarn</p>
+  </footer>
+</div>

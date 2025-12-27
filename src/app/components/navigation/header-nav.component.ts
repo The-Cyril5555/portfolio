@@ -23,6 +23,7 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
   navLinks = [
     { id: 'home', label: 'Accueil' },
     { id: 'work', label: 'Projets' },
+    { id: 'skills', label: 'Compétences' },
     { id: 'about', label: 'À Propos' },
     { id: 'contact', label: 'Contact' }
   ];
