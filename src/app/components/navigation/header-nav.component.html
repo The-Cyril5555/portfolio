@@ -27,7 +27,21 @@
       <span class="logo-subtitle">UX/UI DESIGNER, DEVELOPER</span>
     </div>
 
-    <!-- Navigation générée dynamiquement -->
+    <!-- Hamburger button (mobile only) -->
+    <button
+      class="hamburger-button"
+      [class.active]="mobileMenuOpen"
+      (click)="toggleMobileMenu()"
+      aria-label="Toggle navigation menu"
+      [attr.aria-expanded]="mobileMenuOpen"
+      aria-controls="mobile-nav-menu"
+    >
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+
+    <!-- Navigation générée dynamiquement (Desktop) -->
     <!-- Les liens proviennent de navigation.data.ts (source unique partagée avec le footer) -->
     <ul class="nav-links">
       @for (link of navLinks; track link.id) {
@@ -44,3 +58,24 @@
     </ul>
   </nav>
 </header>
+
+<!-- Menu mobile séparé (en dehors de la navbar) -->
+<nav
+  class="mobile-nav-menu"
+  [class.mobile-menu-open]="mobileMenuOpen"
+  id="mobile-nav-menu"
+>
+  <ul class="mobile-nav-links">
+    @for (link of navLinks; track link.id) {
+      <li>
+        <a
+          [href]="link.href"
+          (click)="closeMenu(); onNavClick($event, link.id)"
+          [attr.aria-label]="'Aller à la section ' + link.label"
+        >
+          {{ link.label }}
+        </a>
+      </li>
+    }
+  </ul>
+</nav>

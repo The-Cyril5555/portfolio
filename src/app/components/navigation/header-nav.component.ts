@@ -2,7 +2,7 @@
 // ============================
 // Barre de navigation principale du portfolio avec effet liquid glass au scroll
 
-import { Component, Input, inject, signal, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, inject, signal, OnInit, OnDestroy, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScrollService } from '../../services/scroll.service';
 import { NAV_LINKS } from '../../data/navigation.data';
@@ -31,6 +31,7 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
   @Input() activeSection = '';
 
   private scrollService = inject(ScrollService);
+  private renderer = inject(Renderer2);
 
   // ========================================
   // Propriétés d'état
@@ -82,6 +83,8 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     // Remove scroll listener
     window.removeEventListener('scroll', this.handleScroll);
+    // Ensure body scroll is restored on component destroy
+    this.renderer.removeClass(document.body, 'mobile-menu-active');
   }
 
   // ========================================
@@ -112,6 +115,8 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
     event.preventDefault();
     this.scrollService.scrollToSection(sectionId);
     this.mobileMenuOpen = false;
+    // Remove body scroll lock when navigating
+    this.renderer.removeClass(document.body, 'mobile-menu-active');
   }
 
   /**
@@ -119,5 +124,21 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
    */
   toggleMobileMenu(): void {
     this.mobileMenuOpen = !this.mobileMenuOpen;
+
+    // Prevent body scroll when mobile menu is open
+    // This improves UX by preventing background scroll
+    if (this.mobileMenuOpen) {
+      this.renderer.addClass(document.body, 'mobile-menu-active');
+    } else {
+      this.renderer.removeClass(document.body, 'mobile-menu-active');
+    }
+  }
+
+  /**
+   * Ferme le menu mobile
+   */
+  closeMenu(): void {
+    this.mobileMenuOpen = false;
+    this.renderer.removeClass(document.body, 'mobile-menu-active');
   }
 }

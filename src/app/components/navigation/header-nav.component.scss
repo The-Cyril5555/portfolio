@@ -8,6 +8,14 @@ $underline-height: 2px;           // Épaisseur de la ligne de soulignement
 $underline-offset: -2px;          // Distance sous le texte
 $underline-transition: 0.3s ease; // Durée et courbe de l'animation
 
+// ========================================
+// Variables pour le menu mobile
+// ========================================
+$hamburger-size: 24px;
+$hamburger-line-height: 2px;
+$hamburger-gap: 5px;
+$mobile-menu-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
 .brutalist-nav {
   position: fixed;
   top: 0;
@@ -24,16 +32,33 @@ $underline-transition: 0.3s ease; // Durée et courbe de l'animation
 
   // Sur scroll, ajouter l'effet de verre et changer la couleur du texte
   &.scrolled {
-
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    -webkit-backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter");
-    backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter");
+
+    // Liquid glass SEULEMENT sur desktop (>768px)
+    // Sur mobile, évite conflit avec backdrop-filter du menu mobile
+    @media (min-width: 769px) {
+      -webkit-backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter-footer");
+      backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter-footer");
+    }
+
+    // Liquid glass aussi sur mobile (≤768px)
+    @media (max-width: 768px) {
+      -webkit-backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter-footer");
+      backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter-footer");
+    }
 
     .logo-name,
     .logo-subtitle,
     .nav-links a {
       color: #E40037;
+    }
+
+    // Hamburger color change on scroll
+    @media (max-width: 768px) {
+      .hamburger-button .hamburger-line {
+        background-color: #E40037;
+      }
     }
   }
 
@@ -43,6 +68,11 @@ $underline-transition: 0.3s ease; // Durée et courbe de l'animation
     align-items: center;
     max-width: 1400px;
     margin: 0 auto;
+
+    // Relative positioning for mobile menu dropdown
+    @media (max-width: 768px) {
+      position: relative;
+    }
   }
 
   .logo-container {
@@ -54,6 +84,7 @@ $underline-transition: 0.3s ease; // Durée et courbe de l'animation
       flex-direction: column;
       align-items: flex-start;
       gap: 5px;
+      flex: 1; // Allow logo to take available space
     }
   }
 
@@ -89,15 +120,93 @@ $underline-transition: 0.3s ease; // Durée et courbe de l'animation
     }
   }
 
+  // ========================================
+  // Hamburger Button (Mobile Only)
+  // ========================================
+  .hamburger-button {
+    display: none; // Hidden on desktop
+    position: relative;
+    width: 44px; // Touch target minimum 44px
+    height: 44px; // Touch target minimum 44px
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 103; // Au-dessus du menu mobile (102)
+
+    // Center the hamburger icon (flex properties applied via media query)
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: $hamburger-gap;
+
+    @media (max-width: 768px) {
+      display: flex; // Show on mobile
+    }
+
+    // Accessibility: focus state
+    &:focus-visible {
+      outline: 2px solid #F5EEE6;
+      outline-offset: 2px;
+    }
+
+    .hamburger-line {
+      width: $hamburger-size;
+      height: $hamburger-line-height;
+      background-color: #F5EEE6;
+      transition: all $mobile-menu-transition;
+      transform-origin: center;
+      border-radius: 2px;
+
+      // First line (top)
+      &:nth-child(1) {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      // Second line (middle)
+      &:nth-child(2) {
+        opacity: 1;
+        transform: scaleX(1);
+      }
+
+      // Third line (bottom)
+      &:nth-child(3) {
+        transform: translateY(0) rotate(0deg);
+      }
+    }
+
+    // Active state (X animation)
+    &.active {
+      .hamburger-line {
+        &:nth-child(1) {
+          transform: translateY(calc($hamburger-gap + $hamburger-line-height)) rotate(45deg);
+        }
+
+        &:nth-child(2) {
+          opacity: 0;
+          transform: scaleX(0);
+        }
+
+        &:nth-child(3) {
+          transform: translateY(calc(-1 * ($hamburger-gap + $hamburger-line-height))) rotate(-45deg);
+        }
+      }
+    }
+  }
+
+  // ========================================
+  // Navigation Links (Desktop only)
+  // ========================================
   .nav-links {
-    display: flex;
-    gap: 40px;
+    display: none; // Caché sur mobile (le menu mobile est maintenant séparé)
     list-style: none;
     margin: 0;
     padding: 0;
 
-    @media (max-width: 768px) {
-      gap: 20px;
+    // DESKTOP: Navigation horizontale
+    @media (min-width: 769px) {
+      display: flex;
+      gap: 40px;
     }
 
     a {
@@ -158,5 +267,89 @@ $underline-transition: 0.3s ease; // Durée et courbe de l'animation
         font-size: 14px;
       }
     }
+  }
+}
+
+// ========================================
+// Menu Mobile Séparé (hors de la navbar)
+// ========================================
+.mobile-nav-menu {
+  display: none; // Caché par défaut
+
+  @media (max-width: 768px) {
+    // Caché par défaut sur mobile aussi
+    display: none;
+
+    // Quand ouvert
+    &.mobile-menu-open {
+      display: flex;
+
+      // Positionnement full-screen
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 102; // Au-dessus de la navbar (100)
+      isolation: isolate; // Crée un stacking context isolé
+
+      // Glassmorphisme liquid glass (copié du footer qui MARCHE)
+      border-left: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: -8px 0 32px rgba(0, 0, 0, 0.1);
+      -webkit-backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter-footer");
+      backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter-footer");
+
+      // Layout centré
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      padding: 0;
+
+      // Animation d'entrée
+      animation: slideInMobile 0.3s ease-out;
+
+      .mobile-nav-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        align-items: center;
+
+        li {
+          width: auto;
+        }
+
+        a {
+          display: block;
+          font-size: 24px;
+          font-family: 'Migra', serif !important; // Police Migra pour menu mobile
+          text-align: center;
+          color: #E40037 !important; // Couleur rouge
+          text-decoration: none;
+          padding: 15px 40px;
+          transition: background 0.2s ease, opacity 0.2s ease;
+
+          &:hover,
+          &:active {
+            background: rgba(228, 0, 55, 0.1);
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes slideInMobile {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }

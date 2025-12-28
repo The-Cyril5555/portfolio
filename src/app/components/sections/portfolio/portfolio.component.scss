@@ -55,9 +55,16 @@
     gap: 30px;
   }
 
+  // Mobile: Keep 2 columns (CHANGED from 1 column)
   @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px; // Reduced gap for tighter mobile layout
+  }
+
+  // Very small screens: Single column
+  @media (max-width: 480px) {
     grid-template-columns: 1fr;
-    gap: 30px;
+    gap: 20px;
   }
 }
 
@@ -136,10 +143,25 @@
     flex-direction: column;
     flex: 1;
     height: 100%;
+
+    // Reduce padding on mobile for 2-column layout
+    @media (max-width: 768px) {
+      padding: 25px;
+    }
+
+    // Restore for single column
+    @media (max-width: 480px) {
+      padding: 30px;
+    }
   }
 
   .project-header {
     margin-bottom: 20px;
+
+    // Reduce margin on mobile
+    @media (max-width: 768px) {
+      margin-bottom: 15px;
+    }
   }
 
   .project-title {
@@ -149,12 +171,28 @@
     font-size: 28px;
     margin-bottom: 8px;
     line-height: 1.2;
+
+    // Smaller title for 2-column mobile layout
+    @media (max-width: 768px) {
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+
+    // Restore size for single column
+    @media (max-width: 480px) {
+      font-size: 24px;
+    }
   }
 
   .project-client {
     color: #F4E9E0;
     opacity: 0.8;
     font-size: 14px;
+
+    // Smaller client text on mobile
+    @media (max-width: 768px) {
+      font-size: 12px;
+    }
   }
 
   .project-description {
@@ -163,6 +201,17 @@
     opacity: 0.95;
     margin-bottom: 20px;
     line-height: 1.6;
+
+    // Adjust description spacing
+    @media (max-width: 768px) {
+      margin-bottom: 15px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 15px;
+    }
   }
 
   .project-services {
@@ -171,6 +220,12 @@
     gap: 8px;
     margin-bottom: 16px;
 
+    // Reduce gap on mobile
+    @media (max-width: 768px) {
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
     .service-tag {
       color: #F4E9E0;
       border: 1px solid rgba(244, 233, 224, 0.4);
@@ -178,6 +233,16 @@
       padding: 4px 12px;
       font-size: 12px;
       border-radius: 4px;
+
+      // Smaller tags on mobile
+      @media (max-width: 768px) {
+        padding: 3px 8px;
+        font-size: 10px;
+      }
+
+      @media (max-width: 480px) {
+        font-size: 11px;
+      }
     }
   }
 
@@ -186,6 +251,12 @@
     flex-wrap: wrap;
     gap: 8px;
     margin-bottom: 20px;
+
+    // Reduce gap on mobile
+    @media (max-width: 768px) {
+      gap: 6px;
+      margin-bottom: 15px;
+    }
 
     .tech-tag {
       color: #F4E9E0;
@@ -196,6 +267,16 @@
       font-size: 13px;
       font-weight: 500;
       backdrop-filter: blur(4px);
+
+      // Smaller tech tags on mobile
+      @media (max-width: 768px) {
+        padding: 4px 8px;
+        font-size: 10px;
+      }
+
+      @media (max-width: 480px) {
+        font-size: 11px;
+      }
     }
   }
 
@@ -204,6 +285,12 @@
     margin-top: auto;
     display: flex;
     gap: 10px;
+
+    // Adjust link layout on mobile
+    @media (max-width: 768px) {
+      gap: 8px;
+      flex-wrap: wrap; // Allow wrapping if needed
+    }
 
     .project-link {
       position: relative;
@@ -225,6 +312,18 @@
       max-width: 135px;
       transition: all 0.3s ease;
 
+      // Smaller buttons on mobile
+      @media (max-width: 768px) {
+        font-size: 11px;
+        max-width: 110px;
+        padding: 0px 3px;
+      }
+
+      @media (max-width: 480px) {
+        font-size: 13px;
+        max-width: 120px;
+      }
+
       &:hover {
         background: rgba(244, 233, 224, 0.15);
         backdrop-filter: blur(15px);
@@ -244,6 +343,11 @@
           display: inline-block;
           white-space: nowrap;
           padding-right: 40px;
+
+          // Reduce padding on mobile
+          @media (max-width: 768px) {
+            padding-right: 30px;
+          }
         }
       }
     }
@@ -255,10 +359,27 @@
     right: 20px;
     z-index: 3;
 
+    // Smaller badge on mobile
+    @media (max-width: 768px) {
+      top: 15px;
+      right: 15px;
+    }
+
     .badge-star {
       width: 40px;
       height: 40px;
       filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+
+      // Smaller star on mobile
+      @media (max-width: 768px) {
+        width: 30px;
+        height: 30px;
+      }
+
+      @media (max-width: 480px) {
+        width: 35px;
+        height: 35px;
+      }
     }
   }
 

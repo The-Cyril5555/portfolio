@@ -60,7 +60,7 @@ import { TECHNOLOGIES } from '../../../data/technologies.data';
       grid-template-columns: repeat(7, 1fr);
       background: #F4E9E0;
 
-      @media (max-width: 1200px) { grid-template-columns: repeat(5, 1fr); }
+      @media (max-width: 1200px) { grid-template-columns: repeat(4, 1fr); }
       @media (max-width: 768px) { grid-template-columns: repeat(3, 1fr); }
       @media (max-width: 480px) { grid-template-columns: repeat(2, 1fr); }
     }
@@ -86,10 +86,10 @@ import { TECHNOLOGIES } from '../../../data/technologies.data';
       &:nth-child(7n) { border-right: none; }
       @media (max-width: 1200px) {
         &:nth-child(7n) { border-right: 3px solid black; }
-        &:nth-child(5n) { border-right: none; }
+        &:nth-child(4n) { border-right: none; }
       }
       @media (max-width: 768px) {
-        &:nth-child(5n) { border-right: 3px solid black; }
+        &:nth-child(4n) { border-right: 3px solid black; }
         &:nth-child(3n) { border-right: none; }
       }
       @media (max-width: 480px) {
@@ -98,9 +98,18 @@ import { TECHNOLOGIES } from '../../../data/technologies.data';
       }
 
       &:nth-last-child(-n+7) { border-bottom: none; }
-      @media (max-width: 1200px) { &:nth-last-child(-n+5) { border-bottom: none; } }
-      @media (max-width: 768px) { &:nth-last-child(-n+3) { border-bottom: none; } }
-      @media (max-width: 480px) { &:nth-last-child(-n+2) { border-bottom: none; } }
+      @media (max-width: 1200px) {
+        &:nth-last-child(-n+7) { border-bottom: 3px solid black; }
+        &:nth-last-child(-n+1) { border-bottom: none; }
+      }
+      @media (max-width: 768px) {
+        &:nth-last-child(-n+1) { border-bottom: 3px solid black; }
+        &:nth-last-child(-n+3) { border-bottom: none; }
+      }
+      @media (max-width: 480px) {
+        &:nth-last-child(-n+3) { border-bottom: 3px solid black; }
+        &:nth-last-child(-n+1) { border-bottom: none; }
+      }
 
       @media (max-width: 768px) { padding: 1.5rem; }
       @media (max-width: 480px) { padding: 1rem; }

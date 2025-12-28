@@ -76,3 +76,11 @@ select {
   font-family: inherit;
   font-size: inherit;
 }
+
+// Mobile Menu Active State
+// Prevent body scroll when mobile menu is open
+.mobile-menu-active {
+  @media (max-width: 768px) {
+    overflow: hidden;
+  }
+}
