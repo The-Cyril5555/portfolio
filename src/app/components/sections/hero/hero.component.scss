@@ -40,7 +40,7 @@
 
   @media (max-width: 768px) {
     font-size: 18px;
-    margin-bottom: 5px;
+    margin-bottom: 18px;
   }
 }
 
@@ -201,7 +201,7 @@
 
     @media (max-width: 768px) {
       font-size: clamp(48px, 14vw, 100px);
-      line-height: 0.8;
+      line-height: 0.95;
     }
 
     .line-1,
