@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Page d'accueil -->
+  <url>
+    <loc>https://cyril-bizouarn.com/</loc>
+    <lastmod>2026-01-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Section Work/Portfolio -->
+  <url>
+    <loc>https://cyril-bizouarn.com/#work</loc>
+    <lastmod>2026-01-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Section Skills -->
+  <url>
+    <loc>https://cyril-bizouarn.com/#skills</loc>
+    <lastmod>2026-01-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Section About -->
+  <url>
+    <loc>https://cyril-bizouarn.com/#about</loc>
+    <lastmod>2026-01-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Section Contact -->
+  <url>
+    <loc>https://cyril-bizouarn.com/#contact</loc>
+    <lastmod>2026-01-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+</urlset>

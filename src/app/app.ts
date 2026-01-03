@@ -9,7 +9,7 @@
 // - ScrollService pour détecter la section active
 // - AnimationService pour les animations au scroll
 
-import { Component, OnInit, OnDestroy, AfterViewInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderNavComponent } from './components/navigation/header-nav.component';
 import { HeroComponent } from './components/sections/hero/hero.component';
@@ -19,6 +19,7 @@ import { AboutComponent } from './components/sections/about/about.component';
 import { ContactComponent } from './components/sections/contact/contact.component';
 import { ScrollService } from './services/scroll.service';
 import { AnimationService } from './services/animation.service';
+import { SeoService } from './services/seo.service';
 
 /**
  * Composant racine de l'application portfolio
@@ -62,18 +63,50 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
   private animationService = inject(AnimationService);
 
   /**
+   * Service de gestion SEO (meta tags, structured data)
+   * @private
+   */
+  private seoService = inject(SeoService);
+
+  /**
    * Signal réactif de la section actuellement active
    * Mis à jour automatiquement par le ScrollService via IntersectionObserver
    * @readonly
    */
   activeSection = this.scrollService.activeSection;
 
+  constructor() {
+    // Écouter les changements de section active pour mettre à jour les meta tags
+    effect(() => {
+      const section = this.activeSection();
+      if (section) {
+        const seoConfig = this.seoService.getSectionSeoConfig(section);
+        this.seoService.updateTags(seoConfig);
+      }
+    });
+  }
+
   /**
    * Initialisation du composant
    * Appelé après la construction mais avant le rendu de la vue
+   *
+   * Initialise le SEO avec la configuration de la page d'accueil
+   * et ajoute les structured data JSON-LD (Person, WebSite schemas)
    */
   ngOnInit(): void {
-    // Initialisation basique - les animations sont initialisées dans AfterViewInit
+    // Initialiser SEO pour la page d'accueil
+    const homeSeoConfig = this.seoService.getSectionSeoConfig('home');
+    this.seoService.updateTags(homeSeoConfig);
+
+    // Ajouter structured data (JSON-LD)
+    this.seoService.addStructuredData(
+      this.seoService.createPersonSchema(),
+      'person-schema'
+    );
+    this.seoService.addStructuredData(
+      this.seoService.createWebSiteSchema(),
+      'website-schema'
+    );
   }
 
   /**
