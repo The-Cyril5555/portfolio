@@ -3,8 +3,7 @@
 
 // Import Design System
 @use 'styles/fonts';
-@use 'styles/variables' as *;
-@use 'styles/mixins' as *;
+@use 'styles/responsive' as *;  // Forwards: variables + mixins + responsive mixins
 @use 'styles/themes';
 @use 'styles/typography';
 // @use 'styles/glassmorphism';  // Désactivé pour design brutalist
@@ -30,6 +29,23 @@ body {
   color: var(--text-primary);
   transition: background-color $transition-base, color $transition-base;
   overflow-x: hidden;
+}
+
+// Accessibility: Respect user's motion preferences
+// Disable/reduce animations for users with motion sensitivity
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 // Custom Scrollbar
@@ -80,7 +96,7 @@ select {
 // Mobile Menu Active State
 // Prevent body scroll when mobile menu is open
 .mobile-menu-active {
-  @media (max-width: 768px) {
+  @include mobile {
     overflow: hidden;
   }
 }

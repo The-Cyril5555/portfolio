@@ -1,144 +1,193 @@
-// Header Navigation Component
-// ============================
-// Barre de navigation principale du portfolio avec effet liquid glass au scroll
+/**
+ * Header Navigation Component - Style Article
+ * ============================================
+ *
+ * Composant de navbar simplifié avec style article (95% width, border-radius, static glass).
+ *
+ * **Responsabilités :**
+ * - Gestion du scroll detection (isScrolled > 50px)
+ * - Navigation desktop inline (pas de composant)
+ * - Hamburger button inline (pas de composant)
+ * - Body scroll lock quand menu mobile ouvert
+ *
+ * **Style :**
+ * - 95% width centrée avec border-radius 24px
+ * - Effet glass statique (blur 8px constant)
+ * - Shadow au scroll
+ *
+ * **Child Component :**
+ * - MobileMenuComponent : Menu mobile latéral (seul composant enfant)
+ *
+ * @component
+ * @standalone
+ * @author Cyril Bizouarn
+ */
 
-import { Component, Input, inject, signal, OnInit, OnDestroy, Renderer2 } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  OnInit,
+  OnDestroy,
+  Renderer2,
+  ElementRef,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScrollService } from '../../services/scroll.service';
 import { NAV_LINKS } from '../../data/navigation.data';
 import { NavLink } from '../../models/contact.model';
 
-/**
- * Composant de navigation principal (navbar)
- *
- * Affiche la barre de navigation en haut de page avec :
- * - Logo et nom
- * - Liens de navigation vers les sections
- * - Effet liquid glass au scroll
- * - Changement de couleur du texte au scroll
- *
- * @component
- * @standalone
- */
+// Import du composant mobile menu (seul composant enfant)
+import { MobileMenuComponent } from './mobile-menu/mobile-menu.component';
+
 @Component({
   selector: 'app-header-nav',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    MobileMenuComponent  // Seul composant enfant restant
+  ],
   templateUrl: './header-nav.component.html',
-  styleUrl: './header-nav.component.scss'
+  styleUrl: './header-nav.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderNavComponent implements OnInit, OnDestroy {
-  @Input() activeSection = '';
+  // ========================================
+  // Services
+  // ========================================
 
-  private scrollService = inject(ScrollService);
+  scrollService = inject(ScrollService); // Public pour le template
   private renderer = inject(Renderer2);
 
   // ========================================
-  // Propriétés d'état
+  // État
   // ========================================
 
   /**
    * Indique si l'utilisateur a scrollé (> 50px)
-   * Utilisé pour appliquer l'effet liquid glass et changer les couleurs
+   * Contrôle l'activation de l'effet liquid glass
    */
   isScrolled = signal(false);
 
   /**
    * État du menu mobile (ouvert/fermé)
+   * Converti en signal pour meilleure réactivité
    */
-  mobileMenuOpen = false;
+  mobileMenuOpen = signal(false);
 
   // ========================================
-  // Données de navigation
+  // Données
   // ========================================
 
   /**
-   * Liens de navigation affichés dans la navbar
-   *
-   * Importés depuis navigation.data.ts pour garantir la cohérence avec le footer.
-   * Toute modification des liens doit être faite dans navigation.data.ts.
-   *
-   * @readonly
-   * @see {@link navigation.data.ts}
+   * Liens de navigation
+   * Source unique partagée avec le footer
    */
   readonly navLinks: NavLink[] = NAV_LINKS;
+
+  // ========================================
+  // Propriétés privées
+  // ========================================
+
+  /**
+   * Position de scroll sauvegardée quand le menu mobile s'ouvre
+   * Nécessaire pour restaurer la position exacte après fermeture
+   */
+  private scrollPosition = 0;
 
   // ========================================
   // Lifecycle Hooks
   // ========================================
 
-  /**
-   * Initialisation du composant
-   * Ajoute l'écouteur d'événement de scroll pour gérer l'effet liquid glass
-   */
   ngOnInit(): void {
-    // Add scroll listener
-    window.addEventListener('scroll', this.handleScroll);
+    // Ajouter le scroll listener
+    window.addEventListener('scroll', this.handleScroll, { passive: true });
   }
 
-  /**
-   * Nettoyage lors de la destruction du composant
-   * Retire l'écouteur d'événement de scroll pour éviter les fuites mémoire
-   */
   ngOnDestroy(): void {
-    // Remove scroll listener
+    // Nettoyer le scroll listener
     window.removeEventListener('scroll', this.handleScroll);
-    // Ensure body scroll is restored on component destroy
+
+    // Restaurer le body si menu était ouvert
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
     this.renderer.removeClass(document.body, 'mobile-menu-active');
   }
 
   // ========================================
-  // Gestionnaires d'événements
+  // Scroll Handling
   // ========================================
 
   /**
-   * Gère le scroll de la page pour appliquer l'effet liquid glass
+   * Gère le scroll pour activer la classe 'scrolled'
    *
-   * Lorsque l'utilisateur scroll de plus de 50px :
-   * - Active l'effet liquid glass (backdrop-filter avec SVG)
-   * - Change la couleur du texte
-   *
-   * @private
+   * Met à jour isScrolled signal (> 50px) pour classes CSS
+   * L'effet glass est statique en CSS (blur 8px constant)
    */
   private handleScroll = (): void => {
-    // Update scrolled state when user scrolls more than 50px
     this.isScrolled.set(window.scrollY > 50);
   };
 
-  /**
-   * Gère le clic sur un lien de navigation
-   *
-   * @param event - Événement de clic
-   * @param sectionId - Identifiant de la section vers laquelle scroller
-   */
-  onNavClick(event: Event, sectionId: string): void {
-    event.preventDefault();
-    this.scrollService.scrollToSection(sectionId);
-    this.mobileMenuOpen = false;
-    // Remove body scroll lock when navigating
-    this.renderer.removeClass(document.body, 'mobile-menu-active');
-  }
+  // ========================================
+  // Mobile Menu Handlers
+  // ========================================
 
   /**
    * Toggle l'ouverture/fermeture du menu mobile
+   *
+   * **Body Scroll Lock Strategy :**
+   * - Fixe le body (pattern standard) pour empêcher le scroll visuel
+   * - Préserve window.scrollY pour que les scroll events continuent
+   * - Sauvegarde/restaure la position de scroll
+   * - Permet au parallax de continuer à fonctionner
    */
   toggleMobileMenu(): void {
-    this.mobileMenuOpen = !this.mobileMenuOpen;
+    const newState = !this.mobileMenuOpen();
+    this.mobileMenuOpen.set(newState);
 
-    // Prevent body scroll when mobile menu is open
-    // This improves UX by preventing background scroll
-    if (this.mobileMenuOpen) {
+    if (newState) {
+      // OUVERTURE : Sauvegarder position et verrouiller
+      this.scrollPosition = window.scrollY;
+
+      // Verrouiller le BODY (pattern standard - préserve scroll events!)
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${this.scrollPosition}px`;
+      document.body.style.width = '100%';
       this.renderer.addClass(document.body, 'mobile-menu-active');
     } else {
+      // FERMETURE : Déverrouiller et restaurer
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
       this.renderer.removeClass(document.body, 'mobile-menu-active');
+
+      // Restaurer la position de scroll
+      window.scrollTo(0, this.scrollPosition);
     }
   }
 
   /**
    * Ferme le menu mobile
+   * Appelé par l'événement (close) du MobileMenuComponent
+   *
+   * Utilise la même logique de body scroll lock que toggleMobileMenu
    */
   closeMenu(): void {
-    this.mobileMenuOpen = false;
+    // Déverrouiller le body
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+
+    this.mobileMenuOpen.set(false);
     this.renderer.removeClass(document.body, 'mobile-menu-active');
+
+    // Restaurer la position de scroll
+    window.scrollTo(0, this.scrollPosition);
   }
 }

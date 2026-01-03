@@ -7,8 +7,9 @@
 
     <!-- Projects Grid -->
     <div class="carousel-wrapper">
-      <div class="carousel-track">
-      @for (project of displayedProjects; track project.id) {
+      <div class="carousel-track"
+           [appScrollReveal]="{ animation: 'fadeInUp', duration: 600, stagger: true, staggerDelay: 150 }">
+      @for (project of displayedProjects(); track project.id) {
         <article class="project-card"
                  [style.--accent-color]="project.color || '#000'"
                  [style.background-image]="'url(' + project.images.thumbnail + ')'">

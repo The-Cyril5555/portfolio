@@ -14,20 +14,19 @@
 
 <div class="contact">
   <!-- Couche de fond avec parallax -->
-  <!-- La transformation est appliquée dynamiquement via backgroundTransform() -->
-  <!-- scaleY(-1) retourne l'image verticalement pour un effet artistique -->
+  <!-- Effet parallax lent (30% vitesse scroll) avec image retournée verticalement -->
+  <!-- scaleY(-1) crée un effet artistique en miroir -->
   <div
     class="contact-background"
-    [style.transform]="backgroundTransform()"
+    [appMotionParallax]="{ speed: 0.3, direction: 'vertical', transform: 'scaleY(-1)' }"
     aria-hidden="true"
   ></div>
 
   <!-- Couche de contenu avec parallax -->
-  <!-- Le décalage vertical (translateY) est calculé dynamiquement -->
-  <!-- Défile plus lentement que le fond pour créer l'effet de profondeur -->
+  <!-- Défile très lentement (15% vitesse scroll) pour accentuer la profondeur -->
   <div
     class="contact-content"
-    [style.transform]="'translateY(' + contentOffset() + 'px)'"
+    [appMotionParallax]="{ speed: 0.15, direction: 'vertical' }"
   >
     <!-- Informations de contact centrées -->
     <div class="contact-info">
@@ -37,13 +36,13 @@
       <!-- Adresse email de contact -->
       <!-- Affichée avec une grande taille pour la visibilité -->
       <div class="contact-email">
-        {{ contactEmail }}
+        {{ contactEmail() }}
       </div>
 
       <!-- Liens vers les réseaux sociaux -->
       <!-- Chaque lien affiche une icône et le nom du réseau -->
       <div class="contact-social">
-        @for (link of socialLinks; track link.id) {
+        @for (link of socialLinks(); track link.id) {
           <a
             [href]="link.url"
             target="_blank"
@@ -94,7 +93,7 @@
 
         <!-- Icônes des technologies avec leurs noms -->
         <div class="stack-icons">
-          @for (tech of techStack; track tech.id) {
+          @for (tech of techStack(); track tech.id) {
             <div class="stack-item">
               <!-- Icône Devicon de la technologie -->
               <i

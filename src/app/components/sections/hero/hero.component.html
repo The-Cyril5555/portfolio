@@ -1,5 +1,5 @@
 <section class="hero">
-  <div class="hero-background" [style.transform]="'translateY(' + parallaxOffset() + 'px)'"></div>
+  <div class="hero-background" [appMotionParallax]="{ speed: 0.5, direction: 'vertical' }"></div>
   <div class="hero-overlay">
     <!-- Badge disponibilité -->
     <div class="availability-badge">
@@ -14,7 +14,8 @@
     <!-- Typographie principale superposée -->
     <div class="hero-typography">
       <span class="creative-label">creative</span>
-      <h1 class="hero-main-text">
+      <h1 class="hero-main-text"
+          [appScrollReveal]="{ animation: 'fadeInUp', duration: 1000 }">
         <span class="line-1">
           <span class="tusker">DESIGNER</span> <span class="ampersand">&</span>
         </span>
@@ -25,7 +26,8 @@
     <!-- Conteneur flex pour description et bouton -->
     <div class="hero-content-right">
       <!-- Description -->
-      <div class="hero-description">
+      <div class="hero-description"
+           [appScrollReveal]="{ animation: 'fadeInUp', duration: 800, delay: 500 }">
         <p>
           DÉVELOPPEUR WEB FULL-STACK JUNIOR SPÉCIALISÉ EN REACT, NODE.JS ET SQL.
           EXPÉRIENCE EN CRÉATION D'APPLICATIONS WEB, SITES E-COMMERCE ET PLATEFORMES MÉTIERS.
@@ -34,7 +36,8 @@
       </div>
 
       <!-- CTA -->
-      <a href="#contact" class="hero-cta brutalist-button brutalist-button--inverse">
+      <a href="#contact" class="hero-cta brutalist-button brutalist-button--inverse"
+         [appScrollReveal]="{ animation: 'fadeInUp', duration: 800, delay: 900 }">
         <span class="button-text-wrapper">
           <span class="button-text">ME CONTACTER</span>
           <span class="button-text" aria-hidden="true">ME CONTACTER</span>

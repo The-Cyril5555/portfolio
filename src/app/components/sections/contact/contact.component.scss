@@ -4,8 +4,7 @@
 // Le fond (image paint.png retournée) et le contenu défilent à des vitesses différentes
 // pour créer une sensation de profondeur et un effet visuel immersif.
 
-@use '../../../../styles/variables' as *;
-@use '../../../../styles/mixins' as *;
+@use '../../../../styles/responsive' as *;
 
 // ========================================
 // Variables locales du composant
@@ -110,7 +109,7 @@ $transition-hover: 0.3s ease;
   padding: $contact-padding-desktop;
   will-change: transform;
 
-  @media (max-width: $breakpoint-md) {
+  @include mobile {
     padding: $contact-padding-mobile;
   }
 }
@@ -142,7 +141,7 @@ $transition-hover: 0.3s ease;
   margin: $contact-title-margin;
   color: $color-contact-text;
 
-  @media (max-width: $breakpoint-md) {
+  @include mobile {
     font-size: 48px;
     margin: $contact-title-margin-mobile;
   }
@@ -160,7 +159,7 @@ $transition-hover: 0.3s ease;
   color: $color-contact-text;
   margin-bottom: $contact-email-margin;
 
-  @media (max-width: $breakpoint-md) {
+  @include mobile {
     font-size: 20px;
     margin-bottom: $contact-email-margin-mobile;
   }
@@ -180,7 +179,7 @@ $transition-hover: 0.3s ease;
   justify-content: center;
   margin-top: 20px;
 
-  @media (max-width: $breakpoint-md) {
+  @include mobile {
     gap: 30px;
   }
 }
@@ -258,7 +257,7 @@ $transition-hover: 0.3s ease;
   -webkit-backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter-footer");
   backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter-footer");
 
-  @media (max-width: $breakpoint-md) {
+  @include mobile {
     margin-top: $footer-margin-top-mobile;
     padding: $footer-padding-mobile;
   }
@@ -285,7 +284,7 @@ $transition-hover: 0.3s ease;
   align-items: flex-start;
   margin-bottom: 20px;
 
-  @media (max-width: $breakpoint-md) {
+  @include mobile {
     flex-direction: column;
     gap: 20px;
     align-items: center;
@@ -327,7 +326,7 @@ $transition-hover: 0.3s ease;
     }
   }
 
-  @media (max-width: $breakpoint-md) {
+  @include mobile {
     gap: 20px;
     flex-wrap: wrap;
     justify-content: center;
@@ -354,7 +353,7 @@ $transition-hover: 0.3s ease;
   align-items: flex-end;
   gap: 10px;
 
-  @media (max-width: $breakpoint-md) {
+  @include mobile {
     align-items: center;
   }
 }

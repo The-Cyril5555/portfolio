@@ -1,0 +1,178 @@
+/**
+ * Mobile Menu Component - Styles
+ * ================================
+ *
+ * Styles pour le menu mobile avec effet liquid glass.
+ */
+
+@use '../../../../styles/responsive' as *;
+@use '../../../../styles/glassmorphism-v2' as glass;
+
+// ========================================
+// Overlay (Backdrop)
+// ========================================
+
+.mobile-menu-overlay {
+  display: none; // Caché par défaut
+
+  @include mobile {
+    position: fixed;
+    inset: 0; // top, right, bottom, left: 0
+    z-index: 101;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+
+    // Overlay glass effect
+    @include glass.glass-overlay($color: black, $opacity: 0.5, $blur: 8px);
+
+    // Visible quand menu ouvert
+    &.visible {
+      display: block;
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+}
+
+// ========================================
+// Panel Latéral
+// ========================================
+
+.mobile-menu-panel {
+  display: none; // Caché par défaut
+
+  @include mobile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 85%; // 85% de la largeur écran
+    max-width: 400px;
+    z-index: 102; // Au-dessus de l'overlay
+
+    padding: 40px 30px;
+
+    // Effet glass iOS-compatible
+    @include glass.mobile-menu-glass-custom(0.12);
+
+    // Position initiale : hors écran à droite
+    transform: translateX(100%);
+
+    // Note: L'animation est gérée par Motion One dans le TS
+    // Pas de transition CSS pour éviter les conflits
+
+    // État ouvert (fallback si Motion One désactivé)
+    &.open {
+      transform: translateX(0);
+    }
+  }
+
+  // Très petits écrans
+  @include tiny {
+    width: 90%;
+    padding: 30px 20px;
+  }
+}
+
+// ========================================
+// Liste de Navigation
+// ========================================
+
+.mobile-nav-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  @include tiny {
+    gap: 20px;
+  }
+}
+
+// ========================================
+// Liens de Navigation
+// ========================================
+
+.mobile-nav-link {
+  display: block;
+  font-family: 'Migra', serif;
+  font-size: 28px;
+  color: #E40037; // Rouge
+  text-decoration: none;
+  padding: 16px 20px;
+  border-radius: 12px;
+  text-align: center;
+
+  // Touch target minimum 44px (avec padding = 16*2 + 28 line-height ≈ 60px)
+  min-height: 44px;
+
+  // Transition pour hover/active
+  transition: background 0.2s ease, transform 0.1s ease;
+
+  // Hover (desktop preview sur mobile)
+  &:hover {
+    background: rgba(228, 0, 55, 0.08);
+  }
+
+  // Active (touch feedback)
+  &:active {
+    background: rgba(228, 0, 55, 0.15);
+    transform: scale(0.98);
+  }
+
+  // Focus visible
+  &:focus-visible {
+    outline: 2px solid #E40037;
+    outline-offset: 2px;
+  }
+
+  @include tiny {
+    font-size: 24px;
+    padding: 14px 16px;
+  }
+}
+
+// ========================================
+// Reduced Motion
+// ========================================
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu-panel {
+    // Pas d'animation, juste apparition/disparition instantanée
+    transition: none !important;
+
+    &.open {
+      transform: translateX(0);
+    }
+
+    &:not(.open) {
+      transform: translateX(100%);
+    }
+  }
+
+  .mobile-menu-overlay {
+    transition: opacity 0s;
+  }
+
+  .mobile-nav-link {
+    transition: background 0s, transform 0s;
+  }
+}
+
+// ========================================
+// Desktop (caché sur desktop)
+// ========================================
+
+@include desktop {
+  .mobile-menu-overlay,
+  .mobile-menu-panel {
+    display: none !important;
+  }
+}

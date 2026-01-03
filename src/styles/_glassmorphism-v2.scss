@@ -1,0 +1,352 @@
+/**
+ * Glassmorphism v2 - iOS Compatible
+ * ===================================
+ *
+ * Système de mixins pour effet liquid glass compatible avec iOS Safari.
+ *
+ * **Problème résolu :**
+ * L'ancien système utilisait des filtres SVG dans backdrop-filter :
+ * `backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#...");`
+ *
+ * iOS Safari ne supporte pas les URLs SVG dans backdrop-filter,
+ * ce qui rendait la navbar invisible ou mal rendue sur iOS.
+ *
+ * **Solution :**
+ * CSS pur avec backdrop-filter: blur() + saturate() + brightness()
+ * Fonctionne sur tous les navigateurs modernes incluant iOS Safari.
+ *
+ * **Browser Support :**
+ * - ✅ iOS Safari 17+
+ * - ✅ Chrome/Edge 120+
+ * - ✅ Firefox 120+
+ * - ✅ Safari macOS 17+
+ *
+ * **Sources :**
+ * - https://dev.to/gruszdev/apples-liquid-glass-revolution-how-glassmorphism-is-shaping-ui-design-in-2025-with-css-code-1221
+ * - https://blog.logrocket.com/how-create-liquid-glass-effects-css-and-svg/
+ * - https://caniuse.com/css-backdrop-filter
+ *
+ * @author Cyril Bizouarn
+ */
+
+// ========================================
+// Design Tokens
+// ========================================
+
+// Couleurs de base
+$glass-bg-cream: 245, 238, 230; // #F5EEE6 en RGB
+$glass-bg-opacity: 0.08;
+$glass-border-color: rgba(255, 255, 255, 0.18);
+
+// Effets de blur
+$glass-blur-max: 24px;
+$glass-blur-mobile: 32px; // Plus de blur sur mobile pour meilleur effet
+
+// Saturation et brightness
+$glass-saturate: 180%;
+$glass-brightness: 1.1;
+
+// Ombres
+$glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+$glass-shadow-mobile: -8px 0 32px rgba(0, 0, 0, 0.2); // Pour menu latéral
+
+// Transitions
+$glass-transition-duration: 0.4s;
+$glass-transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
+
+// ========================================
+// Mixin Principal - Navbar Glass Effect
+// ========================================
+
+/**
+ * Applique l'effet liquid glass à la navbar
+ *
+ * Compatible iOS Safari - N'utilise PAS de filtres SVG
+ *
+ * @param {Boolean} $scrolled - État scrolled (true) ou non-scrolled (false)
+ *
+ * @example
+ * ```scss
+ * .navbar {
+ *   @include liquid-glass-navbar($scrolled: false);
+ *
+ *   &.scrolled {
+ *     @include liquid-glass-navbar($scrolled: true);
+ *   }
+ * }
+ * ```
+ */
+@mixin liquid-glass-navbar($scrolled: false) {
+  @if $scrolled {
+    // État scrolled : effet glass actif
+    background: rgba($glass-bg-cream, $glass-bg-opacity);
+    backdrop-filter: blur($glass-blur-max) saturate($glass-saturate) brightness($glass-brightness);
+    -webkit-backdrop-filter: blur($glass-blur-max) saturate($glass-saturate) brightness($glass-brightness);
+    border-bottom: 1px solid $glass-border-color;
+    box-shadow: $glass-shadow;
+  } @else {
+    // État initial : transparent
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom: 1px solid transparent;
+    box-shadow: none;
+  }
+
+  transition: all $glass-transition-duration $glass-transition-easing;
+}
+
+// ========================================
+// Mixin - Glass Effect Progressif
+// ========================================
+
+/**
+ * Applique un effet glass progressif contrôlé par des CSS custom properties
+ *
+ * Permet une transition fluide basée sur le scroll position.
+ * Les valeurs --navbar-blur et --navbar-bg-opacity doivent être
+ * définies via JavaScript.
+ *
+ * @example
+ * ```scss
+ * .navbar {
+ *   @include progressive-glass();
+ * }
+ * ```
+ *
+ * @example
+ * ```typescript
+ * // Dans le composant TypeScript
+ * const progress = Math.min(scrollY / 200, 1);
+ * element.style.setProperty('--navbar-blur', `${progress * 24}px`);
+ * element.style.setProperty('--navbar-bg-opacity', `${progress * 0.08}`);
+ * ```
+ */
+@mixin progressive-glass() {
+  // Variables par défaut (modifiables via JS)
+  --navbar-blur: 0px;
+  --navbar-bg-opacity: 0;
+
+  background: rgba($glass-bg-cream, var(--navbar-bg-opacity));
+  backdrop-filter: blur(var(--navbar-blur)) saturate($glass-saturate) brightness($glass-brightness);
+  -webkit-backdrop-filter: blur(var(--navbar-blur)) saturate($glass-saturate) brightness($glass-brightness);
+
+  // Transition sur border et shadow uniquement (blur géré par JS)
+  transition: border-color $glass-transition-duration $glass-transition-easing,
+              box-shadow $glass-transition-duration $glass-transition-easing;
+}
+
+// ========================================
+// Mixin - Mobile Menu Glass Effect
+// ========================================
+
+/**
+ * Applique l'effet glass au menu mobile (panneau latéral)
+ *
+ * Utilise un blur plus intense et une ombre latérale
+ * pour différencier du contenu principal.
+ *
+ * @example
+ * ```scss
+ * .mobile-menu-panel {
+ *   @include mobile-menu-glass();
+ * }
+ * ```
+ */
+@mixin mobile-menu-glass() {
+  background: rgba($glass-bg-cream, $glass-bg-opacity + 0.04); // Un peu plus opaque
+  backdrop-filter: blur($glass-blur-mobile) saturate($glass-saturate);
+  -webkit-backdrop-filter: blur($glass-blur-mobile) saturate($glass-saturate);
+  border-left: 1px solid $glass-border-color;
+  box-shadow: $glass-shadow-mobile;
+}
+
+// Variante avec opacité custom
+@mixin mobile-menu-glass-custom($opacity: 0.12) {
+  background: rgba(245, 238, 230, $opacity); // RGB direct au lieu de variable
+  backdrop-filter: blur($glass-blur-mobile) saturate($glass-saturate);
+  -webkit-backdrop-filter: blur($glass-blur-mobile) saturate($glass-saturate);
+  border-left: 1px solid $glass-border-color;
+  box-shadow: $glass-shadow-mobile;
+}
+
+// ========================================
+// Mixin - Card Glass Effect
+// ========================================
+
+/**
+ * Applique un effet glass subtil pour les cartes/containers
+ *
+ * Moins intense que la navbar, pour un effet plus discret.
+ *
+ * @param {Number} $opacity - Opacité du background (0.05 par défaut)
+ * @param {Number} $blur - Intensité du blur (16px par défaut)
+ *
+ * @example
+ * ```scss
+ * .project-card {
+ *   @include card-glass($opacity: 0.08, $blur: 20px);
+ * }
+ * ```
+ */
+@mixin card-glass($opacity: 0.05, $blur: 16px) {
+  background: rgba($glass-bg-cream, $opacity);
+  backdrop-filter: blur($blur) saturate(150%);
+  -webkit-backdrop-filter: blur($blur) saturate(150%);
+  border: 1px solid $glass-border-color;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+// ========================================
+// Mixin - Glass Overlay
+// ========================================
+
+/**
+ * Applique un overlay semi-transparent avec blur
+ *
+ * Utilisé pour les backdrops de modales ou menus.
+ *
+ * @param {Color} $color - Couleur de base (noir par défaut)
+ * @param {Number} $opacity - Opacité (0.5 par défaut)
+ * @param {Number} $blur - Intensité du blur (8px par défaut)
+ *
+ * @example
+ * ```scss
+ * .mobile-menu-overlay {
+ *   @include glass-overlay($color: black, $opacity: 0.5, $blur: 8px);
+ * }
+ * ```
+ */
+@mixin glass-overlay($color: black, $opacity: 0.5, $blur: 8px) {
+  background: rgba($color, $opacity);
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+}
+
+// ========================================
+// Utilitaires - Feature Detection
+// ========================================
+
+/**
+ * Applique des styles uniquement si backdrop-filter est supporté
+ *
+ * Permet un fallback gracieux pour les navigateurs plus anciens.
+ *
+ * @example
+ * ```scss
+ * .navbar {
+ *   background: rgba(245, 238, 230, 0.3); // Fallback opaque
+ *
+ *   @include supports-backdrop-filter {
+ *     background: rgba(245, 238, 230, 0.08); // Glass léger
+ *     backdrop-filter: blur(24px);
+ *   }
+ * }
+ * ```
+ */
+@mixin supports-backdrop-filter {
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    @content;
+  }
+}
+
+/**
+ * Applique des styles pour les navigateurs ne supportant PAS backdrop-filter
+ *
+ * @example
+ * ```scss
+ * .navbar {
+ *   @include no-backdrop-filter {
+ *     background: rgba(245, 238, 230, 0.95); // Plus opaque en fallback
+ *     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+ *   }
+ * }
+ * ```
+ */
+@mixin no-backdrop-filter {
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    @content;
+  }
+}
+
+// ========================================
+// Utilitaires - Performance
+// ========================================
+
+/**
+ * Optimise les performances GPU pour les éléments avec glass effect
+ *
+ * Utiliser avec précaution - ne pas appliquer à tous les éléments.
+ *
+ * @example
+ * ```scss
+ * .navbar {
+ *   @include liquid-glass-navbar($scrolled: true);
+ *   @include glass-performance-boost();
+ * }
+ * ```
+ */
+@mixin glass-performance-boost() {
+  // Force l'accélération GPU
+  transform: translateZ(0);
+  will-change: backdrop-filter, background, border-color;
+
+  // Note: Retirer will-change après l'animation pour libérer les ressources GPU
+  // Faire via JavaScript si l'élément ne change plus
+}
+
+/**
+ * Retire l'optimisation GPU (à appeler après les animations)
+ *
+ * @example
+ * ```typescript
+ * // Dans le composant après l'animation
+ * element.style.willChange = 'auto';
+ * ```
+ */
+@mixin glass-performance-cleanup() {
+  will-change: auto;
+  transform: none;
+}
+
+// ========================================
+// Exemples d'Utilisation
+// ========================================
+
+/**
+ * Exemple complet : Navbar avec glass progressif
+ *
+ * ```scss
+ * .navbar {
+ *   position: fixed;
+ *   top: 0;
+ *   width: 100%;
+ *
+ *   // Approche 1 : Progressif (recommandé)
+ *   @include progressive-glass();
+ *
+ *   // État scrolled pour fallback sans JS
+ *   &.scrolled {
+ *     @include liquid-glass-navbar($scrolled: true);
+ *   }
+ *
+ *   // Fallback gracieux pour vieux navigateurs
+ *   @include no-backdrop-filter {
+ *     background: rgba(245, 238, 230, 0.95);
+ *   }
+ * }
+ * ```
+ *
+ * Exemple : Menu mobile
+ *
+ * ```scss
+ * .mobile-menu {
+ *   @include mobile-menu-glass();
+ *
+ *   // Overlay
+ *   &::before {
+ *     @include glass-overlay($color: black, $opacity: 0.5);
+ *   }
+ * }
+ * ```
+ */

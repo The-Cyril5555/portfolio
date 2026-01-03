@@ -1,0 +1,32 @@
+<!-- Overlay semi-transparent -->
+<div
+  class="mobile-menu-overlay"
+  [class.visible]="isOpen"
+  (click)="onOverlayClick()"
+  [attr.aria-hidden]="!isOpen"
+  [attr.inert]="!isOpen ? true : null"></div>
+
+<!-- Panel latéral -->
+<nav
+  class="mobile-menu-panel"
+  [class.open]="isOpen"
+  [attr.aria-hidden]="!isOpen"
+  [attr.inert]="!isOpen ? true : null"
+  role="navigation"
+  aria-label="Mobile navigation menu"
+  (keydown)="onKeyDown($event)">
+  <ul class="mobile-nav-links">
+    @for (link of links; track link.id) {
+      <li>
+        <a
+          class="mobile-nav-link"
+          [href]="link.href"
+          (click)="onLinkClick($event, link.id)"
+          [attr.aria-label]="'Navigate to ' + link.label"
+          tabindex="{{ isOpen ? 0 : -1 }}">
+          {{ link.label }}
+        </a>
+      </li>
+    }
+  </ul>
+</nav>

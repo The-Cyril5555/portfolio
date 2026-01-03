@@ -1,190 +1,163 @@
-// Composant Contact
-// ==================
-// Ce composant affiche la section de contact du portfolio avec :
-// - Un effet parallax sur le fond et le contenu
-// - Les informations de contact (email)
-// - Les liens vers les réseaux sociaux
-// - Un footer avec navigation et stack technique
-
-import { Component, OnInit, OnDestroy, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IconComponent } from '../../ui/icon/icon.component';
-import {
-  CONTACT_EMAIL,
-  SOCIAL_LINKS,
-  TECH_STACK,
-  PARALLAX_CONFIG
-} from '../../../data/contact.data';
-import { NAV_LINKS } from '../../../data/navigation.data';
-import { SocialLink, TechStackItem, NavLink, ParallaxConfig } from '../../../models/contact.model';
-
 /**
- * Composant de la section Contact
+ * Composant Contact
+ * ==================
  *
- * Affiche les informations de contact avec un effet parallax artistique.
- * Le fond (image paint.png) et le contenu défilent à des vitesses différentes
- * pour créer une sensation de profondeur lors du scroll.
+ * Affiche la section de contact du portfolio avec :
+ * - Effet parallax artistique (directive appParallax)
+ * - Informations de contact (email)
+ * - Liens vers les réseaux sociaux
+ * - Footer avec navigation et stack technique
+ *
+ * **Architecture :**
+ * - Utilise ContactRepository pour l'accès aux données de contact
+ * - Convertit les Observables en Signals avec toSignal()
+ * - Réactivité automatique si les données changent
+ *
+ * **Pattern Repository :**
+ * Au lieu d'importer directement les données locales (CONTACT_EMAIL, SOCIAL_LINKS, etc.),
+ * le composant utilise le ContactRepository qui abstrait la source de données.
+ * Cela permet de migrer facilement vers une API REST sans modifier le composant.
+ *
+ * **Optimisations (refactoring) :**
+ * - Directive appParallax au lieu de gestion manuelle du scroll
+ * - Fond : speed 0.3 (30% vitesse scroll) + scaleY(-1) pour effet miroir
+ * - Contenu : speed 0.15 (15% vitesse scroll) pour accentuer la profondeur
+ * - Élimine 27 lignes de code dupliqué (handleScroll, calculateParallaxOffset)
  *
  * @component
+ * @selector app-contact
  * @standalone
+ *
+ * @example
+ * ```html
+ * <app-contact></app-contact>
+ * ```
+ *
+ * @author Cyril Bizouarn
  */
+
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { IconComponent } from '../../ui/icon/icon.component';
+import { MotionParallaxDirective } from '../../../directives/motion-parallax.directive';
+import { NAV_LINKS } from '../../../data/navigation.data';
+import { SocialLink, TechStackItem, NavLink } from '../../../models/contact.model';
+import { ContactRepository } from '../../../services/data/contact.repository';
+
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [CommonModule, IconComponent],
+  imports: [CommonModule, IconComponent, MotionParallaxDirective],
   templateUrl: './contact.component.html',
-  styleUrl: './contact.component.scss'
+  styleUrl: './contact.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContactComponent implements OnInit, OnDestroy {
+export class ContactComponent {
   // ========================================
-  // Propriétés de données
+  // Propriétés privées - Services injectés
   // ========================================
 
   /**
-   * Adresse email de contact affichée dans la section
+   * Repository pour accéder aux données de contact
+   *
+   * Injecté via la fonction `inject()` d'Angular (approche moderne).
+   * Permet d'utiliser le repository dans les initialisations de propriétés.
+   *
+   * @private
    * @readonly
    */
-  readonly contactEmail = CONTACT_EMAIL;
+  private readonly contactRepo = inject(ContactRepository);
+
+  // ========================================
+  // Propriétés publiques - Données de contact
+  // ========================================
 
   /**
-   * Liste des liens vers les réseaux sociaux (GitHub, LinkedIn, etc.)
-   * Chaque lien contient l'URL, le nom et l'icône à afficher
+   * Signal de l'adresse email de contact
+   *
+   * Converti depuis l'Observable du repository avec toSignal().
+   * Initialisé avec une chaîne vide par défaut.
+   *
+   * **Source :** ContactRepository.getContactEmail()
+   *
+   * @public
    * @readonly
    */
-  readonly socialLinks: SocialLink[] = SOCIAL_LINKS;
+  contactEmail = toSignal(this.contactRepo.getContactEmail(), {
+    initialValue: ''
+  });
 
   /**
-   * Liste des technologies utilisées pour construire ce portfolio
-   * Affichées dans le footer avec leurs icônes Devicon
+   * Signal des liens vers les réseaux sociaux
+   *
+   * Converti depuis l'Observable du repository avec toSignal().
+   * Initialisé avec un tableau vide par défaut.
+   *
+   * Chaque lien contient :
+   * - id : Identifiant unique ('github', 'linkedin')
+   * - name : Nom affiché du réseau
+   * - url : URL du profil
+   * - icon : Nom de l'icône à utiliser
+   *
+   * **Source :** ContactRepository.getSocialLinks()
+   *
+   * @public
    * @readonly
    */
-  readonly techStack: TechStackItem[] = TECH_STACK;
+  socialLinks = toSignal(this.contactRepo.getSocialLinks(), {
+    initialValue: [] as SocialLink[]
+  });
 
   /**
-   * Liens de navigation du footer vers les différentes sections du portfolio
-   * Partagés avec la navbar pour garantir la cohérence des labels
+   * Signal de la stack technique du portfolio
+   *
+   * Converti depuis l'Observable du repository avec toSignal().
+   * Initialisé avec un tableau vide par défaut.
+   *
+   * Chaque technologie contient :
+   * - id : Identifiant unique ('angular', 'typescript')
+   * - name : Nom affiché de la technologie
+   * - icon : Classe CSS de l'icône Devicon
+   *
+   * Affichées dans le footer pour montrer les technologies utilisées.
+   *
+   * **Source :** ContactRepository.getTechStack()
+   *
+   * @public
+   * @readonly
+   */
+  techStack = toSignal(this.contactRepo.getTechStack(), {
+    initialValue: [] as TechStackItem[]
+  });
+
+  // ========================================
+  // Propriétés publiques - Navigation
+  // ========================================
+
+  /**
+   * Liens de navigation du footer
+   *
+   * Partagés avec la navbar pour garantir la cohérence des labels.
    * Source unique : navigation.data.ts
+   *
+   * **Note :** Ces liens ne proviennent pas du ContactRepository car ils
+   * sont partagés entre plusieurs composants (HeaderNav, Contact).
+   * Idéalement, un NavigationRepository pourrait être créé dans le futur.
+   *
+   * @public
    * @readonly
    */
   readonly footerNavLinks: NavLink[] = NAV_LINKS;
 
-  // ========================================
-  // Propriétés d'état (effet parallax)
-  // ========================================
-
   /**
-   * Transformation CSS appliquée au fond (background)
-   * Combine une translation verticale (parallax) et un retournement vertical (scaleY(-1))
-   * Le signal permet une réactivité optimale lors du scroll
-   */
-  backgroundTransform = signal('translateY(0px) scaleY(-1)');
-
-  /**
-   * Décalage vertical du contenu en pixels
-   * Utilisé pour créer l'effet parallax sur le contenu de la section
-   * Valeur calculée dynamiquement lors du scroll
-   */
-  contentOffset = signal(0);
-
-  // ========================================
-  // Propriétés de configuration
-  // ========================================
-
-  /**
-   * Configuration de l'effet parallax
-   * Définit les multiplicateurs de vitesse pour le fond et le contenu
-   * @private
-   * @readonly
-   */
-  private readonly parallaxConfig: ParallaxConfig = PARALLAX_CONFIG;
-
-  /**
-   * Année actuelle pour l'affichage du copyright dans le footer
-   * Calculée automatiquement à l'initialisation du composant
+   * Année actuelle pour le copyright
+   *
+   * Calculée automatiquement à l'initialisation du composant.
+   * Affichée dans le footer : "© 2025 Cyril Bizouarn"
+   *
+   * @public
    * @readonly
    */
   readonly currentYear = new Date().getFullYear();
-
-  // ========================================
-  // Lifecycle Hooks
-  // ========================================
-
-  /**
-   * Initialisation du composant
-   * Ajoute l'écouteur d'événement de scroll pour gérer l'effet parallax
-   */
-  ngOnInit(): void {
-    window.addEventListener('scroll', this.handleScroll);
-  }
-
-  /**
-   * Nettoyage lors de la destruction du composant
-   * Retire l'écouteur d'événement de scroll pour éviter les fuites mémoire
-   */
-  ngOnDestroy(): void {
-    window.removeEventListener('scroll', this.handleScroll);
-  }
-
-  // ========================================
-  // Méthodes privées
-  // ========================================
-
-  /**
-   * Gère l'effet parallax lors du scroll de la page
-   *
-   * Algorithme :
-   * 1. Récupère la position de la section contact dans la viewport
-   * 2. Calcule la distance entre le haut de la fenêtre et le haut de la section
-   * 3. Applique des multiplicateurs différents pour créer l'effet de profondeur :
-   *    - Fond : défile à 30% de la vitesse de scroll (plus lent = plus loin)
-   *    - Contenu : défile à 15% de la vitesse de scroll (encore plus lent)
-   *
-   * L'effet est uniquement actif quand la section est visible dans la viewport
-   * pour optimiser les performances.
-   *
-   * @private
-   */
-  private handleScroll = (): void => {
-    const contactSection = document.querySelector('.contact');
-
-    if (contactSection) {
-      const rect = contactSection.getBoundingClientRect();
-      // Distance entre le haut de la fenêtre et le haut de la section
-      const offset = window.innerHeight - rect.top;
-
-      // Applique le parallax uniquement si la section est visible
-      if (offset > 0 && rect.bottom > 0) {
-        // Fond : défile plus lentement + retourné verticalement pour effet artistique
-        const backgroundOffset = this.calculateParallaxOffset(
-          offset,
-          this.parallaxConfig.backgroundSpeed
-        );
-        this.backgroundTransform.set(`translateY(${backgroundOffset}px) scaleY(-1)`);
-
-        // Contenu : défile encore plus lentement pour accentuer la profondeur
-        const contentParallaxOffset = this.calculateParallaxOffset(
-          offset,
-          this.parallaxConfig.contentSpeed
-        );
-        this.contentOffset.set(contentParallaxOffset);
-      }
-    }
-  };
-
-  /**
-   * Calcule le décalage parallax en fonction de la position de scroll
-   *
-   * @param offset - Distance entre le haut de la fenêtre et le haut de la section (en pixels)
-   * @param speed - Multiplicateur de vitesse (0.3 = 30% de la vitesse de scroll)
-   * @returns Le décalage en pixels à appliquer
-   *
-   * @example
-   * // Pour un scroll de 100px avec une vitesse de 0.3 :
-   * calculateParallaxOffset(100, 0.3) // retourne 30
-   *
-   * @private
-   */
-  private calculateParallaxOffset(offset: number, speed: number): number {
-    return offset * speed;
-  }
 }

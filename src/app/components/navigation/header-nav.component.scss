@@ -1,355 +1,266 @@
-@use '../../../styles/variables' as *;
-@use '../../../styles/mixins' as *;
+// ========================================
+// Header Navigation - Style Article
+// ========================================
+// Navbar frosted glass inspirée de l'article Mac-style liquid glass UI
+// - 95% width centrée avec border-radius 24px
+// - Static glass effect (blur 8px constant, pas progressif)
+// - Position fixed (toujours visible)
+// - Shadow au scroll
+
+@use '../../../styles/responsive' as *;
 
 // ========================================
-// Variables pour l'animation hover
+// Navbar - Layout & Glass Effect
 // ========================================
-$underline-height: 2px;           // Épaisseur de la ligne de soulignement
-$underline-offset: -2px;          // Distance sous le texte
-$underline-transition: 0.3s ease; // Durée et courbe de l'animation
-
-// ========================================
-// Variables pour le menu mobile
-// ========================================
-$hamburger-size: 24px;
-$hamburger-line-height: 2px;
-$hamburger-gap: 5px;
-$mobile-menu-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
 .brutalist-nav {
+  // Layout : Centré, 95% largeur, position fixed
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 20px 40px;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 95%;
+  max-width: 1440px;
   z-index: 100;
-  background-color: transparent;
-  transition: background-color 0.3s ease;
 
-  @media (max-width: 768px) {
-    padding: 15px 20px;
-  }
+  // Spacing
+  padding: 10px 32px;
 
-  // Sur scroll, ajouter l'effet de verre et changer la couleur du texte
+  // Flexbox
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  // Article style : Static glass effect (blur 8px constant)
+  background: rgba(245, 238, 230, 0.08);
+  backdrop-filter: blur(8px) saturate(180%);
+  -webkit-backdrop-filter: blur(8px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 24px;
+
+  // Shadow when scrolled (transition smooth)
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0);
+  transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
   &.scrolled {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-
-    // Liquid glass SEULEMENT sur desktop (>768px)
-    // Sur mobile, évite conflit avec backdrop-filter du menu mobile
-    @media (min-width: 769px) {
-      -webkit-backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter-footer");
-      backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter-footer");
-    }
-
-    // Liquid glass aussi sur mobile (≤768px)
-    @media (max-width: 768px) {
-      -webkit-backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter-footer");
-      backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter-footer");
-    }
-
-    .logo-name,
-    .logo-subtitle,
-    .nav-links a {
-      color: #E40037;
-    }
-
-    // Hamburger color change on scroll
-    @media (max-width: 768px) {
-      .hamburger-button .hamburger-line {
-        background-color: #E40037;
-      }
-    }
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   }
 
-  .nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1400px;
-    margin: 0 auto;
+  // Responsive mobile
+  @include mobile {
+    width: calc(100% - 32px);
+    top: 12px;
+    padding: 8px 20px;
+    border-radius: 20px;
+  }
+}
 
-    // Relative positioning for mobile menu dropdown
-    @media (max-width: 768px) {
-      position: relative;
-    }
+// ========================================
+// Logo Container
+// ========================================
+
+.logo-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-name {
+  font-family: 'Manufacturing Consent', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #F5EEE6;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  cursor: pointer;
+
+  &.scrolled,
+  &:hover {
+    color: #C1121F;
   }
 
-  .logo-container {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-
-    @media (max-width: 768px) {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 5px;
-      flex: 1; // Allow logo to take available space
-    }
-  }
-
-  .logo-name {
-    font-family: 'Manufacturing Consent', sans-serif;
+  @include mobile {
     font-size: 18px;
-    font-weight: 400;
-    color: #F5EEE6;
-    text-decoration: none;
-    text-transform: capitalize;
-    transition: color 0.3s ease, opacity 0.2s;
+  }
+}
 
-    &:hover {
-      opacity: 0.7;
-    }
+.logo-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  color: rgba(245, 238, 230, 0.6);
+  transition: color 0.3s ease;
+  padding-left: 12px;
+  border-left: 1px solid rgba(245, 238, 230, 0.3);
 
-    @media (max-width: 768px) {
-      font-size: 16px;
-    }
+  @include mobile {
+    font-size: 8px;
+    padding-left: 8px;
+  }
+}
+
+// Sous-titre rouge au scroll
+.brutalist-nav.scrolled .logo-subtitle {
+  color: #C1121F;
+}
+
+// ========================================
+// Nav Links - Desktop (inline)
+// ========================================
+
+.nav-links {
+  display: none;
+  gap: 32px;
+  align-items: center;
+
+  @include desktop {
+    display: flex;
+  }
+}
+
+.nav-link {
+  position: relative;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #F5EEE6;
+  text-decoration: none;
+  padding: 8px 0;
+  cursor: pointer;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #C1121F;
   }
 
-  .logo-subtitle {
-    font-family: 'Neue Montreal', sans-serif;
-    font-size: 12px;
-    font-weight: bold;
-    color: #F5EEE6;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    transition: color 0.3s ease;
-
-    @media (max-width: 768px) {
-      font-size: 10px;
-    }
+  &.active {
+    color: #C1121F;
+    font-weight: 700;
   }
 
-  // ========================================
-  // Hamburger Button (Mobile Only)
-  // ========================================
-  .hamburger-button {
-    display: none; // Hidden on desktop
-    position: relative;
-    width: 44px; // Touch target minimum 44px
-    height: 44px; // Touch target minimum 44px
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 10px;
-    z-index: 103; // Au-dessus du menu mobile (102)
-
-    // Center the hamburger icon (flex properties applied via media query)
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: $hamburger-gap;
-
-    @media (max-width: 768px) {
-      display: flex; // Show on mobile
-    }
-
-    // Accessibility: focus state
-    &:focus-visible {
-      outline: 2px solid #F5EEE6;
-      outline-offset: 2px;
-    }
-
-    .hamburger-line {
-      width: $hamburger-size;
-      height: $hamburger-line-height;
-      background-color: #F5EEE6;
-      transition: all $mobile-menu-transition;
-      transform-origin: center;
-      border-radius: 2px;
-
-      // First line (top)
-      &:nth-child(1) {
-        transform: translateY(0) rotate(0deg);
-      }
-
-      // Second line (middle)
-      &:nth-child(2) {
-        opacity: 1;
-        transform: scaleX(1);
-      }
-
-      // Third line (bottom)
-      &:nth-child(3) {
-        transform: translateY(0) rotate(0deg);
-      }
-    }
-
-    // Active state (X animation)
-    &.active {
-      .hamburger-line {
-        &:nth-child(1) {
-          transform: translateY(calc($hamburger-gap + $hamburger-line-height)) rotate(45deg);
-        }
-
-        &:nth-child(2) {
-          opacity: 0;
-          transform: scaleX(0);
-        }
-
-        &:nth-child(3) {
-          transform: translateY(calc(-1 * ($hamburger-gap + $hamburger-line-height))) rotate(-45deg);
-        }
-      }
-    }
+  // Optional: Underline effect on hover
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #C1121F;
+    transition: width 0.3s ease;
   }
 
-  // ========================================
-  // Navigation Links (Desktop only)
-  // ========================================
-  .nav-links {
-    display: none; // Caché sur mobile (le menu mobile est maintenant séparé)
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  &:hover::after,
+  &.active::after {
+    width: 100%;
+  }
+}
 
-    // DESKTOP: Navigation horizontale
-    @media (min-width: 769px) {
-      display: flex;
-      gap: 40px;
-    }
+// Liens nav rouges au scroll
+.brutalist-nav.scrolled .nav-link {
+  color: #C1121F;
 
-    a {
-      position: relative; // Nécessaire pour le positionnement du ::after
-      font-family: 'Neue Montreal', sans-serif;
-      color: #F5EEE6;
-      text-decoration: none;
-      font-size: 16px;
-      text-transform: lowercase;
-      font-weight: bold;
-      transition: color 0.3s ease, opacity 0.2s;
+  &:hover {
+    color: #C1121F;
+  }
 
-      /**
-       * Animation de soulignement au hover
-       *
-       * Utilise un pseudo-élément ::after pour créer une ligne animée
-       * qui apparaît de gauche à droite au survol du lien.
-       *
-       * Performance :
-       * - transform: scaleX() est utilisé plutôt que width pour l'animation
-       * - Plus performant car géré par le GPU (hardware acceleration)
-       * - will-change: transform pré-optimise l'animation
-       *
-       * Comportement :
-       * - La ligne utilise currentColor pour s'adapter automatiquement
-       *   à la couleur du texte (#F5EEE6 par défaut, #E40037 après scroll)
-       * - Animation de gauche à droite grâce à transform-origin: left
-       *
-       * Personnalisation :
-       * - Modifier $underline-height pour changer l'épaisseur
-       * - Modifier $underline-offset pour ajuster la distance sous le texte
-       * - Modifier $underline-transition pour changer la vitesse
-       */
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: $underline-offset;
-        left: 0;
-        width: 100%;
-        height: $underline-height;
-        background-color: currentColor; // S'adapte à la couleur du texte
-        transform: scaleX(0);           // Invisible par défaut
-        transform-origin: left;         // Animation de gauche à droite
-        transition: transform $underline-transition;
-        will-change: transform;         // Optimisation GPU
-      }
-
-      &:hover {
-        opacity: 0.7; // Effet d'opacité conservé
-
-        // Afficher la ligne au hover
-        &::after {
-          transform: scaleX(1); // Ligne visible à 100%
-        }
-      }
-
-      @media (max-width: 768px) {
-        font-size: 14px;
-      }
-    }
+  &.active {
+    color: #C1121F;
+    font-weight: 700;
   }
 }
 
 // ========================================
-// Menu Mobile Séparé (hors de la navbar)
+// Hamburger Button - Mobile (inline)
 // ========================================
-.mobile-nav-menu {
-  display: none; // Caché par défaut
 
-  @media (max-width: 768px) {
-    // Caché par défaut sur mobile aussi
+.hamburger-button {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 101;
+
+  @include desktop {
     display: none;
+  }
+}
 
-    // Quand ouvert
-    &.mobile-menu-open {
-      display: flex;
+.hamburger-line {
+  width: 100%;
+  height: 3px;
+  background-color: #F5EEE6;
+  border-radius: 2px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-      // Positionnement full-screen
-      position: fixed;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 102; // Au-dessus de la navbar (100)
-      isolation: isolate; // Crée un stacking context isolé
+  // Couleur rouge au scroll
+  .hamburger-button.scrolled & {
+    background-color: #C1121F;
+  }
 
-      // Glassmorphisme liquid glass (copié du footer qui MARCHE)
-      border-left: 1px solid rgba(255, 255, 255, 0.05);
-      box-shadow: -8px 0 32px rgba(0, 0, 0, 0.1);
-      -webkit-backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter-footer");
-      backdrop-filter: url("/assets/svg/liquid-glass-filter.svg#liquid-glass-filter-footer");
+  // Animation X quand menu actif
+  .hamburger-button.active & {
+    &:nth-child(1) {
+      transform: translateY(10.5px) rotate(45deg);
+    }
 
-      // Layout centré
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 30px;
-      padding: 0;
+    &:nth-child(2) {
+      opacity: 0;
+    }
 
-      // Animation d'entrée
-      animation: slideInMobile 0.3s ease-out;
-
-      .mobile-nav-links {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 30px;
-        align-items: center;
-
-        li {
-          width: auto;
-        }
-
-        a {
-          display: block;
-          font-size: 24px;
-          font-family: 'Migra', serif !important; // Police Migra pour menu mobile
-          text-align: center;
-          color: #E40037 !important; // Couleur rouge
-          text-decoration: none;
-          padding: 15px 40px;
-          transition: background 0.2s ease, opacity 0.2s ease;
-
-          &:hover,
-          &:active {
-            background: rgba(228, 0, 55, 0.1);
-            opacity: 1;
-          }
-        }
-      }
+    &:nth-child(3) {
+      transform: translateY(-10.5px) rotate(-45deg);
     }
   }
 }
 
-@keyframes slideInMobile {
-  from {
-    opacity: 0;
-    transform: translateX(100%);
+// ========================================
+// Body Scroll Lock (quand menu mobile ouvert)
+// ========================================
+// Body scroll lock standard : Le body est fixé via JavaScript
+// dans toggleMobileMenu() pour préserver les scroll events
+
+:global(body.mobile-menu-active) {
+  @include mobile {
+    overflow: hidden;
+    // Le body est fixé via JavaScript (position: fixed)
+    // Cela préserve window.scrollY et les scroll events pour parallax
   }
-  to {
-    opacity: 1;
-    transform: translateX(0);
+}
+
+// ========================================
+// Fallback - Navigateurs sans backdrop-filter
+// ========================================
+
+@supports not (backdrop-filter: blur(8px)) {
+  .brutalist-nav {
+    background: rgba(245, 238, 230, 0.95); // Plus opaque en fallback
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+// ========================================
+// Reduced Motion
+// ========================================
+
+@media (prefers-reduced-motion: reduce) {
+  .brutalist-nav {
+    transition: none !important;
+  }
+
+  .logo-name,
+  .nav-link,
+  .hamburger-line {
+    transition: none !important;
+  }
+
+  .nav-link::after {
+    transition: none !important;
   }
 }

@@ -1,81 +1,60 @@
 <!--
-  Navigation principale (Header)
-  ==============================
-  Barre de navigation fixe en haut de page
+  Navigation principale (Header) - Style Article
+  ===============================================
 
-  Fonctionnalités :
-  - Affichage du logo et nom
-  - Liens de navigation générés dynamiquement depuis navigation.data.ts
-  - Effet liquid glass au scroll (>50px)
-  - Changement de couleur du texte au scroll
+  Navbar simplified avec composants inline :
+  - Logo et nom (inline)
+  - Nav links desktop (inline, pas de composant)
+  - Hamburger button (inline, pas de composant)
+  - app-mobile-menu : Menu latéral mobile (seul composant)
 
-  Les liens sont partagés avec le footer pour garantir la cohérence
+  Style article : 95% width, 24px border-radius, static glass blur(8px)
 -->
 
-<header class="header brutalist-nav" [class.scrolled]="isScrolled()">
-  <nav class="nav-container">
-    <!-- Logo et nom -->
-    <div class="logo-container">
+<header class="brutalist-nav" [class.scrolled]="isScrolled()">
+  <!-- Logo et nom -->
+  <div class="logo-container">
+    <a
+      href="#home"
+      class="logo-name"
+      [class.scrolled]="isScrolled()"
+      (click)="scrollService.scrollToSection('home'); $event.preventDefault()"
+      aria-label="Retour à l'accueil">
+      Cyril Bizouarn
+    </a>
+    <span class="logo-subtitle">UX/UI DESIGNER, DEVELOPER</span>
+  </div>
+
+  <!-- Navigation Desktop (inline) -->
+  <nav class="nav-links" aria-label="Navigation principale">
+    @for (link of navLinks; track link.id) {
       <a
-        href="#home"
-        class="logo-name"
-        (click)="onNavClick($event, 'home')"
-        aria-label="Retour à l'accueil"
-      >
-        Cyril Bizouarn
+        [href]="link.href"
+        class="nav-link"
+        [class.active]="scrollService.activeSection() === link.id"
+        [attr.aria-current]="scrollService.activeSection() === link.id ? 'page' : null"
+        (click)="scrollService.scrollToSection(link.id); $event.preventDefault()">
+        {{ link.label }}
       </a>
-      <span class="logo-subtitle">UX/UI DESIGNER, DEVELOPER</span>
-    </div>
-
-    <!-- Hamburger button (mobile only) -->
-    <button
-      class="hamburger-button"
-      [class.active]="mobileMenuOpen"
-      (click)="toggleMobileMenu()"
-      aria-label="Toggle navigation menu"
-      [attr.aria-expanded]="mobileMenuOpen"
-      aria-controls="mobile-nav-menu"
-    >
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-    </button>
-
-    <!-- Navigation générée dynamiquement (Desktop) -->
-    <!-- Les liens proviennent de navigation.data.ts (source unique partagée avec le footer) -->
-    <ul class="nav-links">
-      @for (link of navLinks; track link.id) {
-        <li>
-          <a
-            [href]="link.href"
-            (click)="onNavClick($event, link.id)"
-            [attr.aria-label]="'Aller à la section ' + link.label"
-          >
-            {{ link.label }}
-          </a>
-        </li>
-      }
-    </ul>
+    }
   </nav>
+
+  <!-- Hamburger Button Mobile (inline) -->
+  <button
+    class="hamburger-button"
+    [class.active]="mobileMenuOpen()"
+    [class.scrolled]="isScrolled()"
+    (click)="toggleMobileMenu()"
+    aria-label="Toggle menu"
+    [attr.aria-expanded]="mobileMenuOpen()">
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+    <span class="hamburger-line"></span>
+  </button>
 </header>
 
-<!-- Menu mobile séparé (en dehors de la navbar) -->
-<nav
-  class="mobile-nav-menu"
-  [class.mobile-menu-open]="mobileMenuOpen"
-  id="mobile-nav-menu"
->
-  <ul class="mobile-nav-links">
-    @for (link of navLinks; track link.id) {
-      <li>
-        <a
-          [href]="link.href"
-          (click)="closeMenu(); onNavClick($event, link.id)"
-          [attr.aria-label]="'Aller à la section ' + link.label"
-        >
-          {{ link.label }}
-        </a>
-      </li>
-    }
-  </ul>
-</nav>
+<!-- Menu Mobile (component) - En dehors du header -->
+<app-mobile-menu
+  [isOpen]="mobileMenuOpen()"
+  [links]="navLinks"
+  (close)="closeMenu()" />

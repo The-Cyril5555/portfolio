@@ -1,7 +1,7 @@
 // Skills Component
 // =================
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Technology } from '../../../models/technology.model';
 import { TECHNOLOGIES } from '../../../data/technologies.data';
@@ -10,6 +10,7 @@ import { TECHNOLOGIES } from '../../../data/technologies.data';
   selector: 'app-skills',
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="competence-section">
       <h2 class="competence-title">{{ title }}</h2>

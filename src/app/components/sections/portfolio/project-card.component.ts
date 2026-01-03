@@ -1,7 +1,7 @@
 // Project Card Component
 // =======================
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Project } from '../../../models/project.model';
 import { BadgeComponent } from '../../shared/badge.component';
@@ -10,6 +10,8 @@ import { BadgeComponent } from '../../shared/badge.component';
   selector: 'app-project-card',
   standalone: true,
   imports: [CommonModule, BadgeComponent],
+  styleUrl: './project-card.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <article class="project-card glass-card">
       <div class="project-image">
@@ -61,109 +63,7 @@ import { BadgeComponent } from '../../shared/badge.component';
         </div>
       </div>
     </article>
-  `,
-  styles: [`
-    @use '../../../../styles/variables' as *;
-    @use '../../../../styles/mixins' as *;
-
-    .project-card {
-      @include card-hover;
-      overflow: hidden;
-
-      .project-image {
-        position: relative;
-        aspect-ratio: 16 / 10;
-        border-radius: $radius-md;
-        overflow: hidden;
-        margin-bottom: $spacing-md;
-
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform $transition-slow;
-        }
-
-        .overlay {
-          @include full-cover;
-          background: var(--overlay-bg);
-          opacity: 0;
-          transition: opacity $transition-base;
-          @include flex-center;
-
-          .view-link {
-            transform: translateY(20px);
-            transition: transform $transition-base;
-          }
-        }
-      }
-
-      &:hover {
-        .project-image {
-          img {
-            transform: scale(1.05);
-          }
-
-          .overlay {
-            opacity: 1;
-
-            .view-link {
-              transform: translateY(0);
-            }
-          }
-        }
-      }
-
-      .project-content {
-        .project-meta {
-          display: flex;
-          align-items: center;
-          gap: $spacing-sm;
-          font-size: $font-size-sm;
-          color: var(--text-tertiary);
-          margin-bottom: $spacing-sm;
-
-          .separator {
-            opacity: 0.5;
-          }
-        }
-
-        h3 {
-          margin-bottom: $spacing-sm;
-          font-size: $font-size-xl;
-        }
-
-        p {
-          color: var(--text-secondary);
-          margin-bottom: $spacing-md;
-          @include line-clamp(2);
-        }
-
-        .project-tags {
-          display: flex;
-          flex-wrap: wrap;
-          gap: $spacing-sm;
-          margin-bottom: $spacing-md;
-        }
-
-        .project-links {
-          display: flex;
-          gap: $spacing-md;
-          padding-top: $spacing-md;
-          border-top: 1px solid var(--border-primary);
-
-          a {
-            color: var(--text-secondary);
-            transition: color $transition-fast;
-
-            &:hover {
-              color: var(--accent-primary);
-            }
-          }
-        }
-      }
-    }
-  `]
+  `
 })
 export class ProjectCardComponent {
   @Input({ required: true }) project!: Project;

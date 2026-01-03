@@ -1,5 +1,4 @@
-@use '../../../../styles/variables' as *;
-@use '../../../../styles/mixins' as *;
+@use '../../../../styles/responsive' as *;
 
 .hero {
   min-height: 100vh;
@@ -10,10 +9,10 @@
 
 .hero-background {
   position: absolute;
-  top: -20%;
+  top: -50%;
   left: 0;
   width: 100%;
-  height: 140%;
+  height: 180%;
   background-image: url('/paint.png');
   background-size: cover;
   background-position: center top;
@@ -38,7 +37,7 @@
   margin-left: 15px;
   text-align: left;
 
-  @media (max-width: 768px) {
+  @include mobile {
     font-size: 18px;
     margin-bottom: 18px;
   }
@@ -57,13 +56,13 @@
   gap: 20px;
 
   // Tablet adjustment
-  @media (max-width: 1024px) {
+  @include tablet {
     right: 40px;
     padding: 25px 35px;
   }
 
   // Mobile: Top right positioning
-  @media (max-width: 768px) {
+  @include mobile {
     top: 90px;
     right: 20px;
     transform: none;
@@ -72,7 +71,7 @@
   }
 
   // Very small screens
-  @media (max-width: 480px) {
+  @include tiny {
     top: 85px;
     padding: 12px 20px;
     gap: 10px;
@@ -85,14 +84,14 @@
     width: 40px;
     height: 40px;
 
-    @media (max-width: 768px) {
+    @include mobile {
       width: 25px;
       height: 25px;
       top: 6px;
       left: 6px;
     }
 
-    @media (max-width: 480px) {
+    @include tiny {
       width: 20px;
       height: 20px;
       top: 5px;
@@ -106,11 +105,11 @@
     font-weight: 900 !important;
     line-height: 0.9;
 
-    @media (max-width: 768px) {
+    @include mobile {
       font-size: 60px;
     }
 
-    @media (max-width: 480px) {
+    @include tiny {
       font-size: 50px;
     }
   }
@@ -129,12 +128,12 @@
     font-weight: 400;
     margin-bottom: 5px;
 
-    @media (max-width: 768px) {
+    @include mobile {
       font-size: 12px;
       margin-bottom: 2px;
     }
 
-    @media (max-width: 480px) {
+    @include tiny {
       font-size: 11px;
     }
   }
@@ -146,12 +145,12 @@
     line-height: 1.3;
     font-weight: 400;
 
-    @media (max-width: 768px) {
+    @include mobile {
       font-size: 10px;
       line-height: 1.2;
     }
 
-    @media (max-width: 480px) {
+    @include tiny {
       font-size: 9px;
     }
   }
@@ -167,14 +166,14 @@
   text-align: left;
 
   // Tablet: Use fixed padding
-  @media (max-width: 1024px) {
+  @include tablet {
     left: 40px;
     right: 40px;
     max-width: calc(100% - 80px);
   }
 
   // Mobile: Top left positioning, aligned with badge
-  @media (max-width: 768px) {
+  @include mobile {
     left: 20px;
     top: 90px;
     bottom: auto;
@@ -183,7 +182,7 @@
   }
 
   // Very small: Adjust top position
-  @media (max-width: 480px) {
+  @include tiny {
     top: 80px;
     max-width: 58%;
   }
@@ -199,7 +198,7 @@
     text-transform: uppercase;
     margin: 0;
 
-    @media (max-width: 768px) {
+    @include mobile {
       font-size: clamp(48px, 14vw, 100px);
       line-height: 1.1;
     }
@@ -219,11 +218,11 @@
       display: inline-block;
 
       // Better scaling on mobile
-      @media (max-width: 768px) {
+      @include mobile {
         font-size: clamp(120px, 13vw, 160px);
       }
 
-      @media (max-width: 480px) {
+      @include tiny {
         font-size: clamp(85px, 12vw, 140px);
       }
     }
@@ -237,11 +236,11 @@
       display: inline-block;
 
       // Better scaling on mobile
-      @media (max-width: 768px) {
+      @include mobile {
         font-size: clamp(120px, 11vw, 140px);
       }
 
-      @media (max-width: 480px) {
+      @include tiny {
         font-size: clamp(75px, 10vw, 125px);
       }
     }
@@ -280,14 +279,14 @@
   gap: 30px;
 
   // Tablet: Better positioning
-  @media (max-width: 1024px) {
+  @include tablet {
     right: 40px;
     max-width: 600px;
     gap: 25px;
   }
 
   // Mobile: Centered below badge/title
-  @media (max-width: 768px) {
+  @include mobile {
     position: absolute;
     top: 380px;
     left: 50%;
@@ -301,7 +300,7 @@
     align-items: center;
   }
 
-  @media (max-width: 480px) {
+  @include tiny {
     top: 320px;
     max-width: 85%;
     gap: 15px;
@@ -319,20 +318,20 @@
     letter-spacing: 0.02em;
 
     // Tablet adjustment
-    @media (max-width: 1024px) {
+    @include tablet {
       font-size: 24px;
       line-height: 1.5;
     }
 
     // CRITICAL FIX: Mobile font size reduction
-    @media (max-width: 768px) {
+    @include mobile {
       font-size: 16px;
       line-height: 1.6;
       font-weight: 600;
       letter-spacing: 0.01em;
     }
 
-    @media (max-width: 480px) {
+    @include tiny {
       font-size: 14px;
       line-height: 1.35;
     }
@@ -376,12 +375,12 @@
     text-align: left;
     line-height: 1.1;
 
-    @media (max-width: 768px) {
+    @include mobile {
       font-size: 14px;
       padding: 0 12px 0 0;
     }
 
-    @media (max-width: 480px) {
+    @include tiny {
       font-size: 13px;
     }
   }
@@ -394,7 +393,7 @@
   }
 
   // Mobile button adjustments
-  @media (max-width: 768px) {
+  @include mobile {
     align-self: center;
     width: auto;
     min-width: 130px;
@@ -411,7 +410,7 @@
     }
   }
 
-  @media (max-width: 480px) {
+  @include tiny {
     min-width: 120px;
   }
 }

@@ -1,7 +1,7 @@
 // About Component
 // ================
 
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { QUALITIES, EDUCATION, EXPERIENCES, BIO_PARAGRAPHS } from '../../../data/about.data';
 import { Quality, Education, Experience, TimelineItem } from '../../../models/about.model';
@@ -12,7 +12,8 @@ import { TimelineComponent } from '../../shared/timeline.component';
   standalone: true,
   imports: [CommonModule, TimelineComponent],
   templateUrl: './about.component.html',
-  styleUrl: './about.component.scss'
+  styleUrl: './about.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AboutComponent {
   bioParagraphs = signal<string[]>(BIO_PARAGRAPHS);
