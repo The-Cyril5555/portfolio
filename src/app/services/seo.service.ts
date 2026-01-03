@@ -51,7 +51,7 @@ export class SeoService {
     const {
       title,
       description,
-      image = 'https://the-cyril5555.github.io/PortFolio/logo.png',
+      image = 'https://the-cyril5555.github.io/PortFolio/og-image.png',
       url = 'https://the-cyril5555.github.io/PortFolio/',
       type = 'website',
       keywords,
