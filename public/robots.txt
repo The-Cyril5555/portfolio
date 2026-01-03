@@ -1,6 +1,6 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cyril-bizouarn.com/sitemap.xml
+Sitemap: https://the-cyril5555.github.io/PortFolio/sitemap.xml
 
 Crawl-delay: 1
