@@ -1,7 +1,7 @@
 // Tech Grid Component
 // ====================
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Technology } from '../../../models/technology.model';
 import { TECHNOLOGIES } from '../../../data/technologies.data';
@@ -11,7 +11,8 @@ import { TECHNOLOGIES } from '../../../data/technologies.data';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './tech-grid.component.html',
-  styleUrl: './tech-grid.component.scss'
+  styleUrl: './tech-grid.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TechGridComponent {
   @Input() technologies: Technology[] = TECHNOLOGIES;

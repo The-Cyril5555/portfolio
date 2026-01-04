@@ -31,12 +31,26 @@
   justify-content: space-between;
   align-items: center;
 
-  // Article style : Static glass effect (blur 8px constant)
+  // Article style : Static glass effect (blur optimized for performance)
   background: rgba(245, 238, 230, 0.08);
-  backdrop-filter: blur(8px) saturate(180%);
-  -webkit-backdrop-filter: blur(8px) saturate(180%);
+
+  // Optimized backdrop-filter: lighter blur on mobile for better performance
+  backdrop-filter: blur(6px) saturate(180%);
+  -webkit-backdrop-filter: blur(6px) saturate(180%);
+
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 24px;
+
+  // Desktop: stronger blur for better visual effect
+  @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+  }
+
+  // Fallback for browsers without backdrop-filter support
+  @supports not (backdrop-filter: blur(6px)) {
+    background: rgba(245, 238, 230, 0.95);
+  }
 
   // Shadow when scrolled (transition smooth)
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0);

@@ -85,203 +85,29 @@ export class AnimationService {
   /**
    * Initialise toutes les animations au scroll
    *
-   * Point d'entrée principal appelé au démarrage de l'application (app.ts).
-   * Crée tous les ScrollTriggers pour les différentes sections.
+   * **✅ MIGRATION TERMINÉE**
    *
-   * **⚠️ Note :** Cette méthode est progressivement vidée au fur et à mesure
-   * que les animations migrent vers ScrollRevealDirective.
+   * Toutes les animations ont été migrées vers ScrollRevealDirective.
+   * Cette méthode est conservée temporairement pour compatibilité
+   * mais ne fait plus rien.
    *
+   * @deprecated Toutes les animations utilisent maintenant ScrollRevealDirective
    * @public
    *
    * @example
    * ```typescript
+   * // Ancienne approche (déprécié)
    * ngAfterViewInit() {
    *   this.animationService.initScrollAnimations();
    * }
+   *
+   * // Nouvelle approche (recommandée)
+   * // Utiliser [appScrollReveal] directement dans les templates
    * ```
    */
   initScrollAnimations(): void {
-    // ✅ Migré vers ScrollRevealDirective
-    // this.projectCardsAnimation();
-
-    // ⏳ À migrer
-    this.skillBadgesAnimation();
-    this.fadeInSections();
-  }
-
-  // ========================================
-  // Méthodes publiques - Animations spécifiques
-  // ========================================
-
-  /**
-   * Animation de la section Hero
-   *
-   * **⚠️ DÉPRÉCIÉ - Ne plus utiliser**
-   *
-   * Cette méthode est remplacée par ScrollRevealDirective appliquée
-   * directement dans hero.component.html sur les éléments :
-   * - .hero-main-text
-   * - .hero-description
-   * - .hero-cta
-   *
-   * @deprecated Utiliser ScrollRevealDirective à la place
-   * @public
-   *
-   * @example
-   * ```html
-   * <!-- Nouvelle approche (hero.component.html) -->
-   * <h1 [appScrollReveal]="{ animation: 'fadeInUp', duration: 1000 }">
-   *   Titre
-   * </h1>
-   * ```
-   */
-  heroAnimation(): void {
-    // ⚠️ DÉPRÉCIÉ - Conservé pour compatibilité temporaire
-    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-
-    tl.from('.hero-main-text', {
-      y: 50,
-      opacity: 0,
-      duration: 1,
-      clearProps: 'all'
-    })
-    .from('.hero-description', {
-      y: 30,
-      opacity: 0,
-      duration: 0.8,
-      clearProps: 'all'
-    }, '-=0.5')
-    .from('.hero-cta', {
-      y: 20,
-      opacity: 0,
-      duration: 0.8,
-      clearProps: 'all'
-    }, '-=0.4');
-  }
-
-  /**
-   * Animation des cartes de projets avec effet stagger
-   *
-   * **⚠️ DÉPRÉCIÉ - Ne plus utiliser**
-   *
-   * Cette méthode est remplacée par ScrollRevealDirective avec stagger
-   * appliquée directement sur .carousel-track dans portfolio.component.html.
-   *
-   * @deprecated Utiliser ScrollRevealDirective avec stagger: true
-   * @private
-   *
-   * @example
-   * ```html
-   * <!-- Nouvelle approche (portfolio.component.html) -->
-   * <div class="carousel-track"
-   *      [appScrollReveal]="{
-   *        animation: 'fadeInUp',
-   *        duration: 600,
-   *        stagger: true,
-   *        staggerDelay: 150
-   *      }">
-   *   <!-- Project cards -->
-   * </div>
-   * ```
-   */
-  private projectCardsAnimation(): void {
-    // ⚠️ DÉPRÉCIÉ - Conservé pour référence
-    const trigger = ScrollTrigger.create({
-      trigger: '.carousel-track',
-      start: 'top 80%',
-      onEnter: () => {
-        gsap.to('.project-card', {
-          y: 0,
-          opacity: 1,
-          duration: 0.6,
-          stagger: 0.15,
-          ease: 'power3.out',
-          clearProps: 'transform'
-        });
-      },
-      once: true
-    });
-
-    this.scrollTriggers.push(trigger);
-  }
-
-  /**
-   * Animation des badges de compétences avec effet de rebond
-   *
-   * Anime les badges de la section Skills avec un effet de scale
-   * et un easing "back.out" pour un rebond subtil.
-   *
-   * **⏳ À migrer vers ScrollRevealDirective**
-   *
-   * @private
-   *
-   * Configuration :
-   * - Trigger: 75% de la section visible
-   * - Animation: Scale de 0.8 à 1 avec fade in
-   * - Stagger: 80ms entre chaque badge
-   * - Easing: back.out(1.7) pour effet rebond
-   */
-  private skillBadgesAnimation(): void {
-    const trigger = ScrollTrigger.create({
-      trigger: '.skills-grid',
-      start: 'top 75%',
-      onEnter: () => {
-        gsap.from('.skill-badge', {
-          scale: 0.8,
-          opacity: 0,
-          duration: 0.5,
-          stagger: 0.08,
-          ease: 'back.out(1.7)'
-        });
-      },
-      once: true
-    });
-
-    this.scrollTriggers.push(trigger);
-  }
-
-  /**
-   * Animation fade in générique pour les sections
-   *
-   * Applique une animation fade in + slide up sur toutes les sections
-   * ayant la classe CSS `.fade-in-section`.
-   *
-   * **⏳ À migrer vers ScrollRevealDirective**
-   *
-   * @private
-   *
-   * Configuration :
-   * - Trigger: 85% de la section visible
-   * - Animation: Slide up (y: 0) + fade in (opacity: 1)
-   * - Durée: 800ms
-   * - Easing: power2.out (décélération douce)
-   *
-   * Utilisation actuelle :
-   * Toute section HTML avec la classe `.fade-in-section` sera automatiquement
-   * animée lors de l'entrée dans la viewport.
-   */
-  private fadeInSections(): void {
-    // Récupère toutes les sections avec la classe .fade-in-section
-    const sections = gsap.utils.toArray<HTMLElement>('.fade-in-section');
-
-    // Crée un ScrollTrigger pour chaque section
-    sections.forEach((section) => {
-      const trigger = ScrollTrigger.create({
-        trigger: section,
-        start: 'top 85%',
-        onEnter: () => {
-          gsap.to(section, {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            ease: 'power2.out'
-          });
-        },
-        once: true
-      });
-
-      this.scrollTriggers.push(trigger);
-    });
+    // ✅ Toutes les animations migrées vers ScrollRevealDirective
+    // Plus aucune animation à initialiser ici
   }
 
   // ========================================

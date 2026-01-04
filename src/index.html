@@ -19,7 +19,7 @@
   <meta property="og:description" content="Développeur web full-stack junior spécialisé en React, Node.js et SQL. Création d'applications web, sites e-commerce et plateformes métiers.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://the-cyril5555.github.io/PortFolio/">
-  <meta property="og:image" content="https://the-cyril5555.github.io/PortFolio/og-image.png">
+  <meta property="og:image" content="https://the-cyril5555.github.io/PortFolio/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="fr_FR">
@@ -28,7 +28,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Cyril Bizouarn - Développeur Web Full-Stack">
   <meta name="twitter:description" content="Portfolio de développeur web full-stack junior spécialisé en React, Node.js et SQL.">
-  <meta name="twitter:image" content="https://the-cyril5555.github.io/PortFolio/og-image.png">
+  <meta name="twitter:image" content="https://the-cyril5555.github.io/PortFolio/og-image.jpg">
   <meta name="twitter:creator" content="@cyrilbizouarn">
 
   <link rel="icon" type="image/x-icon" href="favicon.ico">
@@ -40,10 +40,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Anton&family=Estonia&family=Montserrat:wght@400;500;600;700&display=swap" as="style">
 
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Estonia&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+  <!-- Preload critical images -->
+  <link rel="preload" as="image" type="image/webp" href="/paint.webp">
+  <link rel="preload" as="image" type="image/jpeg" href="/paint.jpg">
+
+  <!-- Async font loading for better performance -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Anton&family=Estonia&family=Montserrat:wght@400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Anton&family=Estonia&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet"></noscript>
+
+  <!-- Lazy load devicons CSS -->
+  <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" media="print" onload="this.media='all'" />
 </head>
 <body>
   <!-- SVG Filters pour liquid glass -->

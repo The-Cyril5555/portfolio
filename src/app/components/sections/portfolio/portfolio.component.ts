@@ -35,12 +35,13 @@ import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Project } from '../../../models/project.model';
 import { ScrollRevealDirective } from '../../../directives/scroll-reveal.directive';
+import { LazyImageDirective } from '../../../directives/lazy-image.directive';
 import { PortfolioRepository } from '../../../services/data/portfolio.repository';
 
 @Component({
   selector: 'app-portfolio',
   standalone: true,
-  imports: [CommonModule, ScrollRevealDirective],
+  imports: [CommonModule, ScrollRevealDirective, LazyImageDirective],
   templateUrl: './portfolio.component.html',
   styleUrl: './portfolio.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

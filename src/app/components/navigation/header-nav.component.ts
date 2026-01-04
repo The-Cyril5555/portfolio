@@ -110,11 +110,9 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
     window.removeEventListener('scroll', this.handleScroll);
 
     // Restaurer le body si menu était ouvert
-    document.body.style.overflow = '';
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.width = '';
-    this.renderer.removeClass(document.body, 'mobile-menu-active');
+    if (this.mobileMenuOpen()) {
+      this.unlockBodyScroll();
+    }
   }
 
   // ========================================
@@ -149,42 +147,54 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
     this.mobileMenuOpen.set(newState);
 
     if (newState) {
-      // OUVERTURE : Sauvegarder position et verrouiller
-      this.scrollPosition = window.scrollY;
-
-      // Verrouiller le BODY (pattern standard - préserve scroll events!)
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${this.scrollPosition}px`;
-      document.body.style.width = '100%';
-      this.renderer.addClass(document.body, 'mobile-menu-active');
+      this.lockBodyScroll();
     } else {
-      // FERMETURE : Déverrouiller et restaurer
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      this.renderer.removeClass(document.body, 'mobile-menu-active');
-
-      // Restaurer la position de scroll
-      window.scrollTo(0, this.scrollPosition);
+      this.unlockBodyScroll();
     }
   }
 
   /**
    * Ferme le menu mobile
    * Appelé par l'événement (close) du MobileMenuComponent
-   *
-   * Utilise la même logique de body scroll lock que toggleMobileMenu
    */
   closeMenu(): void {
+    this.mobileMenuOpen.set(false);
+    this.unlockBodyScroll();
+  }
+
+  /**
+   * Verrouille le scroll du body et sauvegarde la position actuelle
+   *
+   * **Body Scroll Lock Strategy :**
+   * - Fixe le body (pattern standard) pour empêcher le scroll visuel
+   * - Préserve window.scrollY pour que les scroll events continuent
+   * - Sauvegarde la position de scroll pour restauration ultérieure
+   * - Permet au parallax de continuer à fonctionner
+   *
+   * @private
+   */
+  private lockBodyScroll(): void {
+    this.scrollPosition = window.scrollY;
+
+    // Verrouiller le body (pattern standard - préserve scroll events!)
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${this.scrollPosition}px`;
+    document.body.style.width = '100%';
+    this.renderer.addClass(document.body, 'mobile-menu-active');
+  }
+
+  /**
+   * Déverrouille le scroll du body et restaure la position sauvegardée
+   *
+   * @private
+   */
+  private unlockBodyScroll(): void {
     // Déverrouiller le body
     document.body.style.overflow = '';
     document.body.style.position = '';
     document.body.style.top = '';
     document.body.style.width = '';
-
-    this.mobileMenuOpen.set(false);
     this.renderer.removeClass(document.body, 'mobile-menu-active');
 
     // Restaurer la position de scroll

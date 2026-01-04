@@ -51,7 +51,7 @@ export class SeoService {
     const {
       title,
       description,
-      image = 'https://the-cyril5555.github.io/PortFolio/og-image.png',
+      image = 'https://the-cyril5555.github.io/PortFolio/og-image.jpg',
       url = 'https://the-cyril5555.github.io/PortFolio/',
       type = 'website',
       keywords,
@@ -62,27 +62,79 @@ export class SeoService {
     // Update page title
     this.title.setTitle(title);
 
-    // Update standard meta tags
-    this.meta.updateTag({ name: 'description', content: description });
-    this.meta.updateTag({ name: 'keywords', content: keywords.join(', ') });
-    this.meta.updateTag({ name: 'robots', content: robots });
-
-    // Update Open Graph tags
-    this.meta.updateTag({ property: 'og:title', content: title });
-    this.meta.updateTag({ property: 'og:description', content: description });
-    this.meta.updateTag({ property: 'og:image', content: image });
-    this.meta.updateTag({ property: 'og:url', content: url });
-    this.meta.updateTag({ property: 'og:type', content: type });
-
-    // Update Twitter Card tags
-    this.meta.updateTag({ name: 'twitter:title', content: title });
-    this.meta.updateTag({ name: 'twitter:description', content: description });
-    this.meta.updateTag({ name: 'twitter:image', content: image });
+    // Update meta tags in groups (helper methods for better readability)
+    this.updateStandardTags(description, keywords, robots);
+    this.updateOgTags(title, description, image, url, type);
+    this.updateTwitterTags(title, description, image);
 
     // Update canonical URL if provided
     if (canonical) {
       this.updateCanonicalUrl(canonical);
     }
+  }
+
+  /**
+   * Met à jour les meta tags standards (description, keywords, robots)
+   *
+   * @param description Description de la page
+   * @param keywords Mots-clés de la page
+   * @param robots Directives pour les robots (index, follow)
+   * @private
+   */
+  private updateStandardTags(description: string, keywords: string[], robots: string): void {
+    const standardTags = [
+      { name: 'description', content: description },
+      { name: 'keywords', content: keywords.join(', ') },
+      { name: 'robots', content: robots }
+    ];
+
+    standardTags.forEach(tag => this.meta.updateTag(tag));
+  }
+
+  /**
+   * Met à jour les meta tags Open Graph (Facebook, LinkedIn)
+   *
+   * @param title Titre de la page
+   * @param description Description de la page
+   * @param image URL de l'image de preview
+   * @param url URL de la page
+   * @param type Type de contenu (website, article, etc.)
+   * @private
+   */
+  private updateOgTags(
+    title: string,
+    description: string,
+    image: string,
+    url: string,
+    type: string
+  ): void {
+    const ogTags = [
+      { property: 'og:title', content: title },
+      { property: 'og:description', content: description },
+      { property: 'og:image', content: image },
+      { property: 'og:url', content: url },
+      { property: 'og:type', content: type }
+    ];
+
+    ogTags.forEach(tag => this.meta.updateTag(tag));
+  }
+
+  /**
+   * Met à jour les meta tags Twitter Card
+   *
+   * @param title Titre de la page
+   * @param description Description de la page
+   * @param image URL de l'image de preview
+   * @private
+   */
+  private updateTwitterTags(title: string, description: string, image: string): void {
+    const twitterTags = [
+      { name: 'twitter:title', content: title },
+      { name: 'twitter:description', content: description },
+      { name: 'twitter:image', content: image }
+    ];
+
+    twitterTags.forEach(tag => this.meta.updateTag(tag));
   }
 
   /**
@@ -199,6 +251,43 @@ export class SeoService {
           'urlTemplate': 'https://the-cyril5555.github.io/PortFolio/#work'
         }
       }
+    };
+  }
+
+  /**
+   * Crée le schema BreadcrumbList pour une section
+   *
+   * Permet à Google d'afficher un fil d'Ariane dans les résultats de recherche,
+   * améliorant ainsi la navigation et le CTR.
+   *
+   * @param sectionId ID de la section (work, skills, about, contact)
+   * @param sectionName Nom affiché de la section
+   * @returns Schema JSON-LD de type BreadcrumbList
+   *
+   * @example
+   * ```typescript
+   * const breadcrumb = this.seoService.createBreadcrumbSchema('work', 'Projets');
+   * this.seoService.addStructuredData(breadcrumb, 'breadcrumb-work');
+   * ```
+   */
+  createBreadcrumbSchema(sectionId: string, sectionName: string): JsonLdSchema {
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      'itemListElement': [
+        {
+          '@type': 'ListItem',
+          'position': 1,
+          'name': 'Accueil',
+          'item': 'https://the-cyril5555.github.io/PortFolio/'
+        },
+        {
+          '@type': 'ListItem',
+          'position': 2,
+          'name': sectionName,
+          'item': `https://the-cyril5555.github.io/PortFolio/#${sectionId}`
+        }
+      ]
     };
   }
 

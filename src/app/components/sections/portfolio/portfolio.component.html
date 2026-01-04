@@ -75,7 +75,7 @@
           <!-- Featured Badge -->
           @if (project.featured) {
             <div class="featured-badge">
-              <img src="/star.png" alt="Featured" class="badge-star" />
+              <img [appLazyImage]="'/star.png'" alt="Featured" class="badge-star" />
             </div>
           }
         </article>
