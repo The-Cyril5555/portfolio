@@ -14,9 +14,27 @@ function fixPaths(filePath) {
     modified = true;
   }
 
-  // Replace /paint.png with /PortFolio/paint.png
-  if (content.includes('/paint.png')) {
-    content = content.replace(/\/paint\.png/g, `${baseHref}/paint.png`);
+  // Replace /paint.jpg with /PortFolio/paint.jpg
+  if (content.includes('/paint.jpg')) {
+    content = content.replace(/\/paint\.jpg/g, `${baseHref}/paint.jpg`);
+    modified = true;
+  }
+
+  // Replace /paint.webp with /PortFolio/paint.webp
+  if (content.includes('/paint.webp')) {
+    content = content.replace(/\/paint\.webp/g, `${baseHref}/paint.webp`);
+    modified = true;
+  }
+
+  // Replace /og-image.jpg with /PortFolio/og-image.jpg
+  if (content.includes('/og-image.jpg')) {
+    content = content.replace(/\/og-image\.jpg/g, `${baseHref}/og-image.jpg`);
+    modified = true;
+  }
+
+  // Replace /og-image.webp with /PortFolio/og-image.webp
+  if (content.includes('/og-image.webp')) {
+    content = content.replace(/\/og-image\.webp/g, `${baseHref}/og-image.webp`);
     modified = true;
   }
 
@@ -45,6 +63,16 @@ if (fs.existsSync(indexPath)) {
   }
   if (indexContent.includes('href="logo.png"')) {
     indexContent = indexContent.replace(/href="logo\.png"/g, `href="${baseHref}/logo.png"`);
+    indexModified = true;
+  }
+
+  // Fix preload image paths
+  if (indexContent.includes('href="/paint.webp"')) {
+    indexContent = indexContent.replace(/href="\/paint\.webp"/g, `href="${baseHref}/paint.webp"`);
+    indexModified = true;
+  }
+  if (indexContent.includes('href="/paint.jpg"')) {
+    indexContent = indexContent.replace(/href="\/paint\.jpg"/g, `href="${baseHref}/paint.jpg"`);
     indexModified = true;
   }
 
