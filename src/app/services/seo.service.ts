@@ -51,8 +51,8 @@ export class SeoService {
     const {
       title,
       description,
-      image = 'https://the-cyril5555.github.io/PortFolio/og-image.jpg',
-      url = 'https://the-cyril5555.github.io/PortFolio/',
+      image = 'https://the-cyril5555.github.io/portfolio/og-image.jpg',
+      url = 'https://the-cyril5555.github.io/portfolio/',
       type = 'website',
       keywords,
       robots = 'index, follow',
@@ -203,7 +203,7 @@ export class SeoService {
       '@type': 'Person',
       'name': 'Cyril Bizouarn',
       'jobTitle': 'Développeur Web Full-Stack',
-      'url': 'https://the-cyril5555.github.io/PortFolio/',
+      'url': 'https://the-cyril5555.github.io/portfolio/',
       'sameAs': [
         'https://github.com/The-Cyril5555',
         'https://linkedin.com/in/cyrilbizouarn'
@@ -238,7 +238,7 @@ export class SeoService {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
       'name': 'Cyril Bizouarn - Portfolio',
-      'url': 'https://the-cyril5555.github.io/PortFolio/',
+      'url': 'https://the-cyril5555.github.io/portfolio/',
       'description': 'Portfolio de Cyril Bizouarn, développeur web full-stack spécialisé en React, Node.js et SQL. Découvrez mes projets d\'applications web, sites e-commerce et plateformes métiers.',
       'author': {
         '@type': 'Person',
@@ -248,7 +248,7 @@ export class SeoService {
         '@type': 'SearchAction',
         'target': {
           '@type': 'EntryPoint',
-          'urlTemplate': 'https://the-cyril5555.github.io/PortFolio/#work'
+          'urlTemplate': 'https://the-cyril5555.github.io/portfolio/#work'
         }
       }
     };
@@ -279,13 +279,13 @@ export class SeoService {
           '@type': 'ListItem',
           'position': 1,
           'name': 'Accueil',
-          'item': 'https://the-cyril5555.github.io/PortFolio/'
+          'item': 'https://the-cyril5555.github.io/portfolio/'
         },
         {
           '@type': 'ListItem',
           'position': 2,
           'name': sectionName,
-          'item': `https://the-cyril5555.github.io/PortFolio/#${sectionId}`
+          'item': `https://the-cyril5555.github.io/portfolio/#${sectionId}`
         }
       ]
     };
@@ -314,7 +314,7 @@ export class SeoService {
           'portfolio',
           'développeur junior'
         ],
-        canonical: 'https://the-cyril5555.github.io/PortFolio/'
+        canonical: 'https://the-cyril5555.github.io/portfolio/'
       },
       work: {
         title: 'Projets - Cyril Bizouarn',
@@ -328,7 +328,7 @@ export class SeoService {
           'WooCommerce',
           'applications métiers'
         ],
-        canonical: 'https://the-cyril5555.github.io/PortFolio/#work'
+        canonical: 'https://the-cyril5555.github.io/portfolio/#work'
       },
       skills: {
         title: 'Compétences - Cyril Bizouarn',
@@ -344,7 +344,7 @@ export class SeoService {
           'stack technique',
           'technologies web'
         ],
-        canonical: 'https://the-cyril5555.github.io/PortFolio/#skills'
+        canonical: 'https://the-cyril5555.github.io/portfolio/#skills'
       },
       about: {
         title: 'À propos - Cyril Bizouarn',
@@ -358,7 +358,7 @@ export class SeoService {
           'BTS SIO',
           'MyDigitalSchool'
         ],
-        canonical: 'https://the-cyril5555.github.io/PortFolio/#about'
+        canonical: 'https://the-cyril5555.github.io/portfolio/#about'
       },
       contact: {
         title: 'Contact - Cyril Bizouarn',
@@ -371,7 +371,7 @@ export class SeoService {
           'mission développeur',
           'emploi développeur web'
         ],
-        canonical: 'https://the-cyril5555.github.io/PortFolio/#contact'
+        canonical: 'https://the-cyril5555.github.io/portfolio/#contact'
       }
     };
 

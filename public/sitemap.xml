@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Page d'accueil -->
   <url>
-    <loc>https://the-cyril5555.github.io/PortFolio/</loc>
+    <loc>https://the-cyril5555.github.io/portfolio/</loc>
     <lastmod>2026-01-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -10,7 +10,7 @@
 
   <!-- Section Work/Portfolio -->
   <url>
-    <loc>https://the-cyril5555.github.io/PortFolio/#work</loc>
+    <loc>https://the-cyril5555.github.io/portfolio/#work</loc>
     <lastmod>2026-01-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -18,7 +18,7 @@
 
   <!-- Section Skills -->
   <url>
-    <loc>https://the-cyril5555.github.io/PortFolio/#skills</loc>
+    <loc>https://the-cyril5555.github.io/portfolio/#skills</loc>
     <lastmod>2026-01-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -26,7 +26,7 @@
 
   <!-- Section About -->
   <url>
-    <loc>https://the-cyril5555.github.io/PortFolio/#about</loc>
+    <loc>https://the-cyril5555.github.io/portfolio/#about</loc>
     <lastmod>2026-01-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -34,7 +34,7 @@
 
   <!-- Section Contact -->
   <url>
-    <loc>https://the-cyril5555.github.io/PortFolio/#contact</loc>
+    <loc>https://the-cyril5555.github.io/portfolio/#contact</loc>
     <lastmod>2026-01-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

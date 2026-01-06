@@ -34,7 +34,7 @@ jobs:
 
       - name: Build Angular application
         run: |
-          npx ng build --base-href="/PortFolio/"
+          npx ng build --base-href="/portfolio/"
           node fix-paths.js
 
       - name: Add .nojekyll file

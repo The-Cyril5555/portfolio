@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const distDir = path.join(__dirname, 'dist', 'portfolio-angular', 'browser');
-const baseHref = '/PortFolio';
+const baseHref = '/portfolio';
 
 function fixPaths(filePath) {
   let content = fs.readFileSync(filePath, 'utf8');
