@@ -1,59 +1,231 @@
-# PortfolioAngular
+<div align="center">
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.4.
+# Portfolio Angular 🎨
 
-## Development server
+### Site Web Personnel - Modern & Minimalist
 
-To start a local development server, run:
+[![Angular](https://img.shields.io/badge/Angular-21.0-DD0031?style=for-the-badge&logo=angular&logoColor=white)](https://angular.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![GSAP](https://img.shields.io/badge/GSAP-3.14-88CE02?style=for-the-badge&logo=greensock&logoColor=white)](https://gsap.com)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+
+[Demo en ligne](https://your-portfolio-url.com) • [Signaler un Bug](https://github.com/The-Cyril5555/portfolio/issues) • [Demander une Feature](https://github.com/The-Cyril5555/portfolio/issues)
+
+</div>
+
+---
+
+## ✨ À propos
+
+Portfolio web moderne développé avec **Angular 19**, présentant mes projets et compétences en développement web. Le design adopte une approche **brutalist** avec des effets de **glassmorphisme** et des **animations fluides** propulsées par GSAP.
+
+### 🎯 Points Forts
+
+- 🎨 **Design Moderne** - Interface brutalist avec effets glassmorphisme
+- ⚡ **Animations Fluides** - Intégration GSAP et Motion One pour des transitions élégantes
+- 🎭 **Galerie Artistique** - Intégration de peintures classiques comme arrière-plans
+- 🌓 **Mode Sombre/Clair** - Système de thèmes dynamique
+- 📱 **Responsive** - Design adaptatif pour tous les écrans
+- 🚀 **Performance** - Optimisation SSR et lazy loading des images
+- ♿ **Accessibilité** - Respect des standards WCAG
+
+---
+
+## 🛠️ Stack Technique
+
+<table>
+<tr>
+<td>
+
+**Frontend**
+- Angular 21
+- TypeScript 5.9
+- SCSS Modules
+- RxJS 7.8
+
+</td>
+<td>
+
+**Animations**
+- GSAP 3.14
+- Motion One
+- Scroll Reveal
+- Parallax Effects
+
+</td>
+<td>
+
+**Outils**
+- Angular CLI
+- Vitest
+- Prettier
+- Sharp (Images)
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🚀 Démarrage Rapide
+
+### Prérequis
 
 ```bash
-ng serve
+Node.js >= 18.x
+npm >= 10.9.2
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Installation
 
 ```bash
-ng generate component component-name
+# Cloner le repository
+git clone https://github.com/The-Cyril5555/portfolio.git
+
+# Accéder au dossier
+cd portfolio-angular
+
+# Installer les dépendances
+npm install
+
+# Lancer le serveur de développement
+npm start
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+L'application sera accessible sur [http://localhost:4200](http://localhost:4200) 🎉
 
-```bash
-ng generate --help
+---
+
+## 📦 Scripts Disponibles
+
+| Commande | Description |
+|----------|-------------|
+| `npm start` | Démarre le serveur de développement |
+| `npm run build` | Compile le projet pour la production + fix des paths |
+| `npm run watch` | Compilation en mode watch pour le développement |
+| `npm test` | Lance les tests unitaires avec Vitest |
+
+---
+
+## 🏗️ Architecture du Projet
+
+```
+src/
+├── app/
+│   ├── components/         # Composants réutilisables
+│   │   ├── navigation/    # Header, mobile menu
+│   │   ├── sections/      # Hero, About, Portfolio, Contact
+│   │   ├── shared/        # Buttons, badges, timeline
+│   │   └── ui/           # Icon, theme toggle
+│   ├── directives/        # Directives custom (parallax, scroll-reveal)
+│   ├── services/          # Services Angular
+│   │   ├── data/         # Repositories de données
+│   │   ├── animation.service.ts
+│   │   ├── scroll.service.ts
+│   │   └── seo.service.ts
+│   ├── models/           # Interfaces TypeScript
+│   ├── data/            # Données statiques (projets, skills)
+│   └── app.routes.ts    # Configuration des routes
+├── assets/              # Images, fonts, etc.
+└── styles/             # Styles globaux SCSS
 ```
 
-## Building
+---
 
-To build the project run:
+## 🎨 Fonctionnalités
 
-```bash
-ng build
+### ⚡ Animations Avancées
+
+- **Scroll Reveal** - Les éléments apparaissent au défilement
+- **Parallax** - Effets de profondeur sur les backgrounds
+- **Transitions Fluides** - Navigation et interactions animées
+
+### 📱 Sections du Portfolio
+
+| Section | Description |
+|---------|-------------|
+| **Hero** | Introduction avec animation de texte dynamique |
+| **About** | Présentation et compétences techniques |
+| **Portfolio** | Galerie de projets avec filtres |
+| **Technologies** | Grille des technologies maîtrisées |
+| **Contact** | Formulaire de contact et réseaux sociaux |
+
+### 🎭 Projets Présentés
+
+- **Proflex** - Plateforme d'intérim logistique (React, Node.js)
+- **SQWK** - Site e-commerce (WordPress, WooCommerce)
+- **Wiki App** - Application de recherche (React, API REST)
+- Et plus encore...
+
+---
+
+## 🎨 Personnalisation des Couleurs
+
+> **Note sur les couleurs GitHub** : GitHub Markdown supporte plusieurs façons d'ajouter de la couleur à votre documentation :
+
+### Méthodes disponibles :
+
+1. **Badges** (shields.io) - Le plus populaire
+```markdown
+![Badge](https://img.shields.io/badge/texte-valeur-couleur?style=for-the-badge)
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
+2. **Emojis** - Pour ajouter de la vie
+```markdown
+✅ Succès | ⚠️ Attention | ❌ Erreur | 🚀 Feature
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
+3. **Blocs de code colorés** - Coloration syntaxique
+```javascript
+// Code JavaScript avec coloration
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+4. **HTML limité** - Alignement et structure
+```html
+<div align="center">Contenu centré</div>
+```
 
-## Additional Resources
+5. **Diff blocks** - Pour montrer les changements
+```diff
+- Ancienne ligne (rouge)
++ Nouvelle ligne (vert)
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+> ⚠️ **Limitation** : GitHub ne supporte PAS le CSS inline ou les styles personnalisés pour des raisons de sécurité. Les couleurs sont limitées aux badges, emojis et coloration syntaxique.
+
+---
+
+## 🤝 Contribution
+
+Les contributions sont les bienvenues ! N'hésitez pas à :
+
+1. Fork le projet
+2. Créer une branche (`git checkout -b feature/AmazingFeature`)
+3. Commit vos changements (`git commit -m 'Add some AmazingFeature'`)
+4. Push vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrir une Pull Request
+
+---
+
+## 📝 License
+
+Ce projet est sous licence **MIT**. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
+
+---
+
+## 👤 Auteur
+
+**Cyril**
+
+- GitHub: [@The-Cyril5555](https://github.com/The-Cyril5555)
+- Portfolio: [votre-site.com](https://your-portfolio-url.com)
+
+---
+
+<div align="center">
+
+### ⭐ Si ce projet vous plaît, n'hésitez pas à lui donner une étoile !
+
+**Fait avec ❤️ et Angular**
+
+</div>
