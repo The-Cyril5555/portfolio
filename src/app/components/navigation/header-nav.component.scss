@@ -94,6 +94,11 @@
     color: #C1121F;
   }
 
+  // Click animation with custom bezier curve
+  &:active {
+    animation: nav-link-click 1s cubic-bezier(0.141, 0.635, 0.5, 1);
+  }
+
   @include mobile {
     font-size: 18px;
   }
@@ -168,6 +173,24 @@
   &:hover::after,
   &.active::after {
     width: 100%;
+  }
+
+  // Click animation with custom bezier curve
+  &:active {
+    animation: nav-link-click 1s cubic-bezier(0.141, 0.635, 0.5, 1);
+  }
+}
+
+// ========================================
+// Nav Link Click Animation (Out Bezier)
+// ========================================
+
+@keyframes nav-link-click {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.95);
   }
 }
 
@@ -272,6 +295,7 @@
   .nav-link,
   .hamburger-line {
     transition: none !important;
+    animation: none !important;
   }
 
   .nav-link::after {

@@ -62,7 +62,7 @@ $transition-hover: 0.3s ease;
  *
  * Effet parallax :
  * - La transformation CSS est appliquée dynamiquement via TypeScript
- * - L'image défile à 30% de la vitesse de scroll (voir contact.component.ts)
+ * - L'image défile à 20% de la vitesse de scroll (voir contact.component.ts)
  * - scaleY(-1) retourne l'image verticalement pour un effet artistique
  *
  * Performance :
@@ -94,7 +94,7 @@ $transition-hover: 0.3s ease;
  * Effet parallax :
  * - Position relative avec z-index pour rester au-dessus du fond
  * - La transformation translateY est appliquée dynamiquement
- * - Défile à 15% de la vitesse de scroll (plus lent que le fond)
+ * - Défile à 10% de la vitesse de scroll (plus lent que le fond)
  * - Crée un effet de profondeur en se déplaçant différemment du fond
  *
  * Responsive :

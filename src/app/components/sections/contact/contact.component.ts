@@ -20,8 +20,8 @@
  *
  * **Optimisations (refactoring) :**
  * - Directive appParallax au lieu de gestion manuelle du scroll
- * - Fond : speed 0.3 (30% vitesse scroll) + scaleY(-1) pour effet miroir
- * - Contenu : speed 0.15 (15% vitesse scroll) pour accentuer la profondeur
+ * - Fond : speed 0.2 (20% vitesse scroll) + scaleY(-1) pour effet miroir
+ * - Contenu : speed 0.1 (10% vitesse scroll) pour accentuer la profondeur
  * - Élimine 27 lignes de code dupliqué (handleScroll, calculateParallaxOffset)
  *
  * @component

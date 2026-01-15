@@ -121,10 +121,10 @@
     background: rgba(228, 0, 55, 0.08);
   }
 
-  // Active (touch feedback)
+  // Active (touch feedback with custom bezier curve)
   &:active {
+    animation: mobile-nav-link-click 1s cubic-bezier(0.141, 0.635, 0.5, 1);
     background: rgba(228, 0, 55, 0.15);
-    transform: scale(0.98);
   }
 
   // Focus visible
@@ -136,6 +136,19 @@
   @include tiny {
     font-size: 24px;
     padding: 14px 16px;
+  }
+}
+
+// ========================================
+// Mobile Nav Link Click Animation (Out Bezier)
+// ========================================
+
+@keyframes mobile-nav-link-click {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.95);
   }
 }
 
@@ -163,6 +176,7 @@
 
   .mobile-nav-link {
     transition: background 0s, transform 0s;
+    animation: none !important;
   }
 }
 
