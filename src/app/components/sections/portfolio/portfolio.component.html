@@ -11,6 +11,7 @@
            [appScrollReveal]="{ animation: 'fadeInUp', duration: 600, stagger: true, staggerDelay: 150 }">
       @for (project of displayedProjects(); track project.id) {
         <article class="project-card"
+                 [class.project-card--coming-soon]="!(project.links.live || project.links.github) && !project.featured"
                  [style.--accent-color]="project.color || '#000'"
                  [style.background-image]="'url(' + project.images.thumbnail + ')'">
 
@@ -76,6 +77,15 @@
           @if (project.featured) {
             <div class="featured-badge">
               <img [appLazyImage]="'/star.png'" alt="Featured" class="badge-star" />
+            </div>
+          }
+
+          <!-- Coming Soon Badge -->
+          @if (!(project.links.live || project.links.github) && !project.featured) {
+            <div class="coming-soon-overlay">
+              <div class="coming-soon-badge">
+                <span class="badge-text">À VENIR</span>
+              </div>
             </div>
           }
         </article>

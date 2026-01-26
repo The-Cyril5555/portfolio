@@ -22,6 +22,24 @@ export const PROJECTS: Project[] = [
     color: '#e11d48'
   },
   {
+    id: 'ecommerce-nextjs',
+    title: 'E-commerce Exemple',
+    description: 'Plateforme e-commerce full-stack moderne avec système de paiement virtuel, authentification JWT sécurisée et tableau de bord administrateur pour gérer produits, utilisateurs et commandes.',
+    year: 2026,
+    services: ['Full Stack Development', 'Frontend Development', 'E-commerce'],
+    tags: ['Next.js 15', 'React 18', 'TypeScript', 'Tailwind CSS', 'PostgreSQL', 'Prisma', 'Zustand'],
+    images: {
+      thumbnail: '/assets/images/paintings/Leighton-God_Speed!.jpg',
+      featured: '/assets/images/paintings/Leighton-God_Speed!.jpg'
+    },
+    links: {
+      github: 'https://github.com/The-Cyril5555/e-commerce',
+      live: 'https://ecommerce-rho-khaki-31.vercel.app'
+    },
+    featured: true,
+    color: '#6366f1'
+  },
+  {
     id: 'proflex-platform',
     title: 'Proflex - Plateforme d\'Intérim Logistique',
     description: 'Développement complet d\'une plateforme de recrutement et gestion des besoins en intérim. Création d\'interfaces dynamiques pour candidats et entreprises avec formulaires, filtres et routes optimisées.',
@@ -97,5 +115,20 @@ export const PROJECTS: Project[] = [
     links: {},
     featured: true,
     color: '#f59e0b'
+  },
+  {
+    id: 'shadow-hunter-app',
+    title: 'Shadow Hunter App',
+    description: 'Application de jeu de société numérique - projet en cours de développement. Plateforme interactive pour jouer au jeu Shadow Hunter en ligne avec gestion des parties en temps réel.',
+    year: 2026,
+    services: ['Game Development', 'Mobile App'],
+    tags: ['React', 'TypeScript', 'WebSocket', 'Game Logic'],
+    images: {
+      thumbnail: '/assets/images/paintings/back_card.png',
+      featured: '/assets/images/paintings/back_card.png'
+    },
+    links: {},
+    featured: false,
+    color: '#9ca3af'
   }
 ];

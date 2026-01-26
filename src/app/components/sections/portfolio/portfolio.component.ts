@@ -98,7 +98,7 @@ export class PortfolioComponent {
    *
    * @public
    */
-  showingFeatured = signal(true);
+  showingFeatured = signal(false);
 
   /**
    * Signal computed des projets affichés

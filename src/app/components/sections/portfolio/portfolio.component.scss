@@ -395,6 +395,93 @@
   }
 }
 
+// ========================================
+// Coming Soon State
+// ========================================
+
+.project-card--coming-soon {
+  // Désaturation de l'image
+  filter: grayscale(70%);
+
+  // Overlay gris plus prononcé
+  &::before {
+    background: linear-gradient(
+      180deg,
+      rgba(156, 163, 175, 0.7) 0%,
+      rgba(107, 114, 128, 0.85) 100%
+    ) !important;
+  }
+
+  // Désactiver hover pour projets non-cliquables
+  &:hover {
+    transform: translateY(0) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+
+    &::before {
+      background: linear-gradient(
+        180deg,
+        rgba(156, 163, 175, 0.7) 0%,
+        rgba(107, 114, 128, 0.85) 100%
+      ) !important;
+    }
+  }
+
+  .project-content {
+    opacity: 0.85;
+  }
+}
+
+// Overlay "À VENIR"
+.coming-soon-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+
+  .coming-soon-badge {
+    padding: 20px 50px;
+    background: rgba(31, 41, 55, 0.95);
+    border: 3px solid #F4E9E0;
+    border-radius: 8px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+    @include mobile {
+      padding: 15px 35px;
+      border: 2px solid #F4E9E0;
+    }
+
+    @include tiny {
+      padding: 12px 25px;
+    }
+
+    .badge-text {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: #F4E9E0;
+
+      @include mobile {
+        font-size: 18px;
+        letter-spacing: 0.12em;
+      }
+
+      @include tiny {
+        font-size: 16px;
+      }
+    }
+  }
+}
+
 // Animation de défilement du texte
 @keyframes scroll-text {
   0% {
