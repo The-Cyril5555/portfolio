@@ -20,7 +20,9 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  // scroll-behavior géré par GSAP ScrollToPlugin pour éviter les conflits
+  // (CSS smooth + GSAP = double interpolation = saccades)
+  scroll-behavior: auto;
 }
 
 body {

@@ -97,17 +97,27 @@ export class ScrollService {
 
   /**
    * Instance de l'IntersectionObserver pour le scroll spy
-   *
-   * Observe toutes les sections `<section id="...">` du DOM et met à jour
-   * le signal `activeSection` quand une section entre dans la viewport.
-   *
-   * **Configuration :**
-   * - threshold: 0.3 (30% de la section visible)
-   * - rootMargin: '-80px 0px -80px 0px' (offset pour navbar fixe)
-   *
    * @private
    */
   private observer?: IntersectionObserver;
+
+  /**
+   * Tween GSAP en cours pour le scroll (permet de kill avant un nouveau scroll)
+   * @private
+   */
+  private currentScrollTween?: gsap.core.Tween;
+
+  /**
+   * Timer de debounce pour le scroll spy (évite les changements erratiques)
+   * @private
+   */
+  private scrollSpyTimer?: ReturnType<typeof setTimeout>;
+
+  /**
+   * Dernière section détectée (pour comparer avant mise à jour)
+   * @private
+   */
+  private pendingSection?: string;
 
   // ========================================
   // Constructeur
@@ -156,30 +166,45 @@ export class ScrollService {
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API}
    */
   initScrollSpy(): void {
-    // Récupère toutes les sections avec un id
     const sections = document.querySelectorAll('section[id]');
 
-    // Crée l'observer avec callback et configuration
+    // Plusieurs seuils pour une détection plus granulaire
     this.observer = new IntersectionObserver(
       (entries) => {
-        // Pour chaque section qui change de visibilité
+        // Trouver la section la plus visible parmi celles qui intersectent
+        let bestEntry: IntersectionObserverEntry | null = null;
+
         entries.forEach((entry) => {
-          // Si la section est visible (intersecting)
           if (entry.isIntersecting) {
-            // Met à jour le signal avec l'id de la section
-            this.activeSection.set(entry.target.id);
+            if (!bestEntry || entry.intersectionRatio > bestEntry.intersectionRatio) {
+              bestEntry = entry;
+            }
           }
         });
+
+        if (bestEntry) {
+          const sectionId = (bestEntry as IntersectionObserverEntry).target.id;
+
+          // Debounce de 80ms pour éviter les flickering rapides
+          if (sectionId !== this.activeSection()) {
+            this.pendingSection = sectionId;
+            clearTimeout(this.scrollSpyTimer);
+            this.scrollSpyTimer = setTimeout(() => {
+              if (this.pendingSection) {
+                this.activeSection.set(this.pendingSection);
+                this.pendingSection = undefined;
+              }
+            }, 80);
+          }
+        }
       },
       {
-        // 30% de la section doit être visible
-        threshold: 0.3,
-        // Réduit la zone d'observation de 80px en haut et bas (navbar fixe)
-        rootMargin: '-80px 0px -80px 0px'
+        // Seuils multiples pour meilleure granularité
+        threshold: [0.15, 0.3, 0.5],
+        rootMargin: '-80px 0px -20% 0px'
       }
     );
 
-    // Observer chaque section trouvée
     sections.forEach((section) => {
       this.observer?.observe(section);
     });
@@ -192,55 +217,39 @@ export class ScrollService {
   /**
    * Scroll fluide vers une section avec GSAP
    *
-   * **⭐ Méthode recommandée** pour la navigation entre sections.
+   * Durée dynamique basée sur la distance de scroll pour un rendu naturel.
+   * Kill automatique de l'animation en cours si on clique rapidement entre sections.
    *
-   * Anime le scroll jusqu'à la section cible avec une transition fluide
-   * gérée par GSAP ScrollToPlugin. Prend automatiquement en compte
-   * l'offset de la navbar fixe (80px).
-   *
-   * **Avantages vs scrollTo natif :**
-   * - ✅ Easing personnalisé (power2.inOut) plus fluide
-   * - ✅ Durée contrôlée (1s)
-   * - ✅ Interruptible et chaînable avec autres animations GSAP
-   * - ✅ Support cross-browser uniforme
-   *
-   * @public
-   *
-   * @param {string} sectionId - L'id de la section cible (sans le #)
-   *
-   * @example
-   * ```typescript
-   * // Dans un composant de navigation
-   * navigateToAbout() {
-   *   this.scrollService.scrollToSection('about');
-   * }
-   * ```
-   *
-   * @example
-   * ```html
-   * <!-- Dans un template -->
-   * <a (click)="scrollService.scrollToSection('contact')">
-   *   Contact
-   * </a>
-   * ```
-   *
-   * @see {@link scrollToSectionNative} - Alternative sans GSAP
+   * @param sectionId - L'id de la section cible (sans le #)
    */
   scrollToSection(sectionId: string): void {
-    // Récupère l'élément DOM de la section cible
     const element = document.getElementById(sectionId);
-
-    // Si la section n'existe pas, annule l'opération
     if (!element) return;
 
+    // Kill l'animation en cours pour éviter les conflits
+    this.currentScrollTween?.kill();
+
+    // Calcul de la distance pour ajuster la durée
+    const targetY = element.getBoundingClientRect().top + window.scrollY - 80;
+    const distance = Math.abs(targetY - window.scrollY);
+
+    // Durée dynamique : entre 0.6s (court) et 1.4s (long)
+    // Formule logarithmique pour une progression naturelle
+    const duration = Math.min(1.4, Math.max(0.6, 0.4 + Math.log10(distance / 100 + 1) * 0.5));
+
     // Animation GSAP du scroll
-    gsap.to(window, {
-      duration: 1, // 1 seconde d'animation
+    this.currentScrollTween = gsap.to(window, {
+      duration,
       scrollTo: {
-        y: element, // Cible : l'élément DOM
-        offsetY: 80 // Offset de 80px pour la navbar fixe
+        y: element,
+        offsetY: 80,
+        autoKill: true // Stop auto si l'utilisateur scroll manuellement
       },
-      ease: 'power2.inOut' // Easing fluide (décélération douce)
+      ease: 'power3.inOut', // Easing premium avec décélération plus marquée
+      overwrite: 'auto',
+      onComplete: () => {
+        this.currentScrollTween = undefined;
+      }
     });
   }
 
@@ -319,7 +328,8 @@ export class ScrollService {
    * @see {@link initScrollSpy} - Pour réinitialiser après destroy
    */
   destroy(): void {
-    // Déconnecte l'observer s'il existe
     this.observer?.disconnect();
+    this.currentScrollTween?.kill();
+    clearTimeout(this.scrollSpyTimer);
   }
 }

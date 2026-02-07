@@ -29,12 +29,15 @@ import {
   signal,
   OnInit,
   OnDestroy,
+  DestroyRef,
   Renderer2,
   ElementRef,
   ChangeDetectionStrategy
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ScrollService } from '../../services/scroll.service';
+import { ScrollObserverService } from '../../services/scroll-observer.service';
 import { NAV_LINKS } from '../../data/navigation.data';
 import { NavLink } from '../../models/contact.model';
 
@@ -58,6 +61,8 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
   // ========================================
 
   scrollService = inject(ScrollService); // Public pour le template
+  private scrollObserver = inject(ScrollObserverService);
+  private destroyRef = inject(DestroyRef);
   private renderer = inject(Renderer2);
 
   // ========================================
@@ -101,33 +106,18 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
   // ========================================
 
   ngOnInit(): void {
-    // Ajouter le scroll listener
-    window.addEventListener('scroll', this.handleScroll, { passive: true });
+    // Utilise le ScrollObserverService partagé (un seul listener pour toute l'app)
+    this.scrollObserver.isScrolled$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(scrolled => this.isScrolled.set(scrolled));
   }
 
   ngOnDestroy(): void {
-    // Nettoyer le scroll listener
-    window.removeEventListener('scroll', this.handleScroll);
-
     // Restaurer le body si menu était ouvert
     if (this.mobileMenuOpen()) {
       this.unlockBodyScroll();
     }
   }
-
-  // ========================================
-  // Scroll Handling
-  // ========================================
-
-  /**
-   * Gère le scroll pour activer la classe 'scrolled'
-   *
-   * Met à jour isScrolled signal (> 50px) pour classes CSS
-   * L'effet glass est statique en CSS (blur 8px constant)
-   */
-  private handleScroll = (): void => {
-    this.isScrolled.set(window.scrollY > 50);
-  };
 
   // ========================================
   // Mobile Menu Handlers

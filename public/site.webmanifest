@@ -1,0 +1,12 @@
+{
+  "name": "Cyril Bizouarn - Portfolio",
+  "short_name": "CB Portfolio",
+  "icons": [
+    { "src": "/portfolio/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/portfolio/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ],
+  "theme_color": "#F4E9E0",
+  "background_color": "#0A1119",
+  "display": "standalone",
+  "start_url": "/portfolio/"
+}

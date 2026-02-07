@@ -61,8 +61,12 @@ if (fs.existsSync(indexPath)) {
     indexContent = indexContent.replace(/href="favicon\.(svg|ico)"/g, `href="${baseHref}/favicon.$1"`);
     indexModified = true;
   }
-  if (indexContent.includes('href="logo.png"')) {
-    indexContent = indexContent.replace(/href="logo\.png"/g, `href="${baseHref}/logo.png"`);
+  if (indexContent.includes('href="apple-touch-icon.png"')) {
+    indexContent = indexContent.replace(/href="apple-touch-icon\.png"/g, `href="${baseHref}/apple-touch-icon.png"`);
+    indexModified = true;
+  }
+  if (indexContent.includes('href="site.webmanifest"')) {
+    indexContent = indexContent.replace(/href="site\.webmanifest"/g, `href="${baseHref}/site.webmanifest"`);
     indexModified = true;
   }
 
