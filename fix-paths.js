@@ -8,37 +8,37 @@ function fixPaths(filePath) {
   let content = fs.readFileSync(filePath, 'utf8');
   let modified = false;
 
-  // Replace /assets/ with /PortFolio/assets/
+  // Replace /assets/ with /portfolio/assets/
   if (content.includes('/assets/')) {
     content = content.replace(/\/assets\//g, `${baseHref}/assets/`);
     modified = true;
   }
 
-  // Replace /paint.jpg with /PortFolio/paint.jpg
+  // Replace /paint.jpg with /portfolio/paint.jpg
   if (content.includes('/paint.jpg')) {
     content = content.replace(/\/paint\.jpg/g, `${baseHref}/paint.jpg`);
     modified = true;
   }
 
-  // Replace /paint.webp with /PortFolio/paint.webp
+  // Replace /paint.webp with /portfolio/paint.webp
   if (content.includes('/paint.webp')) {
     content = content.replace(/\/paint\.webp/g, `${baseHref}/paint.webp`);
     modified = true;
   }
 
-  // Replace /og-image.jpg with /PortFolio/og-image.jpg
+  // Replace /og-image.jpg with /portfolio/og-image.jpg
   if (content.includes('/og-image.jpg')) {
     content = content.replace(/\/og-image\.jpg/g, `${baseHref}/og-image.jpg`);
     modified = true;
   }
 
-  // Replace /og-image.webp with /PortFolio/og-image.webp
+  // Replace /og-image.webp with /portfolio/og-image.webp
   if (content.includes('/og-image.webp')) {
     content = content.replace(/\/og-image\.webp/g, `${baseHref}/og-image.webp`);
     modified = true;
   }
 
-  // Replace /star.png with /PortFolio/star.png
+  // Replace /star.png with /portfolio/star.png
   if (content.includes('/star.png')) {
     content = content.replace(/\/star\.png/g, `${baseHref}/star.png`);
     modified = true;
