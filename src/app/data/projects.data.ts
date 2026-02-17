@@ -127,7 +127,9 @@ export const PROJECTS: Project[] = [
       thumbnail: '/assets/images/paintings/Arnold_Boecklin-fiedelnder_Tod.jpg',
       featured: '/assets/images/paintings/Arnold_Boecklin-fiedelnder_Tod.jpg'
     },
-    links: {},
+    links: {
+      github: 'https://github.com/The-Cyril5555/shadow_hunter_app'
+    },
     featured: true,
     color: '#7c3aed',
     status: 'sortie'
