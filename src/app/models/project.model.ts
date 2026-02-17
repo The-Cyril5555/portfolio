@@ -22,6 +22,7 @@ export interface Project {
   };
   featured: boolean;
   color?: string;      // Accent color for the card
+  status?: 'sortie' | 'en-cours' | 'a-venir';
 }
 
 export interface Award {

@@ -118,17 +118,18 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 'shadow-hunter-app',
-    title: 'Shadow Hunter App',
-    description: 'Application de jeu de société numérique - projet en cours de développement. Plateforme interactive pour jouer au jeu Shadow Hunter en ligne avec gestion des parties en temps réel.',
+    title: 'Shadow Hunters App',
+    description: 'Adaptation numérique du jeu de société Shadow Hunters — un jeu de rôles cachés où Ombres, Chasseurs et Neutres s\'affrontent dans un manoir maudit. Application web temps réel avec gestion de parties multi-joueurs, attribution secrète des rôles, système de cartes Ermite et du Destin, et logique de victoire par camp.',
     year: 2026,
-    services: ['Game Development', 'Mobile App'],
-    tags: ['React', 'TypeScript', 'WebSocket', 'Game Logic'],
+    services: ['Game Development', 'Full Stack Development', 'Real-time Systems'],
+    tags: ['React', 'TypeScript', 'WebSocket', 'Node.js', 'Socket.io', 'Game Logic'],
     images: {
-      thumbnail: '/assets/images/paintings/back_card.png',
-      featured: '/assets/images/paintings/back_card.png'
+      thumbnail: '/assets/images/paintings/Arnold_Boecklin-fiedelnder_Tod.jpg',
+      featured: '/assets/images/paintings/Arnold_Boecklin-fiedelnder_Tod.jpg'
     },
     links: {},
-    featured: false,
-    color: '#9ca3af'
+    featured: true,
+    color: '#7c3aed',
+    status: 'sortie'
   }
 ];
