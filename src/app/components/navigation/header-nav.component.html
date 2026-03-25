@@ -1,59 +1,62 @@
 <!--
-  Navigation principale (Header) - Style Article
-  ===============================================
+  Navigation principale - Fluid Glass (Three.js)
+  ================================================
 
-  Navbar simplified avec composants inline :
-  - Logo et nom (inline)
-  - Nav links desktop (inline, pas de composant)
-  - Hamburger button (inline, pas de composant)
-  - app-mobile-menu : Menu latéral mobile (seul composant)
+  Desktop : Canvas Three.js avec glass bar (MeshPhysicalMaterial transmission)
+            + HTML overlay pour les liens de navigation
+  Mobile  : CSS glass fallback + hamburger menu
 
-  Style article : 95% width, 24px border-radius, static glass blur(8px)
+  La barre glass réfracte le contenu de la page capturé via html2canvas.
 -->
 
-<header class="brutalist-nav" [class.scrolled]="isScrolled()">
-  <!-- Logo et nom -->
-  <div class="logo-container">
-    <a
-      href="#home"
-      class="logo-name"
-      [class.scrolled]="isScrolled()"
-      (click)="scrollService.scrollToSection('home'); $event.preventDefault()"
-      aria-label="Retour à l'accueil">
-      Cyril Bizouarn
-    </a>
-    <span class="logo-subtitle">UX/UI DESIGNER, DEVELOPER</span>
-  </div>
+<div class="glass-navbar-container" #navContainer>
+  <!-- Three.js Canvas (desktop only, hidden via CSS on mobile) -->
+  <canvas #glassCanvas class="glass-canvas"></canvas>
 
-  <!-- Navigation Desktop (inline) -->
-  <nav class="nav-links" aria-label="Navigation principale">
-    @for (link of navLinks; track link.id) {
+  <!-- Nav Content Overlay -->
+  <header class="nav-content" [class.scrolled]="isScrolled()" [class.three-active]="threeReady()">
+    <!-- Logo et nom -->
+    <div class="logo-container">
       <a
-        [href]="link.href"
-        class="nav-link"
-        [class.active]="scrollService.activeSection() === link.id"
-        [attr.aria-current]="scrollService.activeSection() === link.id ? 'page' : null"
-        (click)="scrollService.scrollToSection(link.id); $event.preventDefault()">
-        {{ link.label }}
+        href="#home"
+        class="logo-name"
+        (click)="scrollService.scrollToSection('home'); $event.preventDefault()"
+        aria-label="Retour à l'accueil">
+        Cyril Bizouarn
       </a>
-    }
-  </nav>
+      <span class="logo-subtitle">UX/UI DESIGNER, DEVELOPER</span>
+    </div>
 
-  <!-- Hamburger Button Mobile (inline) -->
-  <button
-    class="hamburger-button"
-    [class.active]="mobileMenuOpen()"
-    [class.scrolled]="isScrolled()"
-    (click)="toggleMobileMenu()"
-    aria-label="Toggle menu"
-    [attr.aria-expanded]="mobileMenuOpen()">
-    <span class="hamburger-line"></span>
-    <span class="hamburger-line"></span>
-    <span class="hamburger-line"></span>
-  </button>
-</header>
+    <!-- Navigation Desktop -->
+    <nav class="nav-links" aria-label="Navigation principale">
+      @for (link of navLinks; track link.id) {
+        <a
+          [href]="link.href"
+          class="nav-link"
+          [class.active]="scrollService.activeSection() === link.id"
+          [attr.aria-current]="scrollService.activeSection() === link.id ? 'page' : null"
+          (click)="scrollService.scrollToSection(link.id); $event.preventDefault()">
+          {{ link.label }}
+        </a>
+      }
+    </nav>
 
-<!-- Menu Mobile (component) - En dehors du header -->
+    <!-- Hamburger Button Mobile -->
+    <button
+      class="hamburger-button"
+      [class.active]="mobileMenuOpen()"
+      [class.scrolled]="isScrolled()"
+      (click)="toggleMobileMenu()"
+      aria-label="Toggle menu"
+      [attr.aria-expanded]="mobileMenuOpen()">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+  </header>
+</div>
+
+<!-- Menu Mobile (component) -->
 <app-mobile-menu
   [isOpen]="mobileMenuOpen()"
   [links]="navLinks"

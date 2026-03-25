@@ -1,76 +1,109 @@
 // ========================================
-// Header Navigation - Style Article
+// Header Navigation - Fluid Glass (Three.js Custom Shader)
 // ========================================
-// Navbar frosted glass inspirée de l'article Mac-style liquid glass UI
-// - 95% width centrée avec border-radius 24px
-// - Static glass effect (blur 8px constant, pas progressif)
-// - Position fixed (toujours visible)
-// - Shadow au scroll
+// Desktop : Canvas Three.js + CSS backdrop-filter fallback
+// Mobile  : CSS glass fallback (backdrop-filter) + hamburger
 
 @use '../../../styles/responsive' as *;
 
 // ========================================
-// Navbar - Layout & Glass Effect
+// Container
 // ========================================
 
-.brutalist-nav {
-  // Layout : Centré, 95% largeur, position fixed
+.glass-navbar-container {
   position: fixed;
   top: 16px;
   left: 50%;
   transform: translateX(-50%);
   width: 95%;
   max-width: 1440px;
+  height: 56px;
   z-index: 100;
-
-  // Spacing
-  padding: 10px 32px;
-
-  // Flexbox
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  // Article style : Static glass effect (blur optimized for performance)
-  background: rgba(245, 238, 230, 0.08);
-
-  // Optimized backdrop-filter: lighter blur on mobile for better performance
-  backdrop-filter: blur(6px) saturate(180%);
-  -webkit-backdrop-filter: blur(6px) saturate(180%);
-
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  overflow: hidden;
   border-radius: 24px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.08),
+    0 2px 12px rgba(0, 0, 0, 0.1);
 
-  // Desktop: stronger blur for better visual effect
-  @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
-    backdrop-filter: blur(10px) saturate(180%);
-    -webkit-backdrop-filter: blur(10px) saturate(180%);
-  }
-
-  // Fallback for browsers without backdrop-filter support
-  @supports not (backdrop-filter: blur(6px)) {
-    background: rgba(245, 238, 230, 0.95);
-  }
-
-  // Shadow when scrolled (transition smooth)
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0);
-  transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-  &.scrolled {
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-  }
-
-  // Responsive mobile
   @include mobile {
     width: calc(100% - 32px);
     top: 12px;
-    padding: 8px 20px;
+    height: auto;
     border-radius: 20px;
+    overflow: visible;
   }
 }
 
 // ========================================
-// Logo Container
+// Three.js Canvas
+// ========================================
+
+.glass-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+
+  @include mobile {
+    display: none;
+  }
+}
+
+// ========================================
+// Nav Content Overlay
+// ========================================
+
+.nav-content {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  pointer-events: auto;
+
+  // Desktop : CSS glass fallback (visible avant que Three.js charge)
+  // Désactivé une fois que le shader Three.js prend le relais
+  @include desktop {
+    background: rgba(245, 238, 230, 0.03);
+    backdrop-filter: blur(12px) saturate(120%);
+    -webkit-backdrop-filter: blur(12px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+
+    &.three-active {
+      background: transparent;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      border-color: rgba(255, 255, 255, 0.06);
+    }
+  }
+
+  // Mobile : CSS glass
+  @include mobile {
+    position: relative;
+    padding: 8px 20px;
+    background: rgba(245, 238, 230, 0.04);
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 20px;
+
+    &.scrolled {
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    }
+  }
+
+  @supports not (backdrop-filter: blur(6px)) {
+    background: rgba(245, 238, 230, 0.7) !important;
+  }
+}
+
+// ========================================
+// Logo
 // ========================================
 
 .logo-container {
@@ -88,19 +121,23 @@
   text-decoration: none;
   transition: color 0.3s ease;
   cursor: pointer;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 
-  &.scrolled,
   &:hover {
     color: #C1121F;
   }
 
-  // Click animation with custom bezier curve
   &:active {
     animation: nav-link-click 1s cubic-bezier(0.141, 0.635, 0.5, 1);
   }
 
   @include mobile {
     font-size: 18px;
+    text-shadow: none;
+
+    .nav-content.scrolled & {
+      color: #C1121F;
+    }
   }
 }
 
@@ -116,16 +153,15 @@
   @include mobile {
     font-size: 8px;
     padding-left: 8px;
+
+    .nav-content.scrolled & {
+      color: #C1121F;
+    }
   }
 }
 
-// Sous-titre rouge au scroll
-.brutalist-nav.scrolled .logo-subtitle {
-  color: #C1121F;
-}
-
 // ========================================
-// Nav Links - Desktop (inline)
+// Nav Links - Desktop
 // ========================================
 
 .nav-links {
@@ -148,6 +184,7 @@
   padding: 8px 0;
   cursor: pointer;
   transition: color 0.3s ease;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 
   &:hover {
     color: #C1121F;
@@ -158,7 +195,6 @@
     font-weight: 700;
   }
 
-  // Optional: Underline effect on hover
   &::after {
     content: '';
     position: absolute;
@@ -175,41 +211,13 @@
     width: 100%;
   }
 
-  // Click animation with custom bezier curve
   &:active {
     animation: nav-link-click 1s cubic-bezier(0.141, 0.635, 0.5, 1);
   }
 }
 
 // ========================================
-// Nav Link Click Animation (Out Bezier)
-// ========================================
-
-@keyframes nav-link-click {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(0.95);
-  }
-}
-
-// Liens nav rouges au scroll
-.brutalist-nav.scrolled .nav-link {
-  color: #C1121F;
-
-  &:hover {
-    color: #C1121F;
-  }
-
-  &.active {
-    color: #C1121F;
-    font-weight: 700;
-  }
-}
-
-// ========================================
-// Hamburger Button - Mobile (inline)
+// Hamburger - Mobile only
 // ========================================
 
 .hamburger-button {
@@ -236,12 +244,10 @@
   border-radius: 2px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-  // Couleur rouge au scroll
   .hamburger-button.scrolled & {
     background-color: #C1121F;
   }
 
-  // Animation X quand menu actif
   .hamburger-button.active & {
     &:nth-child(1) {
       transform: translateY(10.5px) rotate(45deg);
@@ -258,27 +264,21 @@
 }
 
 // ========================================
-// Body Scroll Lock (quand menu mobile ouvert)
+// Animations
 // ========================================
-// Body scroll lock standard : Le body est fixé via JavaScript
-// dans toggleMobileMenu() pour préserver les scroll events
+
+@keyframes nav-link-click {
+  0% { transform: scale(1); }
+  100% { transform: scale(0.95); }
+}
+
+// ========================================
+// Body Scroll Lock
+// ========================================
 
 :global(body.mobile-menu-active) {
   @include mobile {
     overflow: hidden;
-    // Le body est fixé via JavaScript (position: fixed)
-    // Cela préserve window.scrollY et les scroll events pour parallax
-  }
-}
-
-// ========================================
-// Fallback - Navigateurs sans backdrop-filter
-// ========================================
-
-@supports not (backdrop-filter: blur(8px)) {
-  .brutalist-nav {
-    background: rgba(245, 238, 230, 0.95); // Plus opaque en fallback
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
 }
 
@@ -287,10 +287,6 @@
 // ========================================
 
 @media (prefers-reduced-motion: reduce) {
-  .brutalist-nav {
-    transition: none !important;
-  }
-
   .logo-name,
   .nav-link,
   .hamburger-line {

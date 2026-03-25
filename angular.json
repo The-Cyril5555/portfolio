@@ -36,11 +36,14 @@
           },
           "configurations": {
             "production": {
+              "allowedCommonJsDependencies": [
+                "html2canvas"
+              ],
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "1.2MB",
+                  "maximumError": "2MB"
                 },
                 {
                   "type": "anyComponentStyle",
