@@ -1,10 +1,7 @@
-// Modèles de données pour le composant Contact
-// ===============================================
+// Modèles : contact et navigation
+// ================================
 
-/**
- * Représente un lien vers un réseau social
- * @interface SocialLink
- */
+/** Lien vers un profil externe (section Contact). */
 export interface SocialLink {
   /** Identifiant unique du lien social */
   id: string;
@@ -12,21 +9,8 @@ export interface SocialLink {
   name: string;
   /** URL complète vers le profil */
   url: string;
-  /** Nom de l'icône à utiliser (doit correspondre aux icônes disponibles dans IconComponent) */
+  /** Nom de l'icône (doit exister dans IconComponent) */
   icon: 'github' | 'linkedin';
-}
-
-/**
- * Représente un élément de la stack technique
- * @interface TechStackItem
- */
-export interface TechStackItem {
-  /** Identifiant unique de la technologie */
-  id: string;
-  /** Nom affiché de la technologie (ex: "Angular", "TypeScript") */
-  name: string;
-  /** Classe CSS de l'icône Devicon (ex: "devicon-angularjs-plain") */
-  icon: string;
 }
 
 /**
@@ -41,24 +25,4 @@ export interface NavLink {
   label: string;
   /** Ancre de destination (ex: "#home", "#work") */
   href: string;
-}
-
-/**
- * Configuration pour l'effet parallax de la section contact
- * @interface ParallaxConfig
- */
-export interface ParallaxConfig {
-  /**
-   * Multiplicateur de vitesse pour le fond
-   * Valeur entre 0 et 1. Plus la valeur est petite, plus le fond défile lentement.
-   * Ex: 0.3 signifie que le fond défile à 30% de la vitesse de scroll
-   */
-  backgroundSpeed: number;
-
-  /**
-   * Multiplicateur de vitesse pour le contenu
-   * Valeur entre 0 et 1. Plus la valeur est petite, plus le contenu défile lentement.
-   * Ex: 0.15 signifie que le contenu défile à 15% de la vitesse de scroll
-   */
-  contentSpeed: number;
 }

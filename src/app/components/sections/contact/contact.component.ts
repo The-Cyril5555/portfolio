@@ -1,163 +1,72 @@
-/**
- * Composant Contact
- * ==================
- *
- * Affiche la section de contact du portfolio avec :
- * - Effet parallax artistique (directive appParallax)
- * - Informations de contact (email)
- * - Liens vers les réseaux sociaux
- * - Footer avec navigation et stack technique
- *
- * **Architecture :**
- * - Utilise ContactRepository pour l'accès aux données de contact
- * - Convertit les Observables en Signals avec toSignal()
- * - Réactivité automatique si les données changent
- *
- * **Pattern Repository :**
- * Au lieu d'importer directement les données locales (CONTACT_EMAIL, SOCIAL_LINKS, etc.),
- * le composant utilise le ContactRepository qui abstrait la source de données.
- * Cela permet de migrer facilement vers une API REST sans modifier le composant.
- *
- * **Optimisations (refactoring) :**
- * - Directive appParallax au lieu de gestion manuelle du scroll
- * - Fond : speed 0.2 (20% vitesse scroll) + scaleY(-1) pour effet miroir
- * - Contenu : speed 0.1 (10% vitesse scroll) pour accentuer la profondeur
- * - Élimine 27 lignes de code dupliqué (handleScroll, calculateParallaxOffset)
- *
- * @component
- * @selector app-contact
- * @standalone
- *
- * @example
- * ```html
- * <app-contact></app-contact>
- * ```
- *
- * @author Cyril Bizouarn
- */
+// Contact (#contact) — dernière planche du catalogue
+// ==================================================
+// Le plafond baroque du hero, renversé, sous un voile d'encre dense ; au
+// premier plan, l'adresse e-mail en grand (lien mailto:), un bouton pour la
+// copier et les profils GitHub / LinkedIn.
+//
+// La <section id="contact" aria-labelledby="contact-title"> est fournie par
+// app.html : ce composant ne rend que son contenu (h2#contact-title compris).
+// Parallaxe : CSS pur (scroll-driven), coupée en « moins d'animations ».
 
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { RevealDirective } from '../../../directives/reveal.directive';
 import { IconComponent } from '../../ui/icon/icon.component';
-import { MotionParallaxDirective } from '../../../directives/motion-parallax.directive';
-import { NAV_LINKS } from '../../../data/navigation.data';
-import { SocialLink, TechStackItem, NavLink } from '../../../models/contact.model';
-import { ContactRepository } from '../../../services/data/contact.repository';
+import { CONTACT_EMAIL, SOCIAL_LINKS } from '../../../data/contact.data';
+
+/** Durée d'affichage du retour « Adresse copiée » (plus long en cas d'échec). */
+const FEEDBACK_MS = 2000;
+const ERROR_MS = 4000;
 
 @Component({
   selector: 'app-contact',
-  standalone: true,
-  imports: [CommonModule, IconComponent, MotionParallaxDirective],
+  imports: [RevealDirective, IconComponent],
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  // Couleurs « zone sombre » partagées (styles/_ui.scss) : texte crème, focus clair
+  host: { class: 'section--dark' },
 })
 export class ContactComponent {
-  // ========================================
-  // Propriétés privées - Services injectés
-  // ========================================
+  protected readonly email = CONTACT_EMAIL;
+  /** Affichage sur deux lignes au besoin : la coupure se fait avant « @ ». */
+  protected readonly emailUser = CONTACT_EMAIL.split('@')[0];
+  protected readonly emailDomain = CONTACT_EMAIL.split('@')[1];
+  protected readonly socialLinks = SOCIAL_LINKS;
 
-  /**
-   * Repository pour accéder aux données de contact
-   *
-   * Injecté via la fonction `inject()` d'Angular (approche moderne).
-   * Permet d'utiliser le repository dans les initialisations de propriétés.
-   *
-   * @private
-   * @readonly
-   */
-  private readonly contactRepo = inject(ContactRepository);
+  /** L'API Clipboard n'existe qu'en contexte sécurisé (https, localhost). */
+  protected readonly canCopy =
+    typeof navigator !== 'undefined' && typeof navigator.clipboard?.writeText === 'function';
 
-  // ========================================
-  // Propriétés publiques - Données de contact
-  // ========================================
+  /** Message de la région aria-live (vide = rien à annoncer). */
+  protected readonly copyStatus = signal('');
+  protected readonly copied = signal(false);
 
-  /**
-   * Signal de l'adresse email de contact
-   *
-   * Converti depuis l'Observable du repository avec toSignal().
-   * Initialisé avec une chaîne vide par défaut.
-   *
-   * **Source :** ContactRepository.getContactEmail()
-   *
-   * @public
-   * @readonly
-   */
-  contactEmail = toSignal(this.contactRepo.getContactEmail(), {
-    initialValue: ''
-  });
+  private timer?: ReturnType<typeof setTimeout>;
 
-  /**
-   * Signal des liens vers les réseaux sociaux
-   *
-   * Converti depuis l'Observable du repository avec toSignal().
-   * Initialisé avec un tableau vide par défaut.
-   *
-   * Chaque lien contient :
-   * - id : Identifiant unique ('github', 'linkedin')
-   * - name : Nom affiché du réseau
-   * - url : URL du profil
-   * - icon : Nom de l'icône à utiliser
-   *
-   * **Source :** ContactRepository.getSocialLinks()
-   *
-   * @public
-   * @readonly
-   */
-  socialLinks = toSignal(this.contactRepo.getSocialLinks(), {
-    initialValue: [] as SocialLink[]
-  });
+  constructor() {
+    inject(DestroyRef).onDestroy(() => clearTimeout(this.timer));
+  }
 
-  /**
-   * Signal de la stack technique du portfolio
-   *
-   * Converti depuis l'Observable du repository avec toSignal().
-   * Initialisé avec un tableau vide par défaut.
-   *
-   * Chaque technologie contient :
-   * - id : Identifiant unique ('angular', 'typescript')
-   * - name : Nom affiché de la technologie
-   * - icon : Classe CSS de l'icône Devicon
-   *
-   * Affichées dans le footer pour montrer les technologies utilisées.
-   *
-   * **Source :** ContactRepository.getTechStack()
-   *
-   * @public
-   * @readonly
-   */
-  techStack = toSignal(this.contactRepo.getTechStack(), {
-    initialValue: [] as TechStackItem[]
-  });
-
-  // ========================================
-  // Propriétés publiques - Navigation
-  // ========================================
-
-  /**
-   * Liens de navigation du footer
-   *
-   * Partagés avec la navbar pour garantir la cohérence des labels.
-   * Source unique : navigation.data.ts
-   *
-   * **Note :** Ces liens ne proviennent pas du ContactRepository car ils
-   * sont partagés entre plusieurs composants (HeaderNav, Contact).
-   * Idéalement, un NavigationRepository pourrait être créé dans le futur.
-   *
-   * @public
-   * @readonly
-   */
-  readonly footerNavLinks: NavLink[] = NAV_LINKS;
-
-  /**
-   * Année actuelle pour le copyright
-   *
-   * Calculée automatiquement à l'initialisation du composant.
-   * Affichée dans le footer : "© 2025 Cyril Bizouarn"
-   *
-   * @public
-   * @readonly
-   */
-  readonly currentYear = new Date().getFullYear();
+  protected async copyEmail(): Promise<void> {
+    let ok = true;
+    try {
+      await navigator.clipboard.writeText(this.email);
+    } catch {
+      ok = false; // permission refusée : on invite à copier à la main
+    }
+    const message = ok ? 'Adresse copiée' : 'Copie impossible, sélectionnez l’adresse';
+    // Deuxième clic avec le même message : on vide d'abord la région live,
+    // sinon rien ne change dans le DOM et le lecteur d'écran se tait.
+    if (this.copyStatus() === message) {
+      this.copyStatus.set('');
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    clearTimeout(this.timer);
+    this.copied.set(ok);
+    this.copyStatus.set(message);
+    this.timer = setTimeout(() => {
+      this.copied.set(false);
+      this.copyStatus.set('');
+    }, ok ? FEEDBACK_MS : ERROR_MS);
+  }
 }
