@@ -1,171 +1,51 @@
 /**
- * Mobile Menu Component - Menu Latéral Mobile
- * ============================================
+ * Menu mobile plein écran (< 1024px)
+ * ==================================
  *
- * Menu mobile qui slide depuis la droite avec animations stagger.
- *
- * **Fonctionnalités :**
- * - Panel latéral avec effet liquid glass
- * - Slide-in depuis la droite (Motion One)
- * - Stagger animation sur les liens (apparition en cascade)
- * - Backdrop overlay semi-transparent
- * - Fermeture au clic sur overlay ou lien
- * - Lock du scroll body quand ouvert
- *
- * **Responsabilité :**
- * - Render le menu mobile uniquement
- * - Gérer l'animation d'ouverture/fermeture
- * - Émettre l'événement de fermeture au parent
- * - Navigation vers sections (via ScrollService)
- *
- * @component
- * @standalone
- * @author Cyril Bizouarn
+ * Panneau papier, liens en gothique numérotés, email en bas.
+ * Ouverture / fermeture en CSS (opacity, transform, visibility) ; fermé, l'hôte
+ * est `inert` + `aria-hidden`. Le focus, Échap et le piège de Tab sont gérés par
+ * la barre (HeaderNavComponent), qui garde le bouton de fermeture au-dessus.
  */
 
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  inject,
-  ElementRef,
-  OnChanges,
-  SimpleChanges,
-  ChangeDetectionStrategy
-} from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, input, output } from '@angular/core';
 import { NavLink } from '../../../models/contact.model';
-import { ScrollService } from '../../../services/scroll.service';
-import { MotionOneService } from '../../../services/motion-one.service';
+import { NAV_EMAIL } from '../../../data/navigation.data';
+
+export interface MenuNavigation {
+  event: Event;
+  id: string;
+}
 
 @Component({
   selector: 'app-mobile-menu',
-  standalone: true,
-  imports: [CommonModule],
   templateUrl: './mobile-menu.component.html',
   styleUrl: './mobile-menu.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[class.is-open]': 'open()',
+    '[attr.inert]': 'open() ? null : ""',
+    '[attr.aria-hidden]': 'open() ? null : "true"',
+  },
 })
-export class MobileMenuComponent implements OnChanges {
-  // ========================================
-  // Inputs / Outputs
-  // ========================================
+export class MobileMenuComponent {
+  readonly open = input.required<boolean>();
+  readonly links = input.required<readonly NavLink[]>();
+  /** Id de la section visible (scroll-spy). */
+  readonly active = input<string>('');
 
-  /**
-   * État d'ouverture du menu
-   */
-  @Input({ required: true }) isOpen!: boolean;
+  /** Clic sur un lien : la barre ferme le menu puis fait défiler. */
+  readonly navigate = output<MenuNavigation>();
 
-  /**
-   * Liste des liens de navigation
-   */
-  @Input({ required: true }) links!: NavLink[];
+  protected readonly email = NAV_EMAIL;
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  /**
-   * Événement de fermeture du menu
-   * Émis quand l'utilisateur clique sur overlay ou lien
-   */
-  @Output() close = new EventEmitter<void>();
-
-  // ========================================
-  // Services
-  // ========================================
-
-  private scrollService = inject(ScrollService);
-  private motionService = inject(MotionOneService);
-  private elementRef = inject(ElementRef);
-
-  // ========================================
-  // Lifecycle Hooks
-  // ========================================
-
-  /**
-   * Détecte les changements d'état isOpen pour animer
-   */
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['isOpen'] && !changes['isOpen'].isFirstChange()) {
-      const isOpening = changes['isOpen'].currentValue;
-      this.animateMenu(isOpening);
-    }
+  /** Éléments focusables du panneau, dans l'ordre du DOM. */
+  focusables(): HTMLElement[] {
+    return Array.from(this.host.nativeElement.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'));
   }
 
-  // ========================================
-  // Animations
-  // ========================================
-
-  /**
-   * Anime l'ouverture/fermeture du menu
-   *
-   * **Ouverture :**
-   * 1. Panel slide depuis droite (translateX: 100% → 0%)
-   * 2. Links apparaissent en cascade (stagger)
-   *
-   * **Fermeture :**
-   * - Panel slide vers droite (translateX: 0% → 100%)
-   *
-   * @param open - true pour ouverture, false pour fermeture
-   * @private
-   */
-  private animateMenu(open: boolean): void {
-    // Skip animations si l'utilisateur préfère reduced-motion
-    if (this.motionService.prefersReducedMotion()) {
-      return;
-    }
-
-    const menu = this.elementRef.nativeElement.querySelector('.mobile-menu-panel') as HTMLElement;
-    const links = this.elementRef.nativeElement.querySelectorAll('.mobile-nav-link');
-
-    if (!menu) return;
-
-    if (open) {
-      // Animation d'ouverture avec stagger
-      this.motionService.animateMobileMenuOpen(menu, links);
-    } else {
-      // Animation de fermeture
-      this.motionService.animateMobileMenuClose(menu);
-    }
-  }
-
-  // ========================================
-  // Event Handlers
-  // ========================================
-
-  /**
-   * Gère le clic sur un lien de navigation
-   *
-   * - Navigue vers la section
-   * - Ferme le menu
-   * - Émet l'événement close au parent
-   *
-   * @param event - Event de clic
-   * @param sectionId - ID de la section cible
-   */
-  onLinkClick(event: Event, sectionId: string): void {
-    event.preventDefault();
-    this.scrollService.scrollToSection(sectionId);
-    this.close.emit();
-  }
-
-  /**
-   * Gère le clic sur l'overlay
-   *
-   * Ferme le menu quand l'utilisateur clique en dehors.
-   */
-  onOverlayClick(): void {
-    this.close.emit();
-  }
-
-  /**
-   * Gère les touches clavier
-   *
-   * Ferme le menu quand Escape est pressé.
-   *
-   * @param event - Keyboard event
-   */
-  onKeyDown(event: KeyboardEvent): void {
-    if (event.key === 'Escape' && this.isOpen) {
-      this.close.emit();
-    }
+  focusFirst(): void {
+    this.focusables()[0]?.focus();
   }
 }
