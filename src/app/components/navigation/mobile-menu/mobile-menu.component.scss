@@ -28,10 +28,11 @@
 
 // La zone qui défile commence SOUS la barre (devenue transparente) : en paysage,
 // les liens ne glissent jamais derrière la marque ni le bouton fermer.
+// --nav-top et --nav-h viennent de l'hôte de la barre (compacts sur écran bas).
 // Contenu aligné sur la marque (gouttière + bordure + padding de la pilule).
 .panel {
   position: absolute;
-  inset: calc(var(--space-3) + var(--nav-h)) 0 0;
+  inset: calc(var(--nav-top, var(--space-3)) + var(--nav-h)) 0 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -41,6 +42,16 @@
   padding: var(--space-6) calc(var(--gutter) + var(--space-5) + 1px);
   // fondu discret en haut quand le contenu défile sous le bord
   mask-image: linear-gradient(transparent, black var(--space-5));
+
+  // Écran bas (téléphone en paysage) : l'adresse passe à droite de la liste,
+  // les cinq entrées tiennent sans défilement interne
+  @media (max-height: 500px) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: var(--space-6);
+    padding-block: var(--space-4);
+  }
 }
 
 // Texte des sur-titres calé sur la colonne des libellés (numéro 2rem + écart 1rem)
@@ -50,6 +61,10 @@
 
 .head {
   margin-bottom: var(--space-4);
+
+  @media (max-height: 500px) {
+    margin-bottom: var(--space-3);
+  }
 }
 
 .list {
@@ -67,6 +82,10 @@
   padding: var(--space-3) 0;
   color: var(--ink);
   text-decoration: none;
+
+  @media (max-height: 500px) {
+    padding-block: var(--space-2);
+  }
 
   @include hover {
     &:hover .item__label {
@@ -88,14 +107,31 @@
   font-family: var(--font-gothic);
   font-size: clamp(2.5rem, min(9vw, 8svh), 5rem);
   line-height: 1.05;
+  // Soulignement réservé à la rubrique active (voir plus bas)
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.16em;
+
+  // Écran bas : le plancher de 2.5rem ferait déborder la liste (8svh ≈ 31px à 390px)
+  @media (max-height: 500px) {
+    font-size: clamp(1.75rem, 8svh, 2.5rem);
+  }
 
   @include motion-ok {
     transition: transform var(--dur-2) var(--ease-out);
   }
 }
 
-.item__link.is-active .item__num {
-  color: var(--accent);
+// Rubrique active : numéro rouge ET libellé souligné (même code que la nav desktop),
+// pour ne pas reposer sur la seule couleur (WCAG 1.4.1)
+.item__link.is-active {
+  .item__num {
+    color: var(--accent);
+  }
+
+  .item__label {
+    text-decoration-line: underline;
+    text-decoration-color: var(--accent);
+  }
 }
 
 .foot {
