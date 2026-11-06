@@ -95,8 +95,8 @@
 }
 
 // --- Corps : e-mail en grand, « Copier » dessous, profils à droite ----------
-// Dès 1024 px, même grille que .section-head : l'adresse et « Copier » dans la
-// colonne du titre, les profils dans celle du chapeau, à hauteur de l'adresse.
+// Dès 1024 px, grille commune de 12 colonnes (comme .section-head) : l'adresse
+// et « Copier » en 1 / 8, les profils en 8 / 13, à hauteur de l'adresse.
 $mail-size: clamp(1.75rem, 1rem + 3.5vw, 4.25rem);
 
 .contact__body {
@@ -105,9 +105,8 @@ $mail-size: clamp(1.75rem, 1rem + 3.5vw, 4.25rem);
   align-items: center;
 
   @include up(lg) {
+    @include grid-12;
     container-type: inline-size;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr); // = .section-head
-    column-gap: var(--space-8);
   }
 }
 
@@ -118,10 +117,11 @@ $mail-size: clamp(1.75rem, 1rem + 3.5vw, 4.25rem);
   letter-spacing: -0.015em;
   overflow-wrap: anywhere; // filet de sécurité (zoom fort) : jamais de débordement
 
-  // L'adresse mesure ≈ 10,7 em en Migra : elle reste dans la 1re colonne,
-  // (100cqi − gouttière) / 1,8, avec ~2 rem d'air avant les profils.
+  // L'adresse mesure ≈ 10,7 em en Migra : elle reste dans les colonnes 1-7,
+  // 7/12 × (100cqi − 11 gouttières) + 6 gouttières, avec ~2 rem d'air.
   @include up(lg) {
-    font-size: min(#{$mail-size}, calc((100cqi - var(--space-8)) / 19.3 - 0.2rem));
+    grid-column: $col-main;
+    font-size: min(#{$mail-size}, calc((7 * (100cqi - 11 * var(--grid-gap)) / 12 + 6 * var(--grid-gap)) / 10.72 - 0.2rem));
   }
 }
 
@@ -154,7 +154,7 @@ $mail-size: clamp(1.75rem, 1rem + 3.5vw, 4.25rem);
   gap: var(--space-4);
 
   @include up(lg) {
-    grid-row: 2;
+    grid-area: 2 / 1 / auto / 8;
   }
 }
 
@@ -179,7 +179,7 @@ $mail-size: clamp(1.75rem, 1rem + 3.5vw, 4.25rem);
   list-style: none;
 
   @include up(lg) {
-    grid-area: 1 / 2;
+    grid-area: 1 / 8 / auto / -1;
   }
 
   @include down(lg) {

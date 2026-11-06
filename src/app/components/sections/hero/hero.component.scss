@@ -98,9 +98,16 @@ picture {
   padding-top: var(--space-6);
 
   @include up(lg) {
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    @include grid-12; // grille commune : l'intro part de la colonne 8
     align-items: end;
-    column-gap: var(--space-8);
+
+    > :first-child {
+      grid-column: $col-main;
+    }
+
+    > :last-child {
+      grid-column: $col-side;
+    }
   }
 }
 
@@ -115,7 +122,7 @@ picture {
   border-radius: var(--radius-pill);
   background: color-mix(in srgb, var(--ink) 50%, transparent);
   backdrop-filter: blur(12px);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-caption); // 14px au téléphone
 }
 
 .hero__dot {
@@ -192,11 +199,6 @@ picture {
   color: var(--cream-2);
 }
 
-// mots composés : pas de coupure après le trait d'union (« e- / commerce »)
-.nb {
-  white-space: nowrap;
-}
-
 .hero__actions {
   display: grid;
   justify-items: start;
@@ -226,7 +228,6 @@ picture {
   min-height: 44px;
   color: var(--cream-2);
   font-size: var(--fs-sm);
-  text-underline-offset: 0.3em;
 
   @include hover {
     @include motion-ok {

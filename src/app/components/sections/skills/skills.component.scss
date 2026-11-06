@@ -22,8 +22,9 @@
   }
 
   @include up(lg) {
+    // 3 colonnes à la gouttière commune = colonnes 1, 5 et 9 de la grille de 12
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    column-gap: clamp(var(--space-6), 3.5vw, var(--space-8));
+    column-gap: var(--grid-gap);
 
     > :last-child:nth-child(odd) {
       grid-column: auto;
