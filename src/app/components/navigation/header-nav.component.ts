@@ -9,6 +9,8 @@
  * - ≥ 1024px : liens en ligne ; en dessous : burger + menu plein écran
  *   (focus piégé, Échap, verrouillage du défilement via body.menu-open, reste
  *   de la page rendu `inert` pour que les lecteurs d'écran restent dans le menu).
+ * - Effet Swarm en cours : .is-swarm (pilule opaque, voir le SCSS), car la barre
+ *   n'est photographiée qu'une fois puis reconstruite au-dessus de toute la page.
  */
 
 import {
@@ -24,6 +26,7 @@ import {
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ScrollService } from '../../services/scroll.service';
+import { SwarmService } from '../../services/swarm.service';
 import { NAV_LINKS } from '../../data/navigation.data';
 import { MobileMenuComponent } from './mobile-menu/mobile-menu.component';
 
@@ -43,6 +46,8 @@ const FOCUSABLE = 'a[href], button:not([disabled])';
 })
 export class HeaderNavComponent {
   protected readonly scroll = inject(ScrollService);
+  /** Effet Swarm en cours (événements swarm:start / swarm:exit). */
+  protected readonly swarming = inject(SwarmService).running;
   private readonly doc = inject(DOCUMENT);
   private readonly injector = inject(Injector);
   private readonly destroyRef = inject(DestroyRef);
@@ -130,7 +135,9 @@ export class HeaderNavComponent {
 
   // --- Navigation ---------------------------------------------------------------
 
-  protected go(event: Event, id: string): void {
+  protected go(event: MouseEvent, id: string): void {
+    // Ctrl/⌘/Maj/Alt-clic, bouton du milieu : le navigateur garde la main (nouvel onglet…)
+    if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
     this.setMenu(false);
     this.scroll.scrollToSection(id);
