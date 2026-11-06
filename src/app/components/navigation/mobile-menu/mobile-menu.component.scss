@@ -1,192 +1,119 @@
-/**
- * Mobile Menu Component - Styles
- * ================================
- *
- * Styles pour le menu mobile avec effet liquid glass.
- */
+// Menu mobile : panneau papier plein écran, sous la barre (z-index 100)
+// =====================================================================
+@use 'bp' as *;
 
-@use '../../../../styles/responsive' as *;
-@use '../../../../styles/glassmorphism-v2' as glass;
+:host {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+  background: var(--paper);
+  color: var(--ink);
+  transition:
+    opacity var(--dur-2) var(--ease-out),
+    visibility 0s linear var(--dur-2);
 
-// ========================================
-// Overlay (Backdrop)
-// ========================================
-
-.mobile-menu-overlay {
-  display: none; // Caché par défaut
-
-  @include mobile {
-    position: fixed;
-    inset: 0; // top, right, bottom, left: 0
-    z-index: 101;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-
-    // Overlay glass effect
-    @include glass.glass-overlay($color: black, $opacity: 0.5, $blur: 8px);
-
-    // Visible quand menu ouvert
-    &.visible {
-      display: block;
-      opacity: 1;
-      pointer-events: auto;
-    }
+  @include up(lg) {
+    display: none;
   }
 }
 
-// ========================================
-// Panel Latéral
-// ========================================
-
-.mobile-menu-panel {
-  display: none; // Caché par défaut
-
-  @include mobile {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 85%; // 85% de la largeur écran
-    max-width: 400px;
-    z-index: 102; // Au-dessus de l'overlay
-
-    padding: 40px 30px;
-
-    // Effet glass iOS-compatible
-    @include glass.mobile-menu-glass-custom(0.12);
-
-    // Position initiale : hors écran à droite
-    transform: translateX(100%);
-
-    // Note: L'animation est gérée par Motion One dans le TS
-    // Pas de transition CSS pour éviter les conflits
-
-    // État ouvert (fallback si Motion One désactivé)
-    &.open {
-      transform: translateX(0);
-    }
-  }
-
-  // Très petits écrans
-  @include tiny {
-    width: 90%;
-    padding: 30px 20px;
-  }
+:host(.is-open) {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity var(--dur-2) var(--ease-out);
 }
 
-// ========================================
-// Liste de Navigation
-// ========================================
-
-.mobile-nav-links {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+// Le contenu s'aligne sur la marque de la barre (gouttière + padding de la pilule)
+.panel {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-
-  @include tiny {
-    gap: 20px;
-  }
+  justify-content: space-between;
+  gap: var(--space-7);
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: calc(12px + var(--nav-h) + var(--space-6)) calc(var(--gutter) + var(--space-5)) var(--space-6);
 }
 
-// ========================================
-// Liens de Navigation
-// ========================================
+.list {
+  border-top: 1px solid var(--line);
+}
 
-.mobile-nav-link {
-  display: block;
-  font-family: 'Migra', serif;
-  font-size: 28px;
-  color: #E40037; // Rouge
+.item {
+  border-bottom: 1px solid var(--line);
+}
+
+.item__link {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  padding: var(--space-3) 0;
+  color: var(--ink);
   text-decoration: none;
-  padding: 16px 20px;
-  border-radius: 12px;
-  text-align: center;
 
-  // Touch target minimum 44px (avec padding = 16*2 + 28 line-height ≈ 60px)
+  @include hover {
+    &:hover .item__label {
+      transform: translateX(6px);
+    }
+  }
+}
+
+.item__num {
+  flex: none;
+  width: 2rem;
+  color: var(--ink-3);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.16em;
+  font-variant-numeric: tabular-nums;
+}
+
+.item__label {
+  font-family: var(--font-gothic);
+  font-size: clamp(2.5rem, min(8vw, 8svh), 4rem);
+  line-height: 1.05;
+
+  @include motion-ok {
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+}
+
+.item__link.is-active .item__num {
+  color: var(--accent);
+}
+
+.foot {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.foot__mail {
+  justify-self: start;
   min-height: 44px;
-
-  // Transition pour hover/active
-  transition: background 0.2s ease, transform 0.1s ease;
-
-  // Hover (desktop preview sur mobile)
-  &:hover {
-    background: rgba(228, 0, 55, 0.08);
-  }
-
-  // Active (touch feedback with custom bezier curve)
-  &:active {
-    animation: mobile-nav-link-click 1s cubic-bezier(0.141, 0.635, 0.5, 1);
-    background: rgba(228, 0, 55, 0.15);
-  }
-
-  // Focus visible
-  &:focus-visible {
-    outline: 2px solid #E40037;
-    outline-offset: 2px;
-  }
-
-  @include tiny {
-    font-size: 24px;
-    padding: 14px 16px;
-  }
+  color: var(--ink);
+  font-size: var(--fs-lg);
+  overflow-wrap: anywhere;
 }
 
-// ========================================
-// Mobile Nav Link Click Animation (Out Bezier)
-// ========================================
-
-@keyframes mobile-nav-link-click {
-  0% {
-    transform: scale(1);
+// Entrée en cascade (index --i posé dans le template)
+@include motion-ok {
+  .item,
+  .foot {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+    transition:
+      opacity var(--dur-2) var(--ease-out),
+      transform var(--dur-3) var(--ease-out);
   }
-  100% {
-    transform: scale(0.95);
-  }
-}
 
-// ========================================
-// Reduced Motion
-// ========================================
-
-@media (prefers-reduced-motion: reduce) {
-  .mobile-menu-panel {
-    // Pas d'animation, juste apparition/disparition instantanée
-    transition: none !important;
-
-    &.open {
-      transform: translateX(0);
+  :host(.is-open) {
+    .item,
+    .foot {
+      opacity: 1;
+      transform: none;
+      transition-delay: calc(60ms + var(--i, 0) * 45ms);
     }
-
-    &:not(.open) {
-      transform: translateX(100%);
-    }
-  }
-
-  .mobile-menu-overlay {
-    transition: opacity 0s;
-  }
-
-  .mobile-nav-link {
-    transition: background 0s, transform 0s;
-    animation: none !important;
-  }
-}
-
-// ========================================
-// Desktop (caché sur desktop)
-// ========================================
-
-@include desktop {
-  .mobile-menu-overlay,
-  .mobile-menu-panel {
-    display: none !important;
   }
 }
