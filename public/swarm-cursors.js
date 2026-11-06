@@ -3785,12 +3785,12 @@
       const total = E.tasks.length;
       const done = E.doneCount;
       if (this.complete) return;
-      if (!E.started) v.status.innerHTML = `<b>${E.cursors.length}</b> agents prêts<span class="sep"></span>${total.toLocaleString("fr-FR")} calques`;
+      if (!E.started) v.status.innerHTML = `<b>${E.cursors.length}</b> curseurs prêts<span class="sep"></span>${total.toLocaleString("fr-FR")} calques`;
       else {
         const pend = E.tasks.length - done;
         const below = E.tasks.some((t) => t.state === "wait" && t.layer === "world" && t.gate > E.frontier);
         v.status.innerHTML =
-          `<b>${workers}</b> agents<span class="sep"></span><b>${done.toLocaleString("fr-FR")}</b> / ${total.toLocaleString("fr-FR")} calques` +
+          `<b>${workers}</b> curseurs<span class="sep"></span><b>${done.toLocaleString("fr-FR")}</b> / ${total.toLocaleString("fr-FR")} calques` +
           (below && pend && !this.tour && E.backlog() === 0 ? `<span class="sep"></span>défilez pour continuer` : "");
       }
       v.barFill.style.width = total ? `${(done / total) * 100}%` : "0%";
@@ -3809,8 +3809,8 @@
       const v = this.view;
       const workers = E.cursors.filter((c) => c.worked).length + E.retired;
       const secs = (E.endTime - E.startTime).toFixed(1);
-      v.status.innerHTML = `Reconstruit par <b>${workers}</b> agents en <b>${secs.replace(".", ",")} s</b>`;
-      v.live.textContent = `Page reconstruite par ${workers} agents. « Revenir au site » ou Échap pour quitter.`;
+      v.status.innerHTML = `Reconstruit par <b>${workers}</b> curseurs en <b>${secs.replace(".", ",")} s</b>`;
+      v.live.textContent = `Page reconstruite par ${workers} curseurs. « Revenir au site » ou Échap pour quitter.`;
       v.barFill.style.width = "100%";
       v.dots.innerHTML = "";
       v.root.querySelector('[data-a="live"]').hidden = false;
