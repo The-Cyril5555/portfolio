@@ -54,9 +54,16 @@ export class ContactComponent {
     } catch {
       ok = false; // permission refusée : on invite à copier à la main
     }
-    this.copied.set(ok);
-    this.copyStatus.set(ok ? 'Adresse copiée' : 'Copie impossible, sélectionnez l’adresse');
+    const message = ok ? 'Adresse copiée' : 'Copie impossible, sélectionnez l’adresse';
+    // Deuxième clic avec le même message : on vide d'abord la région live,
+    // sinon rien ne change dans le DOM et le lecteur d'écran se tait.
+    if (this.copyStatus() === message) {
+      this.copyStatus.set('');
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
     clearTimeout(this.timer);
+    this.copied.set(ok);
+    this.copyStatus.set(message);
     this.timer = setTimeout(() => {
       this.copied.set(false);
       this.copyStatus.set('');

@@ -26,9 +26,11 @@ a {
     color var(--dur-1) ease,
     text-decoration-color var(--dur-1) ease;
 
-  &:hover {
-    color: var(--cream);
-    text-decoration-color: currentColor;
+  @include hover {
+    &:hover {
+      color: var(--cream);
+      text-decoration-color: currentColor;
+    }
   }
 }
 
@@ -37,6 +39,7 @@ a {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
+  align-items: last baseline; // « Développeur web… » et les liens sur la même ligne de base
   justify-content: space-between;
   gap: var(--space-5) var(--space-8);
   padding-top: var(--space-7);
@@ -76,14 +79,19 @@ a {
   }
 }
 
+// un peu d'air dans l'anneau de focus, sans décaler l'alignement du texte
 .footer__nav a {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
+  padding-inline: var(--space-2);
+  margin-inline: calc(-1 * var(--space-2));
   font-size: var(--fs-sm);
 }
 
 // --- Ligne 2 : mentions ------------------------------------------------------
+// téléphone : en colonne ; tablette : 2 × 2, colonne de droite calée à droite ;
+// grand écran : « © » à gauche, crédits à droite séparés par des points médians.
 .footer__meta {
   display: grid;
   gap: var(--space-2) var(--space-5);
@@ -95,14 +103,34 @@ a {
   --link: var(--cream-2);
   --link-line: var(--line-on-dark);
 
-  // tablette : 2 × 2 ; grand écran : une ligne, bords alignés sur la nav
-  @include up(md) {
+  @include up(sm) {
     grid-template-columns: auto auto;
     justify-content: space-between;
+
+    li:nth-child(even) {
+      text-align: end;
+    }
   }
 
   @include up(lg) {
     display: flex;
+    column-gap: var(--space-3);
+
+    li:first-child {
+      margin-inline-end: auto;
+    }
+
+    // point médian dessiné (pas de caractère lu par les lecteurs d'écran)
+    li + li + li::before {
+      content: '';
+      display: inline-block;
+      width: 3px;
+      height: 3px;
+      margin-inline-end: var(--space-3);
+      border-radius: 50%;
+      background: currentColor;
+      vertical-align: 0.22em;
+    }
   }
 
   // zone cliquable de 44px de haut sans changer l'interligne
