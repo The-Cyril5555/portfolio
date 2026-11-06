@@ -15,7 +15,7 @@
   --frame-h: 28rem;
   --card-gap: var(--space-7); // entre deux lignes de cartes (sous le cartel)
   display: grid;
-  column-gap: clamp(var(--space-4), 2vw, var(--space-6));
+  column-gap: var(--grid-gap); // gouttière commune : la 2e carte part de la colonne 8
   row-gap: var(--space-3);
 
   // ≥ md, la dernière ligne est Wiki + carte GitHub : on annule la marge
@@ -179,7 +179,7 @@
 
 // --- Cartel, sur le papier -------------------------------------------------------
 .work-card__cartel {
-  font-size: var(--fs-xs);
+  font-size: var(--fs-caption); // 14px au téléphone (cf. .cartel)
   line-height: 1.45;
   color: var(--ink-3);
 

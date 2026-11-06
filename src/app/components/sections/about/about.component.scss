@@ -3,13 +3,12 @@
 //  < md : en-tête, bio, peinture puis parcours, empilés
 //  ≥ md : grille 12 colonnes, peinture (8-12) à droite qui accompagne la
 //         lecture (sticky) ; la frise réutilise la même grille via --grid-gap
+//         (gouttière commune du site, cf. _tokens.scss)
 //    md : chapeau sur toute la largeur, puis paragraphes (1-7) face à la peinture
 //    lg : en-tête + bio (1-7) à gauche, peinture dès le haut de la section
 @use 'bp' as *;
 
 :host {
-  --grid-gap: clamp(var(--space-5), 3.4vw, var(--space-7));
-
   display: block;
   padding-block: var(--section-pad);
   background: var(--paper);
@@ -64,17 +63,11 @@
   }
 }
 
-// posé hors de l'ombre du cadre : --ink-3 y reste au-dessus de 4,9:1 (5,45:1 sur
-// le papier nu), comme les cartels des Projets
+// .cartel : classe globale (styles/_ui.scss). Ici on l'éloigne davantage du
+// cadre pour le sortir de son ombre portée : --ink-3 y reste au-dessus de 4,9:1
+// (5,45:1 sur le papier nu), comme les cartels des Projets.
 .cartel {
   margin-top: var(--space-5);
-  font-size: var(--fs-xs);
-  line-height: 1.45;
-  color: var(--ink-3);
-
-  cite {
-    font-style: normal;
-  }
 }
 
 .artist {
