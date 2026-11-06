@@ -3,7 +3,7 @@ import { Injectable, signal } from '@angular/core';
 /**
  * Navigation dans la page unique.
  *
- * - `activeSection` : id de la section visible (scroll-spy), lu par la nav et le SEO.
+ * - `activeSection` : id de la section visible (scroll-spy), lu par la nav.
  * - `scrollToSection(id)` : défilement natif ; l'arrêt sous la nav fixe est géré
  *   en CSS par `scroll-padding-top` (styles/_base.scss), et le défilement doux
  *   est coupé quand l'utilisateur demande moins d'animations.

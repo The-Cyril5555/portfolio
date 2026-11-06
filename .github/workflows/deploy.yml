@@ -26,20 +26,30 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
+      - name: Run unit tests
+        run: npx ng test --watch=false
+
+      # `npm run build` enchaîne `postbuild` : swarm-cursors.js est minifié dans
+      # dist (esbuild, fourni par @angular/build ; le crédit /*! … */ est gardé).
       - name: Build Angular application
-        run: npx ng build --base-href="/portfolio/"
+        run: npm run build -- --base-href=/portfolio/
 
       - name: Add .nojekyll file
         run: touch dist/portfolio-angular/browser/.nojekyll
 
-      - name: Create 404.html for SPA routing
+      # Page unique sans routes : une URL inconnue sous /portfolio/ affiche
+      # l'accueil (servi avec le statut 404 par GitHub Pages).
+      - name: Create 404.html (copie de l'accueil)
         run: cp dist/portfolio-angular/browser/index.html dist/portfolio-angular/browser/404.html
+
+      - name: Date the sitemap with the last commit
+        run: sed -i "s|<lastmod>[^<]*</lastmod>|<lastmod>$(git log -1 --format=%cs)</lastmod>|" dist/portfolio-angular/browser/sitemap.xml
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
