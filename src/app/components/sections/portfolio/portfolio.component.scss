@@ -8,6 +8,9 @@
 // --- Accrochage ---------------------------------------------------------------
 // Chaque carte occupe deux rangées (peinture, puis cartel) en subgrid : les
 // cadres d'une même ligne ont la même hauteur même si les cartels diffèrent.
+// Une colonne, puis deux (≥ md), puis l'accrochage à 12 colonnes (≥ xl) : en
+// dessous de 1280px, une carte sur 4 colonnes ne ferait que 300px de large et
+// son texte recouvrirait la peinture.
 .work-grid {
   --frame-h: 28rem;
   --card-gap: var(--space-7); // entre deux lignes de cartes (sous le cartel)
@@ -26,6 +29,9 @@
   @include up(lg) {
     --frame-h: 35rem;
     --card-gap: var(--space-8);
+  }
+
+  @include up(xl) {
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 }
@@ -37,12 +43,13 @@
   grid-template-rows: subgrid;
   margin-bottom: var(--card-gap);
 
+  // grille à deux colonnes : la première carte prend toute la ligne, avec une
+  // marge intérieure plus généreuse
   @include up(md) {
     &--wide {
       grid-column: 1 / -1;
 
-      // seule sur sa ligne en tablette : marge intérieure plus généreuse
-      @include down(lg) {
+      @include down(xl) {
         .work-card__frame {
           --card-pad: var(--space-6);
         }
@@ -50,7 +57,7 @@
     }
   }
 
-  @include up(lg) {
+  @include up(xl) {
     grid-column: span var(--span);
 
     &--featured {
@@ -181,6 +188,12 @@
   }
 }
 
+// titre et année de l'œuvre insécables : le cartel passe à la ligne après
+// l'artiste plutôt qu'au milieu du titre (même règle que .work dans À propos)
+.work-card__work {
+  display: inline-block;
+}
+
 .work-card__artist {
   color: var(--ink-2);
 }
@@ -199,27 +212,33 @@
 }
 
 // --- Carte d'appel GitHub ----------------------------------------------------------
+// Appel secondaire, « hors catalogue » : plus étroite que l'œuvre voisine (5 colonnes
+// contre 7), et pas plus haute que son cadre (35rem).
 .work-more {
   container-type: inline-size;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: var(--space-6);
+  gap: var(--space-5);
   padding: clamp(var(--space-5), 4vw, var(--space-7));
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   background: var(--paper-2);
 
-  @include up(lg) {
-    grid-column: span 7;
+  @include up(xl) {
+    grid-column: span 5;
   }
 }
 
 .work-more__handle {
   // lettrage d'affiche sur toute la largeur de la carte (≈ 2,7 em de chasse
-  // pour 13 signes en Tusker) ; clip : la police de secours, plus large, ne
-  // déborde pas pendant le chargement. Les capitales de Tusker (0,945 em)
-  // dépassent la ligne de 0,135 em : marge haute pour ne pas toucher l'eyebrow.
+  // pour 13 signes en Tusker), ton sur ton comme un gaufrage : il ne doit
+  // peser ni plus que le titre de la carte ni plus que les peintures voisines.
+  // Purement décoratif (le pseudo GitHub, aria-hidden) : le texte est généré
+  // en CSS, hors arbre d'accessibilité et hors contrôle de contraste.
+  // clip : la police de secours, plus large, ne déborde pas pendant le
+  // chargement. Les capitales de Tusker (0,945 em) dépassent la ligne de
+  // 0,135 em : marge haute pour ne pas toucher l'eyebrow.
   margin-top: 0.14em;
   font-family: var(--font-display);
   font-size: clamp(3.5rem, 36cqi, 15rem);
@@ -227,7 +246,11 @@
   text-transform: uppercase;
   white-space: nowrap;
   overflow-x: clip;
-  color: var(--ink);
+  color: var(--paper-3);
+
+  &::before {
+    content: 'The-Cyril5555';
+  }
 }
 
 .work-more__title {
