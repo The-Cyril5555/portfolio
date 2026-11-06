@@ -5,6 +5,8 @@
 // monochrome dans la section Compétences. Pour une graisse homogène à 20px,
 // mysql/laravel/express sont épaissis d'un contour et vuejs est recomposé
 // à partir de la variante « original » (deux bandes séparées).
+// androidstudio.svg reprend le robot Android (android-plain) : le logo
+// compas + robot d'Android Studio devient une tache illisible à 20px.
 
 import { Technology, TechnologyGroup, TechnologyGroupInfo } from '../models/technology.model';
 
