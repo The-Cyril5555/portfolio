@@ -1,48 +1,69 @@
-<section class="hero">
-  <div class="hero-background" [appMotionParallax]="{ speed: 0.3, direction: 'vertical' }"></div>
-  <div class="hero-overlay">
-    <!-- Badge disponibilité -->
-    <div class="availability-badge">
-      <img src="/star.png" alt="star" class="badge-star" />
-      <span class="badge-day">{{ currentDay }}</span>
-      <div class="badge-info">
-        <span class="badge-month">{{ currentMonth }}</span>
-        <span class="badge-text">disponible<br>pour travailler</span>
+<!-- Fond : plafond baroque + voile d'encre (décoratif) -->
+<div class="hero__media" aria-hidden="true">
+  <picture>
+    <source type="image/webp" srcset="paint.webp" />
+    <img
+      class="hero__img"
+      src="paint.jpg"
+      alt=""
+      width="1440"
+      height="1352"
+      fetchpriority="high"
+      decoding="async" />
+  </picture>
+</div>
+
+<div class="hero__inner container">
+  <p class="hero__status" appReveal>
+    <span class="hero__dot" aria-hidden="true"></span>
+    Disponible — à l’écoute d’opportunités
+  </p>
+
+  <div class="hero__grid">
+    <h1 class="hero__title" appReveal>
+      <span class="sr-only">Cyril Bizouarn — </span>
+      <span class="hero__kicker serif">creative</span>
+      <span class="hero__display display">
+        <span class="hero__line">Designer <span class="hero__amp serif">&amp;</span></span>
+        <span class="hero__line">Developer</span>
+      </span>
+    </h1>
+
+    <div class="hero__side">
+      <p class="hero__intro" [appReveal]="120">
+        Développeur web <span class="nb">full-stack</span> junior, spécialisé en React, Node.js et SQL.
+        Je conçois des applications web, des sites <span class="nb">e-commerce</span> et des plateformes
+        métiers, du <span class="nb">front-end</span> au <span class="nb">back-end</span>.
+      </p>
+
+      <div class="hero__actions" [appReveal]="240">
+        <div class="hero__ctas">
+          <a class="btn btn--light" href="#work" (click)="goTo($event, 'work')">Voir les projets</a>
+          <a class="btn btn--ghost-light" href="#contact" (click)="goTo($event, 'contact')">Me contacter</a>
+        </div>
+
+        <button
+          type="button"
+          class="hero__swarm"
+          title="Une nuée de curseurs reconstruit la page — Échap pour quitter"
+          [disabled]="swarmBusy()"
+          [attr.aria-busy]="swarmLoading() ? 'true' : null"
+          (click)="startSwarm()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+            <path d="M3 2v14.5l3.9-3.6 2.6 5.9 2.3-1-2.6-5.8 5.3-.2z" />
+            <path d="M15 11v8.2l2.2-2 1.5 3.3 1.3-.6-1.5-3.3 3-.1z" opacity=".55" />
+          </svg>
+          <span>{{ swarmLoading() ? 'Chargement…' : 'Regarder le site se construire' }}</span>
+        </button>
       </div>
-    </div>
-
-    <!-- Typographie principale superposée -->
-    <div class="hero-typography">
-      <span class="creative-label">creative</span>
-      <h1 class="hero-main-text"
-          [appScrollReveal]="{ animation: 'fadeInUp', duration: 1000 }">
-        <span class="line-1">
-          <span class="tusker">DESIGNER</span> <span class="ampersand">&</span>
-        </span>
-        <span class="line-2"><span class="tusker">DEVELOPER</span></span>
-      </h1>
-    </div>
-
-    <!-- Conteneur flex pour description et bouton -->
-    <div class="hero-content-right">
-      <!-- Description -->
-      <div class="hero-description"
-           [appScrollReveal]="{ animation: 'fadeInUp', duration: 800, delay: 500 }">
-        <p>
-          DÉVELOPPEUR WEB FULL-STACK JUNIOR SPÉCIALISÉ EN REACT, NODE.JS ET SQL.
-          EXPÉRIENCE EN CRÉATION D'APPLICATIONS WEB, SITES E-COMMERCE ET PLATEFORMES MÉTIERS.
-          PROFIL ORIENTÉ SOLUTIONS, DU FRONT-END AU BACK-END.
-        </p>
-      </div>
-
-      <!-- CTA -->
-      <a href="#contact" class="hero-cta brutalist-button brutalist-button--inverse"
-         [appScrollReveal]="{ animation: 'fadeInUp', duration: 800, delay: 900 }">
-        <span class="button-text-wrapper">
-          <span class="button-text">ME CONTACTER</span>
-          <span class="button-text" aria-hidden="true">ME CONTACTER</span>
-        </span>
-      </a>
     </div>
   </div>
-</section>
+
+  <div class="hero__foot" [appReveal]="360">
+    <a class="hero__scroll" href="#work" (click)="goTo($event, 'work')">
+      <span class="hero__scroll-line" aria-hidden="true"></span>
+      Défiler<span class="sr-only"> jusqu’aux projets</span>
+    </a>
+    <p class="hero__fig" aria-hidden="true">Fig. 1 — Plafond baroque, détail</p>
+  </div>
+</div>
