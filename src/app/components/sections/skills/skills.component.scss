@@ -43,9 +43,7 @@
 }
 
 .group-title {
-  font-family: var(--font-serif);
-  font-size: var(--fs-xl);
-  letter-spacing: -0.01em;
+  font-size: var(--fs-xl); // famille Migra via la classe globale .serif
 }
 
 .group-count {
@@ -54,6 +52,7 @@
   letter-spacing: 0.16em;
   font-variant-numeric: tabular-nums;
   color: var(--ink-3);
+  margin-inline-end: -0.16em; // l'interlettrage final ne décale pas le bord droit
 }
 
 // --- Pastilles (surcharge de .chip : plus hautes, fond papier) -------------
@@ -84,12 +83,18 @@
   }
 }
 
-// Icône monochrome : le SVG sert de masque, la couleur vient de l'encre
+// Icône monochrome : le SVG sert de masque, la couleur suit le libellé
 .icon {
   flex: none;
   width: 20px;
   height: 20px;
-  background: var(--ink);
+  background: currentColor;
   -webkit-mask: var(--icon) center / contain no-repeat;
   mask: var(--icon) center / contain no-repeat;
+
+  // Contraste élevé : le fond serait remplacé par Canvas (icône invisible)
+  @media (forced-colors: active) {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
 }
