@@ -50,10 +50,13 @@
   padding: var(--mat) var(--mat) calc(var(--mat) * 1.25);
   border: 0.375rem solid var(--ink);
   background: var(--cream);
-  // ombre portée du cadre sur la marie-louise + ombre sur le mur
+  // ombre portée du cadre sur la marie-louise + ombre sur le mur : celle de
+  // --shadow-2, raccourcie (0 12px 32px au lieu de 0 24px 56px) pour s'éteindre
+  // avant le cartel. Sous la pénombre longue, --ink-3 tombait à 4,15:1.
   box-shadow:
     inset 0 3px 6px var(--line),
-    var(--shadow-2);
+    0 2px 6px color-mix(in srgb, var(--ink) 10%, transparent),
+    0 12px 32px color-mix(in srgb, var(--ink) 22%, transparent);
 
   img {
     width: 100%;
@@ -61,8 +64,10 @@
   }
 }
 
+// posé hors de l'ombre du cadre : --ink-3 y reste au-dessus de 4,9:1 (5,45:1 sur
+// le papier nu), comme les cartels des Projets
 .cartel {
-  margin-top: var(--space-4);
+  margin-top: var(--space-5);
   font-size: var(--fs-xs);
   line-height: 1.45;
   color: var(--ink-3);
@@ -125,7 +130,7 @@
     margin: 0;
 
     // la peinture accompagne la lecture si l'écran est assez haut pour montrer
-    // cadre et cartel en entier (au plus ~745px avec le décalage : 768px suffit)
+    // cadre et cartel en entier (au plus ~753px avec le décalage : 760px suffit)
     @media (min-height: 47.5rem) {
       position: sticky;
       top: calc(var(--nav-h) + var(--space-6));
