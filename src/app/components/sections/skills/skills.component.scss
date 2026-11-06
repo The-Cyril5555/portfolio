@@ -1,0 +1,95 @@
+// Section « Compétences » — bande --paper-2 entre Projets et À propos
+@use 'bp' as *;
+
+:host {
+  display: block;
+  background: var(--paper-2);
+  padding-block: var(--section-pad);
+}
+
+// --- Trois colonnes : 1 (mobile) → 2 (tablette) → 3 (≥ 1024px) -------------
+.groups {
+  display: grid;
+  gap: var(--space-7) var(--space-6);
+
+  @include up(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    // Tablette : le 3e groupe occupe toute la largeur (pas de case vide)
+    > :last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @include up(lg) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: clamp(var(--space-6), 3.5vw, var(--space-8));
+
+    > :last-child:nth-child(odd) {
+      grid-column: auto;
+    }
+  }
+}
+
+// Filet + titre + compteur, comme l'entrée d'un index de catalogue
+.group-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line-strong);
+}
+
+.group-title {
+  font-family: var(--font-serif);
+  font-size: var(--fs-xl);
+  letter-spacing: -0.01em;
+}
+
+.group-count {
+  flex: none;
+  font-size: var(--fs-xs);
+  letter-spacing: 0.16em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+}
+
+// --- Pastilles (surcharge de .chip : plus hautes, fond papier) -------------
+.tech {
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4) var(--space-2) var(--space-3);
+  background: var(--paper);
+  font-size: var(--fs-sm);
+  transition:
+    border-color var(--dur-1) ease,
+    transform var(--dur-1) var(--ease-out),
+    box-shadow var(--dur-1) ease;
+
+  @include hover {
+    &:hover {
+      border-color: var(--ink-3);
+    }
+  }
+
+  @include motion-ok {
+    @include hover {
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-1);
+      }
+    }
+  }
+}
+
+// Icône monochrome : le SVG sert de masque, la couleur vient de l'encre
+.icon {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  background: var(--ink);
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+}
