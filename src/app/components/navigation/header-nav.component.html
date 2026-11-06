@@ -1,63 +1,49 @@
-<!--
-  Navigation principale - Fluid Glass (Three.js)
-  ================================================
+<header
+  #bar
+  class="bar"
+  [class.is-dark]="onDark() && !menuOpen()"
+  [class.is-open]="menuOpen()">
+  <!-- Pas d'aria-label : le nom accessible reprend le texte visible (WCAG 2.5.3) -->
+  <a class="brand" href="#home" (click)="go($event, 'home')">
+    <span class="brand__name">Cyril Bizouarn</span>
+    <span class="brand__role">UX/UI Designer, Developer</span>
+    <span class="sr-only">– retour à l'accueil</span>
+  </a>
 
-  Desktop : Canvas Three.js avec glass bar (MeshPhysicalMaterial transmission)
-            + HTML overlay pour les liens de navigation
-  Mobile  : CSS glass fallback + hamburger menu
-
-  La barre glass réfracte le contenu de la page capturé via html2canvas.
--->
-
-<div class="glass-navbar-container" #navContainer>
-  <!-- Three.js Canvas (desktop only, hidden via CSS on mobile) -->
-  <canvas #glassCanvas class="glass-canvas"></canvas>
-
-  <!-- Nav Content Overlay -->
-  <header class="nav-content" [class.scrolled]="isScrolled()" [class.three-active]="threeReady()">
-    <!-- Logo et nom -->
-    <div class="logo-container">
-      <a
-        href="#home"
-        class="logo-name"
-        (click)="scrollService.scrollToSection('home'); $event.preventDefault()"
-        aria-label="Retour à l'accueil">
-        Cyril Bizouarn
-      </a>
-      <span class="logo-subtitle">UX/UI DESIGNER, DEVELOPER</span>
-    </div>
-
-    <!-- Navigation Desktop -->
-    <nav class="nav-links" aria-label="Navigation principale">
-      @for (link of navLinks; track link.id) {
-        <a
-          [href]="link.href"
-          class="nav-link"
-          [class.active]="scrollService.activeSection() === link.id"
-          [attr.aria-current]="scrollService.activeSection() === link.id ? 'page' : null"
-          (click)="scrollService.scrollToSection(link.id); $event.preventDefault()">
-          {{ link.label }}
-        </a>
+  <nav class="links" aria-label="Navigation principale">
+    <ul role="list">
+      @for (link of links; track link.id) {
+        @let active = scroll.activeSection() === link.id;
+        <li>
+          <a
+            class="link"
+            [class.is-active]="active"
+            [href]="link.href"
+            [attr.aria-current]="active ? 'true' : null"
+            (click)="go($event, link.id)">{{ link.label }}</a>
+        </li>
       }
-    </nav>
+    </ul>
+  </nav>
 
-    <!-- Hamburger Button Mobile -->
-    <button
-      class="hamburger-button"
-      [class.active]="mobileMenuOpen()"
-      [class.scrolled]="isScrolled()"
-      (click)="toggleMobileMenu()"
-      aria-label="Toggle menu"
-      [attr.aria-expanded]="mobileMenuOpen()">
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-    </button>
-  </header>
-</div>
+  <button
+    #burger
+    type="button"
+    class="burger"
+    aria-controls="mobile-menu"
+    [attr.aria-expanded]="menuOpen()"
+    [attr.aria-label]="menuOpen() ? 'Fermer le menu' : 'Ouvrir le menu'"
+    (click)="toggleMenu()">
+    <span class="burger__line" aria-hidden="true"></span>
+    <span class="burger__line" aria-hidden="true"></span>
+    <span class="burger__line" aria-hidden="true"></span>
+  </button>
+</header>
 
-<!-- Menu Mobile (component) -->
 <app-mobile-menu
-  [isOpen]="mobileMenuOpen()"
-  [links]="navLinks"
-  (close)="closeMenu()" />
+  id="mobile-menu"
+  data-swarm-ignore
+  [open]="menuOpen()"
+  [links]="links"
+  [active]="scroll.activeSection()"
+  (navigate)="go($event.event, $event.id)" />

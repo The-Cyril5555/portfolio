@@ -1,300 +1,241 @@
-// ========================================
-// Header Navigation - Fluid Glass (Three.js Custom Shader)
-// ========================================
-// Desktop : Canvas Three.js + CSS backdrop-filter fallback
-// Mobile  : CSS glass fallback (backdrop-filter) + hamburger
+// Barre de navigation : pilule de verre fixe
+// ==========================================
+// Variante claire par défaut ; .is-dark au-dessus des zones [data-nav-theme="dark"] ;
+// .is-open quand le menu mobile est déployé (la barre se fond dans le panneau papier).
+@use 'bp' as *;
 
-@use '../../../styles/responsive' as *;
-
-// ========================================
-// Container
-// ========================================
-
-.glass-navbar-container {
-  position: fixed;
-  top: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 95%;
-  max-width: 1440px;
-  height: 56px;
-  z-index: 100;
-  overflow: hidden;
-  border-radius: 24px;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.08),
-    0 2px 12px rgba(0, 0, 0, 0.1);
-
-  @include mobile {
-    width: calc(100% - 32px);
-    top: 12px;
-    height: auto;
-    border-radius: 20px;
-    overflow: visible;
-  }
-}
-
-// ========================================
-// Three.js Canvas
-// ========================================
-
-.glass-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+:host {
   display: block;
 
-  @include mobile {
+  @media print {
     display: none;
   }
 }
 
-// ========================================
-// Nav Content Overlay
-// ========================================
+.bar {
+  // Verre à 72 % (et non 60 %) : même au-dessus d'un aplat noir (peinture sombre
+  // d'une carte projet) ou blanc (ciel du hero), le texte secondaire garde ≥ 4.5:1.
+  --bg: color-mix(in srgb, var(--paper) 72%, transparent);
+  --edge: color-mix(in srgb, var(--cream) 75%, transparent);
+  --rule: var(--line-strong);
+  --fg: var(--ink);
+  --fg2: var(--ink-2);
+  --mark: var(--accent);
+  --focus: var(--accent);
 
-.nav-content {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
+  // Centrage sans transform : pas de demi-pixel qui flouterait le texte
+  position: fixed;
+  top: var(--space-3);
+  inset-inline: 0;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 32px;
-  pointer-events: auto;
+  gap: var(--space-5);
+  width: min(100% - 2 * var(--gutter), var(--container));
+  height: var(--nav-h);
+  margin-inline: auto;
+  padding: 0 calc((var(--nav-h) - 44px) / 2) 0 var(--space-5); // burger 44px centré
+  border: 1px solid var(--edge);
+  border-radius: var(--radius-pill);
+  background: var(--bg);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
+  box-shadow: var(--shadow-1);
+  color: var(--fg);
+  // Fond et textes changent ensemble (sinon texte clair sur verre encore clair)
+  transition-property: background-color, border-color, box-shadow, color;
+  transition-duration: var(--dur-1);
+  transition-timing-function: ease;
 
-  // Desktop : CSS glass fallback (visible avant que Three.js charge)
-  // Désactivé une fois que le shader Three.js prend le relais
-  @include desktop {
-    background: rgba(245, 238, 230, 0.03);
-    backdrop-filter: blur(12px) saturate(120%);
-    -webkit-backdrop-filter: blur(12px) saturate(120%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 24px;
-
-    &.three-active {
-      background: transparent;
-      backdrop-filter: none;
-      -webkit-backdrop-filter: none;
-      border-color: rgba(255, 255, 255, 0.06);
-    }
-  }
-
-  // Mobile : CSS glass
-  @include mobile {
-    position: relative;
-    padding: 8px 20px;
-    background: rgba(245, 238, 230, 0.04);
-    backdrop-filter: blur(10px) saturate(140%);
-    -webkit-backdrop-filter: blur(10px) saturate(140%);
-    border: 1px solid rgba(255, 255, 255, 0.10);
-    border-radius: 20px;
-
-    &.scrolled {
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-    }
-  }
-
-  @supports not (backdrop-filter: blur(6px)) {
-    background: rgba(245, 238, 230, 0.7) !important;
+  @include up(lg) {
+    padding-right: var(--space-3);
   }
 }
 
-// ========================================
-// Logo
-// ========================================
-
-.logo-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 12px;
+.bar.is-dark {
+  --bg: color-mix(in srgb, var(--ink) 72%, transparent);
+  --edge: var(--line-on-dark);
+  --rule: var(--line-on-dark);
+  --fg: var(--cream);
+  --fg2: var(--cream-2);
+  --mark: var(--accent-on-dark);
+  --focus: var(--cream);
 }
 
-.logo-name {
-  font-family: 'Manufacturing Consent', sans-serif;
-  font-size: 20px;
-  font-weight: 400;
-  color: #F5EEE6;
+.bar.is-open {
+  --bg: transparent;
+  --edge: transparent;
+
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+// Navigateurs sans backdrop-filter : fond quasi opaque pour rester lisible
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .bar {
+    --bg: color-mix(in srgb, var(--paper) 95%, transparent);
+  }
+
+  .bar.is-dark {
+    --bg: color-mix(in srgb, var(--ink) 92%, transparent);
+  }
+}
+
+// --- Marque ----------------------------------------------------------------------
+// Nom et sous-titre partagent la même ligne de base
+.brand {
+  display: inline-flex;
+  align-items: baseline;
+  padding-block: var(--space-3);
+  color: inherit;
   text-decoration: none;
-  transition: color 0.3s ease;
-  cursor: pointer;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
 
-  &:hover {
-    color: #C1121F;
-  }
+.brand__name {
+  font-family: var(--font-gothic);
+  font-size: 1.5rem;
+  line-height: 1;
+  white-space: nowrap;
+}
 
-  &:active {
-    animation: nav-link-click 1s cubic-bezier(0.141, 0.635, 0.5, 1);
-  }
+.brand__role {
+  margin-left: var(--space-4);
+  padding: 2px 0 2px var(--space-4);
+  border-left: 1px solid var(--rule);
+  color: var(--fg2);
+  font-size: var(--fs-xs);
+  line-height: 1.2;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    color var(--dur-1),
+    border-color var(--dur-1);
 
-  @include mobile {
-    font-size: 18px;
-    text-shadow: none;
-
-    .nav-content.scrolled & {
-      color: #C1121F;
-    }
+  @include down(sm) {
+    display: none;
   }
 }
 
-.logo-subtitle {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10px;
-  letter-spacing: 1.2px;
-  color: rgba(245, 238, 230, 0.6);
-  transition: color 0.3s ease;
-  padding-left: 12px;
-  border-left: 1px solid rgba(245, 238, 230, 0.3);
-
-  @include mobile {
-    font-size: 8px;
-    padding-left: 8px;
-
-    .nav-content.scrolled & {
-      color: #C1121F;
-    }
-  }
-}
-
-// ========================================
-// Nav Links - Desktop
-// ========================================
-
-.nav-links {
+// --- Liens (≥ 1024px) -----------------------------------------------------------
+.links {
   display: none;
-  gap: 32px;
-  align-items: center;
 
-  @include desktop {
+  @include up(lg) {
+    display: block;
+  }
+
+  ul {
     display: flex;
   }
 }
 
-.nav-link {
+.link {
   position: relative;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  color: #F5EEE6;
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 var(--space-3);
+  color: var(--fg2);
+  font-size: var(--fs-sm);
+  line-height: 1;
   text-decoration: none;
-  padding: 8px 0;
-  cursor: pointer;
-  transition: color 0.3s ease;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  transition: color var(--dur-1);
 
-  &:hover {
-    color: #C1121F;
-  }
-
-  &.active {
-    color: #C1121F;
-    font-weight: 700;
-  }
-
+  // Soulignement : gris au survol, accent sur la section active.
+  // Tracé en bordure (et non en fond) pour rester visible en contraste forcé.
   &::after {
     content: '';
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background-color: #C1121F;
-    transition: width 0.3s ease;
+    inset: auto var(--space-3) 9px;
+    border-top: 2px solid;
+    opacity: 0.35;
+    transform: scaleX(0);
+    transform-origin: left;
+
+    @include motion-ok {
+      transition:
+        transform var(--dur-2) var(--ease-out),
+        opacity var(--dur-1);
+    }
   }
 
-  &:hover::after,
-  &.active::after {
-    width: 100%;
+  @include hover {
+    &:hover {
+      color: var(--fg);
+
+      &::after {
+        transform: none;
+      }
+    }
   }
 
-  &:active {
-    animation: nav-link-click 1s cubic-bezier(0.141, 0.635, 0.5, 1);
+  &.is-active {
+    color: var(--fg);
+
+    &::after {
+      border-color: var(--mark);
+      opacity: 1;
+      transform: none;
+    }
   }
 }
 
-// ========================================
-// Hamburger - Mobile only
-// ========================================
+// --- Burger (< 1024px) ------------------------------------------------------------
+.burger {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  transition: background-color var(--dur-1);
 
-.hamburger-button {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 30px;
-  height: 24px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  z-index: 101;
-
-  @include desktop {
+  @include up(lg) {
     display: none;
   }
+
+  @include hover {
+    &:hover {
+      background: color-mix(in srgb, currentColor 10%, transparent);
+    }
+  }
 }
 
-.hamburger-line {
-  width: 100%;
-  height: 3px;
-  background-color: #F5EEE6;
-  border-radius: 2px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+// Traits en bordure : restent visibles en contraste forcé (Windows)
+.burger__line {
+  grid-area: 1 / 1;
+  width: 20px;
+  border-top: 2px solid;
 
-  .hamburger-button.scrolled & {
-    background-color: #C1121F;
+  @include motion-ok {
+    transition:
+      transform var(--dur-2) var(--ease-out),
+      opacity var(--dur-1);
   }
 
-  .hamburger-button.active & {
+  &:nth-child(1) {
+    transform: translateY(-6px);
+  }
+
+  &:nth-child(3) {
+    transform: translateY(6px);
+  }
+
+  [aria-expanded='true'] > & {
     &:nth-child(1) {
-      transform: translateY(10.5px) rotate(45deg);
+      transform: rotate(45deg);
     }
 
     &:nth-child(2) {
       opacity: 0;
+      transform: scaleX(0.2);
     }
 
     &:nth-child(3) {
-      transform: translateY(-10.5px) rotate(-45deg);
+      transform: rotate(-45deg);
     }
-  }
-}
-
-// ========================================
-// Animations
-// ========================================
-
-@keyframes nav-link-click {
-  0% { transform: scale(1); }
-  100% { transform: scale(0.95); }
-}
-
-// ========================================
-// Body Scroll Lock
-// ========================================
-
-:global(body.mobile-menu-active) {
-  @include mobile {
-    overflow: hidden;
-  }
-}
-
-// ========================================
-// Reduced Motion
-// ========================================
-
-@media (prefers-reduced-motion: reduce) {
-  .logo-name,
-  .nav-link,
-  .hamburger-line {
-    transition: none !important;
-    animation: none !important;
-  }
-
-  .nav-link::after {
-    transition: none !important;
   }
 }
