@@ -1,49 +1,22 @@
-// About Models
-// =============
+// Modèles de la section « À propos »
+// ===================================
 
-export interface Education {
-  id: string;
-  degree: string;
-  institution: string;
-  location: string;
-  startYear: number;
-  endYear: number;
-  type: 'formation' | 'certification';
-  description?: string;
-}
+/** Nature d'une étape du parcours : marqueur plein (formation) ou anneau (expérience). */
+export type TimelineKind = 'formation' | 'experience';
 
-export interface Experience {
-  id: string;
-  title: string;
-  company: string;
-  location: string;
-  startYear: number;
-  endYear?: number;  // undefined for current position
-  type: 'dev' | 'it' | 'internship';
-  technologies?: string[];
-  description?: string;
-}
-
+/** Une étape du parcours (formation ou expérience), affichée par `app-timeline`. */
 export interface TimelineItem {
   id: string;
+  kind: TimelineKind;
+  /** Année de début (ou année unique). */
+  start: number;
+  /** Année de fin, absente pour une étape d'une seule année. */
+  end?: number;
+  /** Diplôme ou poste. */
   title: string;
-  subtitle: string;
-  year: string;
-  type: 'education' | 'experience';
-  category?: string;
-  description?: string;
-}
-
-export interface Quality {
-  id: string;
-  name: string;
-  icon: string;
+  /** Établissement ou employeur. */
+  organization: string;
+  location?: string;
+  /** Une ligne de description. */
   description: string;
-}
-
-export interface Statistic {
-  id: string;
-  label: string;
-  value: string;
-  icon?: string;
 }
