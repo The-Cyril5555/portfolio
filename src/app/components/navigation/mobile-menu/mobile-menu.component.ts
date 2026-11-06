@@ -2,7 +2,8 @@
  * Menu mobile plein écran (< 1024px)
  * ==================================
  *
- * Panneau papier, liens en gothique numérotés, email en bas.
+ * Panneau papier : « Sommaire », liens en gothique numérotés, email en bas.
+ * La zone qui défile commence sous la barre (aucun lien derrière la marque).
  * Ouverture / fermeture en CSS (opacity, transform, visibility) ; fermé, l'hôte
  * est `inert` + `aria-hidden`. Le focus, Échap et le piège de Tab sont gérés par
  * la barre (HeaderNavComponent), qui garde le bouton de fermeture au-dessus.

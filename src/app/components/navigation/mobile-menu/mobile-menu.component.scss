@@ -26,16 +26,30 @@
   transition: opacity var(--dur-2) var(--ease-out);
 }
 
-// Le contenu s'aligne sur la marque de la barre (gouttière + padding de la pilule)
+// La zone qui défile commence SOUS la barre (devenue transparente) : en paysage,
+// les liens ne glissent jamais derrière la marque ni le bouton fermer.
+// Contenu aligné sur la marque (gouttière + bordure + padding de la pilule).
 .panel {
+  position: absolute;
+  inset: calc(var(--space-3) + var(--nav-h)) 0 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: var(--space-7);
-  height: 100%;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: calc(12px + var(--nav-h) + var(--space-6)) calc(var(--gutter) + var(--space-5)) var(--space-6);
+  padding: var(--space-6) calc(var(--gutter) + var(--space-5) + 1px);
+  // fondu discret en haut quand le contenu défile sous le bord
+  mask-image: linear-gradient(transparent, black var(--space-5));
+}
+
+// Texte des sur-titres calé sur la colonne des libellés (numéro 2rem + écart 1rem)
+.eyebrow {
+  gap: var(--space-4);
+}
+
+.head {
+  margin-bottom: var(--space-4);
 }
 
 .list {
@@ -72,7 +86,7 @@
 
 .item__label {
   font-family: var(--font-gothic);
-  font-size: clamp(2.5rem, min(8vw, 8svh), 4rem);
+  font-size: clamp(2.5rem, min(9vw, 8svh), 5rem);
   line-height: 1.05;
 
   @include motion-ok {
@@ -89,16 +103,25 @@
   gap: var(--space-2);
 }
 
+// Cible ≥ 44px par le padding, soulignement de .link-arrow ramené sous le texte
 .foot__mail {
   justify-self: start;
-  min-height: 44px;
+  padding-block: var(--space-2);
+  background-origin: content-box;
+  background-clip: content-box;
   color: var(--ink);
   font-size: var(--fs-lg);
   overflow-wrap: anywhere;
+
+  // flèche décorative : hors du nom accessible
+  &::after {
+    content: '↗' / '';
+  }
 }
 
 // Entrée en cascade (index --i posé dans le template)
 @include motion-ok {
+  .head,
   .item,
   .foot {
     opacity: 0;
@@ -109,6 +132,7 @@
   }
 
   :host(.is-open) {
+    .head,
     .item,
     .foot {
       opacity: 1;

@@ -7,7 +7,8 @@
  *   [data-nav-theme="dark"] (hero, contact, pied de page), la barre bascule en
  *   variante sombre. Calcul sur scroll/resize, limité à une fois par frame.
  * - ≥ 1024px : liens en ligne ; en dessous : burger + menu plein écran
- *   (focus piégé, Échap, verrouillage du défilement via body.menu-open).
+ *   (focus piégé, Échap, verrouillage du défilement via body.menu-open, reste
+ *   de la page rendu `inert` pour que les lecteurs d'écran restent dans le menu).
  */
 
 import {
@@ -45,22 +46,31 @@ export class HeaderNavComponent {
   private readonly doc = inject(DOCUMENT);
   private readonly injector = inject(Injector);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
   protected readonly links = NAV_LINKS;
   /** Menu mobile ouvert. */
   protected readonly menuOpen = signal(false);
-  /** La barre survole une zone sombre (hero, contact, pied de page). */
-  protected readonly onDark = signal(false);
+  /**
+   * La barre survole une zone sombre (hero, contact, pied de page).
+   * Vrai au départ : la page s'ouvre sur le hero, pas de flash clair au chargement.
+   */
+  protected readonly onDark = signal(true);
 
   private readonly bar = viewChild.required<ElementRef<HTMLElement>>('bar');
   private readonly burger = viewChild.required<ElementRef<HTMLButtonElement>>('burger');
   private readonly menu = viewChild.required(MobileMenuComponent);
 
   private frame = 0;
+  /** Éléments de la page rendus inertes pendant que le menu est ouvert. */
+  private inerted: Element[] = [];
 
   constructor() {
     afterNextRender(() => this.listen());
-    this.destroyRef.onDestroy(() => this.doc.body.classList.remove('menu-open'));
+    this.destroyRef.onDestroy(() => {
+      this.doc.body.classList.remove('menu-open');
+      this.setPageInert(false);
+    });
   }
 
   // --- Thème clair / sombre --------------------------------------------------
@@ -79,11 +89,14 @@ export class HeaderNavComponent {
     resized?.observe(this.doc.body);
 
     // Retour en largeur desktop : le menu n'a plus de raison d'être ouvert.
-    // Si le focus y était, il revient sur la marque (le burger disparaît).
+    // Si le focus était dans le menu ou sur le bouton fermer (qui disparaît),
+    // il revient sur la marque au lieu de retomber sur <body>.
     const desktop = win.matchMedia(DESKTOP_QUERY);
     const onBreakpoint = (e: MediaQueryListEvent) => {
       if (!e.matches || !this.menuOpen()) return;
-      const hadFocus = this.menu().focusables().includes(this.doc.activeElement as HTMLElement);
+      const hadFocus = [...this.menu().focusables(), this.burger().nativeElement].includes(
+        this.doc.activeElement as HTMLElement
+      );
       this.setMenu(false);
       if (hadFocus) this.bar().nativeElement.querySelector<HTMLElement>('.brand')?.focus();
     };
@@ -132,12 +145,30 @@ export class HeaderNavComponent {
   private setMenu(open: boolean): void {
     if (open === this.menuOpen()) return;
     this.menuOpen.set(open);
-    // Classe posée tout de suite : un scrollToSection juste après doit pouvoir défiler
+    // Classe et inert posés tout de suite : un scrollToSection juste après doit
+    // pouvoir défiler et donner le focus à la section
     this.doc.body.classList.toggle('menu-open', open);
+    this.setPageInert(open);
     if (open) {
       // Le panneau n'est focusable qu'une fois `inert` retiré (rendu suivant)
       afterNextRender({ write: () => this.menu().focusFirst() }, { injector: this.injector });
     }
+  }
+
+  /**
+   * Menu ouvert : les voisins de la barre (lien d'évitement, <main>, pied de page)
+   * deviennent `inert`. Le curseur virtuel des lecteurs d'écran ne peut plus
+   * sortir du menu, ce que le seul piège de Tab ne garantit pas.
+   */
+  private setPageInert(on: boolean): void {
+    this.inerted.forEach((el) => el.removeAttribute('inert'));
+    this.inerted = [];
+    if (!on) return;
+    const self = this.host.nativeElement;
+    this.inerted = Array.from(self.parentElement?.children ?? []).filter(
+      (el) => el !== self && !el.hasAttribute('inert')
+    );
+    this.inerted.forEach((el) => el.setAttribute('inert', ''));
   }
 
   protected onDocumentKeydown(event: KeyboardEvent): void {
