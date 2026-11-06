@@ -1,0 +1,60 @@
+// Breakpoints & mixins partagés
+// =============================
+// Utilisation dans un composant :  @use 'bp' as *;
+// (le dossier src/styles est dans stylePreprocessorOptions.includePaths)
+
+@use 'sass:map';
+
+$breakpoints: (
+  sm: 640px,
+  md: 768px,
+  lg: 1024px, // bascule nav desktop / menu burger
+  xl: 1280px,
+);
+
+/// Styles à partir de la largeur $bp (mobile-first)
+@mixin up($bp) {
+  @media (min-width: map.get($breakpoints, $bp)) {
+    @content;
+  }
+}
+
+/// Styles en dessous de la largeur $bp
+@mixin down($bp) {
+  @media (max-width: (map.get($breakpoints, $bp) - 0.02px)) {
+    @content;
+  }
+}
+
+/// Animations autorisées (l'utilisateur ne demande pas moins d'animations)
+@mixin motion-ok {
+  @media (prefers-reduced-motion: no-preference) {
+    @content;
+  }
+}
+
+/// L'utilisateur demande moins d'animations
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+/// Appareil avec une vraie souris (survol fiable)
+@mixin hover {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}
+
+@mixin visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

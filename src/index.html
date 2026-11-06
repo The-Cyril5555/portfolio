@@ -12,7 +12,7 @@
   <meta name="keywords" content="développeur web, full-stack, React, Node.js, SQL, Angular, TypeScript, portfolio, projets web">
   <meta name="author" content="Cyril Bizouarn">
   <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#F4E9E0">
+  <meta name="theme-color" content="#f4e9e0">
 
   <!-- Open Graph Meta Tags (Facebook, LinkedIn) -->
   <meta property="og:title" content="Cyril Bizouarn - Développeur Web Full-Stack">
@@ -36,34 +36,10 @@
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="manifest" href="site.webmanifest">
 
-  <!-- Preconnect & Performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net">
-
-  <!-- Preload critical images -->
-  <link rel="preload" as="image" type="image/webp" href="/paint.webp">
-  <link rel="preload" as="image" type="image/jpeg" href="/paint.jpg">
-
-  <!-- Async font loading for better performance -->
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Anton&family=Estonia&family=Montserrat:wght@400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Anton&family=Estonia&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet"></noscript>
-
-  <!-- Lazy load devicons CSS -->
-  <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" media="print" onload="this.media='all'" />
+  <!-- Image du hero : priorité de chargement -->
+  <link rel="preload" as="image" type="image/webp" href="paint.webp" fetchpriority="high">
 </head>
 <body>
-  <!-- SVG Filters pour liquid glass -->
-  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-    <defs>
-      <filter id="liquid-glass-filter">
-        <feTurbulence type="fractalNoise" baseFrequency="0.01 0.03" numOctaves="2" seed="2" result="turbulence"/>
-        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="50" xChannelSelector="R" yChannelSelector="G" result="displacement"/>
-        <feGaussianBlur in="displacement" stdDeviation="8" result="blur"/>
-      </filter>
-    </defs>
-  </svg>
-
   <app-root></app-root>
 </body>
 </html>

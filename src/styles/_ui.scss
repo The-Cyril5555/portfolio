@@ -1,0 +1,272 @@
+// Composants UI partagés (classes globales)
+// =========================================
+// .container                 largeur max + marges latérales
+// .section / .section--dark  rythme vertical commun ; variante fond encre
+// .section-head              bloc eyebrow + titre + intro en tête de section
+// .btn (+ --primary --ghost --light --sm)   boutons pilule
+// .chip (+ --on-dark)        pastilles de techno
+// .link-arrow                lien texte avec flèche ↗
+// .reveal / .is-visible      apparition au scroll (pilotée par [appReveal])
+// .skip-link, .sr-only       accessibilité
+@use 'bp' as *;
+
+.container {
+  width: 100%;
+  max-width: calc(var(--container) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  position: relative;
+  padding-block: var(--section-pad);
+}
+
+.section--dark {
+  --focus: var(--cream);
+  background: var(--ink);
+  color: var(--cream-2);
+
+  h2,
+  h3,
+  .section-title {
+    color: var(--cream);
+  }
+
+  .eyebrow {
+    color: var(--cream-3);
+  }
+
+  .lead {
+    color: var(--cream-2);
+  }
+}
+
+.section-head {
+  display: grid;
+  gap: var(--space-5);
+  margin-bottom: clamp(var(--space-7), 5vw, var(--space-9));
+
+  @include up(lg) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+    align-items: end;
+    column-gap: var(--space-8);
+
+    > .eyebrow {
+      grid-column: 1 / -1;
+    }
+
+    > .lead {
+      justify-self: end;
+      padding-bottom: 0.6em; // aligne la ligne de base avec le bas du titre gothique
+    }
+  }
+}
+
+// --- Boutons ---------------------------------------------------------------
+.btn {
+  --btn-bg: transparent;
+  --btn-fg: currentColor;
+  --btn-border: currentColor;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  min-height: 48px;
+  padding: 0 1.4rem;
+  border: 1px solid var(--btn-border);
+  border-radius: var(--radius-pill);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-1) ease,
+    color var(--dur-1) ease,
+    border-color var(--dur-1) ease,
+    transform var(--dur-1) ease;
+
+  svg {
+    width: 1.05em;
+    height: 1.05em;
+    flex-shrink: 0;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &:disabled,
+  &[aria-busy='true'] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+}
+
+.btn--primary {
+  --btn-bg: var(--ink);
+  --btn-fg: var(--cream);
+  --btn-border: var(--ink);
+
+  @include hover {
+    &:hover {
+      --btn-bg: var(--accent);
+      --btn-border: var(--accent);
+    }
+  }
+}
+
+.btn--ghost {
+  --btn-border: var(--line-strong);
+
+  @include hover {
+    &:hover {
+      --btn-bg: var(--ink);
+      --btn-fg: var(--cream);
+      --btn-border: var(--ink);
+    }
+  }
+}
+
+// Sur fond sombre / peinture
+.btn--light {
+  --btn-bg: var(--cream);
+  --btn-fg: var(--ink);
+  --btn-border: var(--cream);
+
+  @include hover {
+    &:hover {
+      --btn-bg: var(--accent);
+      --btn-fg: var(--cream);
+      --btn-border: var(--accent);
+    }
+  }
+}
+
+.btn--ghost-light {
+  --btn-fg: var(--cream);
+  --btn-border: var(--line-on-dark);
+
+  @include hover {
+    &:hover {
+      --btn-bg: var(--cream);
+      --btn-fg: var(--ink);
+      --btn-border: var(--cream);
+    }
+  }
+}
+
+.btn--sm {
+  min-height: 38px;
+  padding: 0 1rem;
+  font-size: var(--fs-xs);
+}
+
+// --- Pastilles -------------------------------------------------------------
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  min-height: 30px;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: rgb(255 255 255 / 0.35);
+  color: var(--ink-2);
+  font-size: var(--fs-xs);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.chip--on-dark {
+  border-color: var(--line-on-dark);
+  background: rgb(245 238 230 / 0.08);
+  color: var(--cream);
+}
+
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+}
+
+// --- Lien flèche -------------------------------------------------------------
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size var(--dur-2) var(--ease-out);
+
+  &::after {
+    content: '↗';
+    font-size: 0.9em;
+    transition: transform var(--dur-1) ease;
+  }
+
+  @include hover {
+    &:hover {
+      background-size: 100% 1px;
+
+      &::after {
+        transform: translate(2px, -2px);
+      }
+    }
+  }
+}
+
+// --- Apparition au scroll (directive appReveal) ----------------------------
+// L'état caché n'existe que si l'animation est autorisée : sans JS ou en
+// « moins d'animations », le contenu est toujours visible.
+@include motion-ok {
+  .reveal {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+    transition:
+      opacity var(--dur-3) var(--ease-out),
+      transform var(--dur-3) var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  // Swarm / impression : tout révéler sans transition
+  .reveal.is-instant {
+    transition: none;
+  }
+}
+
+// --- Accessibilité -----------------------------------------------------------
+.skip-link {
+  position: fixed;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 1000;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  color: var(--cream);
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform var(--dur-1) ease;
+
+  &:focus-visible {
+    transform: none;
+    --focus: var(--accent-on-dark);
+  }
+}
+
+.sr-only {
+  @include visually-hidden;
+}

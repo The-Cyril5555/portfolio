@@ -1,0 +1,77 @@
+// Design tokens — « catalogue d'exposition »
+// ==========================================
+// Une seule source de vérité pour couleurs, typo, espacements, rayons, ombres
+// et durées. Les composants n'utilisent QUE ces variables (pas de hex en dur).
+
+:root {
+  // --- Couleurs : papier crème, encre, un seul accent rouge -----------------
+  --paper: #f4e9e0;        // fond principal (papier)
+  --paper-2: #ecdfd3;      // bandes / cartes claires
+  --paper-3: #e1d0c0;      // séparateurs marqués
+  --ink: #0a1119;          // texte principal + sections sombres
+  --ink-2: #2b3038;        // texte courant
+  --ink-3: #5a5e66;        // texte secondaire (≥ 5:1 sur --paper)
+  --line: rgb(10 17 25 / 0.14);
+  --line-strong: rgb(10 17 25 / 0.32);
+
+  --cream: #f5eee6;        // texte sur fond sombre / peinture
+  --cream-2: rgb(245 238 230 / 0.78);
+  --cream-3: rgb(245 238 230 / 0.56);
+  --line-on-dark: rgb(245 238 230 / 0.22);
+
+  --accent: #b3121e;       // rouge (≥ 5:1 sur --paper)
+  --accent-hover: #8f0e18;
+  --accent-on-dark: #ff6b6b;
+
+  --scrim: linear-gradient(180deg, rgb(10 17 25 / 0.15) 0%, rgb(10 17 25 / 0.55) 55%, rgb(10 17 25 / 0.88) 100%);
+
+  // --- Typographie ----------------------------------------------------------
+  --font-gothic: 'Manufacturing Consent', 'Old English Text MT', serif;
+  --font-display: 'Tusker Grotesk', 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+  --font-serif: 'Migra', 'Playfair Display', Georgia, serif;
+  --font-sans: 'Neue Montreal', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --fs-xs: 0.8125rem;   // 13px
+  --fs-sm: 0.9375rem;   // 15px
+  --fs-base: 1.0625rem; // 17px
+  --fs-lg: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
+  --fs-xl: clamp(1.375rem, 1.2rem + 0.8vw, 1.875rem);
+  --fs-2xl: clamp(1.75rem, 1.4rem + 1.6vw, 2.75rem);
+  --fs-title: clamp(3.5rem, 1.6rem + 7vw, 8.5rem); // titres de section gothiques
+
+  // --- Espacements ----------------------------------------------------------
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+
+  --gutter: clamp(1rem, 0.4rem + 3vw, 3rem);        // marges latérales
+  --section-pad: clamp(5rem, 3rem + 7vw, 10rem);    // padding vertical des sections
+  --container: 1320px;
+  --nav-h: 64px;
+
+  // --- Formes -----------------------------------------------------------------
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+
+  --shadow-1: 0 1px 2px rgb(10 17 25 / 0.06), 0 8px 24px rgb(10 17 25 / 0.08);
+  --shadow-2: 0 2px 6px rgb(10 17 25 / 0.1), 0 24px 56px rgb(10 17 25 / 0.22);
+
+  // --- Mouvement ------------------------------------------------------------
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-1: 0.2s;
+  --dur-2: 0.45s;
+  --dur-3: 0.9s;
+
+  // Couleur de l'anneau de focus (surchargée dans les zones sombres)
+  --focus: var(--accent);
+}

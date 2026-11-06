@@ -1,65 +1,14 @@
-@use '../styles/responsive' as *;
-
+// Mise en page racine : chaque <section id> est fournie par app.html,
+// le contenu et le rythme vertical sont gérés par le composant de la section.
 :host {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  display: block;
 }
 
 main {
-  flex-grow: 1;
-  // Pas de padding-top : la peinture du hero doit toucher le haut
-  padding-top: 0;
-  position: relative;
+  display: block;
+  outline: none;
 }
 
-// Section #home - Hero avec fond paint.png (déjà géré dans hero.component)
-#home {
+section {
   position: relative;
-  z-index: 1;
-}
-
-// Section #work - Fond beige uni
-#work {
-  position: relative;
-  background: #F4E9E0;  // Fond beige uni
-  padding: 0;
-  min-height: 60vh;
-  z-index: 2;
-
-  @media (max-width: 768px) {
-    padding: 0;
-    min-height: 40vh;
-  }
-}
-
-// Section #skills - Fond beige (same as #work)
-#skills {
-  position: relative;
-  background: #F4E9E0;
-  padding: 80px 0;
-  z-index: 2;
-
-  @media (max-width: 768px) {
-    padding: 60px 0;
-  }
-}
-
-// Section #about - Fond beige (same as #work)
-// z-index: 3 pour passer AU-DESSUS de Contact
-#about {
-  position: relative;
-  background-color: #F4E9E0;
-  padding: 0 0 100px 0;
-  z-index: 3;
-
-  @media (max-width: 768px) {
-    padding: 0 0 60px 0;
-  }
-}
-
-// Section #contact - Passe SOUS About avec parallax
-#contact {
-  position: relative;
-  z-index: 1;
 }
