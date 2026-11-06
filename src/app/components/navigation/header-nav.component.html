@@ -1,12 +1,13 @@
 <header
   #bar
   class="bar"
-  [class.is-dark]="onDark() && !menuOpen()"
-  [class.is-open]="menuOpen()">
+  [class.is-dark]="(onDark() || swarming()) && !menuOpen()"
+  [class.is-open]="menuOpen()"
+  [class.is-swarm]="swarming()">
   <!-- Pas d'aria-label : le nom accessible reprend le texte visible (WCAG 2.5.3) -->
   <a class="brand" href="#home" (click)="go($event, 'home')">
     <span class="brand__name">Cyril Bizouarn</span>
-    <span class="brand__role">UX/UI Designer, Developer</span>
+    <span class="brand__role" lang="en">UX/UI Designer, Developer</span>
     <span class="sr-only">– retour à l'accueil</span>
   </a>
 

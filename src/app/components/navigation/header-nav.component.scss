@@ -1,11 +1,24 @@
 // Barre de navigation : pilule de verre fixe
 // ==========================================
 // Variante claire par défaut ; .is-dark au-dessus des zones [data-nav-theme="dark"] ;
-// .is-open quand le menu mobile est déployé (la barre se fond dans le panneau papier).
+// .is-open quand le menu mobile est déployé (la barre se fond dans le panneau papier) ;
+// .is-swarm pendant l'effet Swarm (pilule opaque, voir en bas).
 @use 'bp' as *;
 
 :host {
+  // Décalage de la pilule depuis le haut ; lu aussi par le menu mobile (enfant de l'hôte)
+  --nav-top: var(--space-3);
+
   display: block;
+
+  // Écran bas (téléphone en paysage) : barre compacte, 60px masqués au lieu de 76
+  // (15 % de 390px au lieu de 20 %). Burger 44px et marque tiennent dans 52px.
+  // --nav-h n'est redéfini que pour la nav et son menu (le scroll-padding-top de
+  // styles/_base.scss lit toujours la valeur globale de _tokens.scss).
+  @media (max-height: 500px) {
+    --nav-top: var(--space-2);
+    --nav-h: 52px;
+  }
 
   @media print {
     display: none;
@@ -13,9 +26,10 @@
 }
 
 .bar {
-  // Verre à 72 % (et non 60 %) : même au-dessus d'un aplat noir (peinture sombre
-  // d'une carte projet) ou blanc (ciel du hero), le texte secondaire garde ≥ 4.5:1.
-  --bg: color-mix(in srgb, var(--paper) 72%, transparent);
+  // Verre clair presque couvrant : sur le papier rien ne change, mais au-dessus des
+  // peintures sombres des cartes projet la pilule reste « papier » au lieu de virer au
+  // gris taupe, et le flou large efface la gouttière claire entre deux cartes.
+  --bg: color-mix(in srgb, var(--paper) 92%, transparent);
   --edge: color-mix(in srgb, var(--cream) 75%, transparent);
   --rule: var(--line-strong);
   --fg: var(--ink);
@@ -25,7 +39,7 @@
 
   // Centrage sans transform : pas de demi-pixel qui flouterait le texte
   position: fixed;
-  top: var(--space-3);
+  top: var(--nav-top);
   inset-inline: 0;
   z-index: 100;
   display: flex;
@@ -39,8 +53,8 @@
   border: 1px solid var(--edge);
   border-radius: var(--radius-pill);
   background: var(--bg);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  backdrop-filter: blur(24px) saturate(160%);
   box-shadow: var(--shadow-1);
   color: var(--fg);
   // Fond et textes changent ensemble (sinon texte clair sur verre encore clair)
@@ -80,6 +94,25 @@
 
   .bar.is-dark {
     --bg: color-mix(in srgb, var(--ink) 92%, transparent);
+  }
+}
+
+// Effet Swarm : la barre n'est photographiée qu'une fois puis reconstruite au-dessus
+// de toute la page, sans backdrop-filter. Le template la force en thème sombre
+// (.is-dark) ; ici, pilule encre opaque, juste sur papier comme sur peinture, et sans
+// lien actif (il resterait figé sur « Accueil » pendant toute la Visite).
+.bar.is-swarm {
+  --bg: var(--ink);
+
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+
+  .link {
+    color: var(--fg2);
+
+    &::after {
+      opacity: 0;
+    }
   }
 }
 
