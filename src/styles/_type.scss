@@ -1,0 +1,59 @@
+// Typographie partagée
+// ====================
+// .section-title  grand titre gothique de section (Manufacturing Consent)
+// .eyebrow        sur-titre « N° 01 — Projets » en petites capitales espacées
+// .lead           paragraphe d'introduction
+// .display        lettrage d'affiche condensé (Tusker Grotesk)
+// .serif          sous-titres en Migra
+@use 'bp' as *;
+
+.section-title {
+  font-family: var(--font-gothic);
+  font-size: var(--fs-title);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-sans);
+  font-size: var(--fs-xs);
+  line-height: 1.2;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+
+  // petit filet avant le texte, comme un cartel de musée
+  &::before {
+    content: '';
+    width: 2rem;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.6;
+  }
+}
+
+.lead {
+  font-size: var(--fs-lg);
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 60ch;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  line-height: 0.86;
+  letter-spacing: -0.01em;
+}
+
+.serif {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}

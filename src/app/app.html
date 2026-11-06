@@ -1,23 +1,27 @@
+<a class="skip-link" href="#main" data-swarm-ignore (click)="skipToContent($event)">Aller au contenu</a>
+
 <app-header-nav />
 
-<main>
-  <section id="home">
+<main id="main" tabindex="-1">
+  <section id="home" aria-label="Accueil" data-nav-theme="dark">
     <app-hero />
   </section>
 
-  <section id="work">
+  <section id="work" aria-labelledby="work-title">
     <app-portfolio />
   </section>
 
-  <section id="skills">
+  <section id="skills" aria-labelledby="skills-title">
     <app-skills />
   </section>
 
-  <section id="about">
+  <section id="about" aria-labelledby="about-title">
     <app-about />
   </section>
 
-  <section id="contact">
+  <section id="contact" aria-labelledby="contact-title" data-nav-theme="dark">
     <app-contact />
   </section>
 </main>
+
+<app-site-footer data-nav-theme="dark" />
