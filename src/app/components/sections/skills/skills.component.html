@@ -1,0 +1,31 @@
+<div class="container">
+  <header class="section-head">
+    <p class="eyebrow" appReveal>N°&nbsp;02 — Savoir-faire</p>
+    <h2 id="skills-title" class="section-title" appReveal>Compétences</h2>
+    <p class="lead" [appReveal]="90">
+      Les langages, frameworks et outils que j’utilise au quotidien, du prototype à la mise en
+      production.
+    </p>
+  </header>
+
+  <div class="groups">
+    @for (group of groups; track group.id; let i = $index) {
+      <div class="group" [appReveal]="i * 100">
+        <div class="group-head">
+          <h3 class="group-title serif" [id]="'skills-' + group.id">{{ group.title }}</h3>
+          <!-- Compteur décoratif : la liste annonce déjà son nombre d'éléments -->
+          <span class="group-count" aria-hidden="true">{{ group.count }}</span>
+        </div>
+
+        <ul class="chip-list tech-list" role="list" [attr.aria-labelledby]="'skills-' + group.id">
+          @for (tech of group.items; track tech.id) {
+            <li class="chip tech">
+              <span class="icon" aria-hidden="true" [style.--icon]="tech.iconCss"></span>
+              {{ tech.name }}
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  </div>
+</div>
