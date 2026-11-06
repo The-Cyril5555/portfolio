@@ -44,6 +44,8 @@ export class HeroComponent {
 
   /** Script en cours de chargement : bouton désactivé, libellé « Chargement… ». */
   protected readonly swarmLoading = this.swarm.loading;
+  /** Le script n'a pas pu être chargé (quelques secondes) : on propose de réessayer. */
+  protected readonly swarmFailed = this.swarm.failed;
   /** Rien à relancer tant que l'effet charge ou tourne. */
   protected readonly swarmBusy = computed(() => this.swarm.loading() || this.swarm.running());
 
@@ -76,6 +78,11 @@ export class HeroComponent {
     if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
     this.scroll.scrollToSection(id);
+  }
+
+  /** Survol / focus du bouton : le script (≈157 Ko) se télécharge avant le clic. */
+  protected preloadSwarm(): void {
+    this.swarm.preload();
   }
 
   /**

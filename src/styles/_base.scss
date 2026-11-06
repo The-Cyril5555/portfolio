@@ -24,6 +24,13 @@ html {
   }
 }
 
+// Les sections ont déjà leur propre padding sous la nav : une ancre (#work…)
+// les amène tout en haut de l'écran. Sans cela, on verrait une bande de la
+// section précédente et la nav garderait le thème (clair/sombre) quitté.
+main > section[id] {
+  scroll-margin-top: calc(-1 * (var(--nav-h) + 24px));
+}
+
 body {
   min-height: 100vh;
   background: var(--paper);
