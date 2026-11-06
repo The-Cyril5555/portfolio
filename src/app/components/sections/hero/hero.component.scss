@@ -1,426 +1,302 @@
-@use '../../../../styles/responsive' as *;
+// Hero (#home)
+// ============
+// Calque peinture (absolu) + voile d'encre ; contenu en flux, ancré en bas.
+// Aucune position à nombre magique : seuls la grille et le flex placent le texte.
+// (Budget : < 4 kB compilé — déclarations volontairement sobres.)
+@use 'bp' as *;
 
-.hero {
-  min-height: 100vh;
-  height: 100vh;
+:host {
+  --focus: var(--cream);
   position: relative;
-  overflow: hidden;
-}
-
-.hero-background {
-  position: absolute;
-  top: -50%;
-  left: 0;
-  width: 100%;
-  height: 180%;
-  background-image: url('/paint.jpg');
-  background-size: cover;
-  background-position: center top;
-  z-index: 0;
-  will-change: transform;
-}
-
-.hero-overlay {
-  position: relative;
-  z-index: 2;
-  min-height: 100vh;
-}
-
-.creative-label {
+  isolation: isolate;
   display: block;
-  font-family: 'Migra', sans-serif;
-  font-size: 30px;
-  color: #F5EEE6;
-  text-transform: lowercase;
-  font-weight: 300;
-  margin-bottom: 10px;
-  margin-left: 15px;
-  text-align: left;
-
-  @include mobile {
-    font-size: 18px;
-    margin-bottom: 18px;
-  }
+  background: var(--ink); // tant que la peinture n'est pas chargée
+  color: var(--cream);
 }
 
-.availability-badge {
+// --- Peinture + voile --------------------------------------------------------
+.hero__media {
   position: absolute;
-  top: 80px;
-  right: 200px;
-  background: transparent;
-  color: #F5EEE6;
-  padding: 30px 40px;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  gap: 20px;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
 
-  // Tablet adjustment
-  @include tablet {
-    right: 40px;
-    padding: 25px 35px;
-  }
-
-  // Mobile: Top right positioning
-  @include mobile {
-    top: 90px;
-    right: 20px;
-    transform: none;
-    padding: 15px 25px;
-    gap: 12px;
-  }
-
-  // Very small screens
-  @include tiny {
-    top: 85px;
-    padding: 12px 20px;
-    gap: 10px;
-  }
-
-  .badge-star {
+  // Voile : --scrim (plus dense en bas) + dégradé d'encre à gauche. Empilé
+  // (< 1024px), le texte monte plus haut : un voile uniforme s'y ajoute.
+  // Mesuré : texte ≥ 4.5:1, lettrage ≥ 3:1 sur les zones les plus claires.
+  &::after {
+    content: '';
     position: absolute;
-    top: 10px;
-    left: 10px;
-    width: 40px;
-    height: 40px;
+    inset: 0;
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--ink) 50%, transparent), transparent 70%),
+      var(--scrim) color-mix(in srgb, var(--ink) 30%, transparent);
 
-    @include mobile {
-      width: 25px;
-      height: 25px;
-      top: 6px;
-      left: 6px;
-    }
-
-    @include tiny {
-      width: 20px;
-      height: 20px;
-      top: 5px;
-      left: 5px;
-    }
-  }
-
-  .badge-day {
-    font-family: 'Maelstrom Sans', sans-serif !important;
-    font-size: 120px;
-    font-weight: 900 !important;
-    line-height: 0.9;
-
-    @include mobile {
-      font-size: 60px;
-    }
-
-    @include tiny {
-      font-size: 50px;
-    }
-  }
-
-  .badge-info {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-  }
-
-  .badge-month {
-    font-family: 'Migra', sans-serif;
-    font-size: 16px;
-    text-transform: lowercase;
-    font-weight: 400;
-    margin-bottom: 5px;
-
-    @include mobile {
-      font-size: 12px;
-      margin-bottom: 2px;
-    }
-
-    @include tiny {
-      font-size: 11px;
-    }
-  }
-
-  .badge-text {
-    font-family: 'Neue Montreal', sans-serif;
-    font-size: 14px;
-    text-transform: lowercase;
-    line-height: 1.3;
-    font-weight: 400;
-
-    @include mobile {
-      font-size: 10px;
-      line-height: 1.2;
-    }
-
-    @include tiny {
-      font-size: 9px;
+    @include up(lg) {
+      background-color: color-mix(in srgb, var(--ink) 12%, transparent);
     }
   }
 }
 
-.hero-typography {
+.hero__img {
   position: absolute;
-  left: 5%;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 2;
-  max-width: 90%;
-  text-align: left;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
 
-  // Tablet: Use fixed padding
-  @include tablet {
-    left: 40px;
-    right: 40px;
-    max-width: calc(100% - 80px);
-  }
+  // Parallaxe douce, CSS pur (scroll-driven) : la peinture descend moins vite
+  // que la page. Coupée si non supportée, et en « moins d'animations » (fin de
+  // fichier). NB : chaque `animation: <nom>` reste HORS @media/@supports — une
+  // fois le CSS minifié, l'encapsulation d'Angular n'y renomme pas le nom comme
+  // le @keyframes, et l'animation meurt en production.
+  animation: hero-drift linear both;
+  animation-timeline: scroll(root);
+  animation-range: 0 100vh;
 
-  // Mobile: Top left positioning, aligned with badge
-  @include mobile {
-    left: 20px;
-    top: 90px;
-    bottom: auto;
-    transform: none;
-    max-width: 55%;
-  }
-
-  // Very small: Adjust top position
-  @include tiny {
-    top: 80px;
-    max-width: 58%;
-  }
-
-  .hero-main-text {
-    font-family: 'Tusker Grotesk', sans-serif;
-    font-weight: 400;
-    // Typographie réduite et condensée
-    font-size: clamp(60px, 12vw, 180px);
-    line-height: 0.75;
-    letter-spacing: 0.02em;
-    color: #F5EEE6;
-    text-transform: uppercase;
-    margin: 0;
-
-    @include mobile {
-      font-size: clamp(48px, 14vw, 100px);
-      line-height: 1.1;
-    }
-
-    .line-1,
-    .line-2 {
-      display: block;
-    }
-
-    // Tusker overrides for hero headings to match the tall, condensed look
-    .line-1 .tusker {
-      font-family: 'Tusker Grotesk', sans-serif !important;
-      font-size: clamp(80px, 12vw, 240px);
-      line-height: 0.65;
-      letter-spacing: 0.00000001em;
-      transform: scaleX(0.95);
-      display: inline-block;
-
-      // Better scaling on mobile
-      @include mobile {
-        font-size: clamp(120px, 13vw, 160px);
-      }
-
-      @include tiny {
-        font-size: clamp(85px, 12vw, 140px);
-      }
-    }
-
-    .line-2 .tusker {
-      font-family: 'Tusker Grotesk', sans-serif !important;
-      font-size: clamp(60px, 10vw, 200px);
-      line-height: 0.7;
-      letter-spacing: 0.05em;
-      transform: scaleX(0.95);
-      display: inline-block;
-
-      // Better scaling on mobile
-      @include mobile {
-        font-size: clamp(120px, 11vw, 140px);
-      }
-
-      @include tiny {
-        font-size: clamp(75px, 10vw, 125px);
-      }
-    }
-
-    // Apply Tusker Grotesk on the .tusker spans
-    .tusker {
-      font-family: 'Tusker Grotesk', sans-serif !important;
-      font-weight: 400 !important;
-      text-transform: uppercase;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    .ampersand {
-      display: inline;
-      font-family: 'Estonia', cursive;
-      font-size: 0.8em;
-      font-weight: 400;
-      margin: 0 0.1em;
-    }
+  @supports not (animation-timeline: scroll()) {
+    animation: none;
   }
 }
 
-.hero-content-right {
-  position: absolute;
-  right: 200px;
-  top: 50%;
-  transform: translateY(-50%);
-  max-width: 900px;
-  z-index: 3;
+@keyframes hero-drift {
+  to {
+    translate: 0 28vh;
+  }
+}
 
+// --- Mise en page --------------------------------------------------------------
+.hero__inner {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 30px;
+  min-height: 100svh;
+  padding-top: calc(var(--nav-h) + 3rem);
+  padding-bottom: var(--space-4);
+}
 
-  // Tablet: Better positioning
-  @include tablet {
-    right: 40px;
-    max-width: 600px;
-    gap: 25px;
-  }
+.hero__grid,
+.hero__side {
+  display: grid;
+  gap: clamp(var(--space-5), 3vw, var(--space-6));
+}
 
-  // Mobile: Centered below badge/title
-  @include mobile {
-    position: absolute;
-    top: 380px;
-    left: 50%;
-    right: auto;
-    bottom: auto;
-    transform: translateX(-50%);
-    max-width: 80%;
-    margin: 0;
-    padding: 0;
-    gap: 20px;
-    align-items: center;
-  }
+.hero__grid {
+  margin-top: auto; // ancre le contenu en bas
+  padding-top: var(--space-6);
 
-  @include tiny {
-    top: 320px;
-    max-width: 85%;
-    gap: 15px;
+  @include up(lg) {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: end;
+    column-gap: var(--space-8);
   }
 }
 
-.hero-description {
-  p {
-    font-family: 'Montserrat', sans-serif;
-    color: #F5EEE6;
-    font-size: 30px;
-    line-height: 1.6;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
+// --- Pastille de disponibilité ---------------------------------------------
+.hero__status {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--line-on-dark);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--ink) 50%, transparent);
+  backdrop-filter: blur(12px);
+  font-size: var(--fs-xs);
+}
 
-    // Tablet adjustment
-    @include tablet {
-      font-size: 24px;
-      line-height: 1.5;
-    }
+.hero__dot {
+  // Vert « disponible » : couleur d'état universelle, seule occurrence du site,
+  // volontairement hors palette (aucun token vert).
+  --ok: #4ade80;
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ok);
+  animation: hero-pulse 2.4s var(--ease-out) infinite;
+}
 
-    // CRITICAL FIX: Mobile font size reduction
-    @include mobile {
-      font-size: 16px;
-      line-height: 1.6;
-      font-weight: 600;
-      letter-spacing: 0.01em;
-    }
-
-    @include tiny {
-      font-size: 14px;
-      line-height: 1.35;
-    }
+@keyframes hero-pulse {
+  from {
+    box-shadow: 0 0 0 0 var(--ok);
+  }
+  70%,
+  to {
+    box-shadow: 0 0 0 9px transparent;
   }
 }
 
-.hero-cta {
-  position: relative;
-  z-index: 10;
-  align-self: flex-end;
+// --- Titre -----------------------------------------------------------------
+.hero__title {
+  display: grid; // empile « creative » et le lettrage
+  color: var(--cream);
+}
 
-  // Largeur augmentée
-  width: 140px;
-  display: inline-block;
-  overflow: hidden;
+.hero__kicker {
+  margin-left: 0.1em;
+  font-size: clamp(1.5rem, 1rem + 2vw, 2.75rem);
+  line-height: 1;
+}
 
-  // Padding augmenté
-  padding: 2px 0px 2px 8px !important;
+// Tusker : capitales hautes de 0.95em (au-delà de l'ascendante) — un interligne
+// de 1 donne déjà un empilement serré (≈ 0.05em entre les lignes).
+// Taille bornée par la largeur ET la hauteur : rien ne passe sous la nav, et
+// sur téléphone les CTA restent visibles sans défiler.
+.hero__display {
+  margin: 0.08em 0 -0.1em; // haut : place des capitales ; bas : boîte = ligne de base
+  font-size: max(4.5rem, min(32vw, 13svh + 5vw));
+  line-height: 1;
 
-  // Bordure plus fine
-  border-width: 1px !important;
+  // tablette portrait : la hauteur disponible permet un lettrage plus ample
+  @include up(md) {
+    font-size: min(30vw, 20svh);
+  }
 
-  .button-text-wrapper {
+  @include up(lg) {
+    font-size: clamp(4.5rem, min(16vw, 26svh), 18rem);
+  }
+}
+
+.hero__line {
+  display: block;
+  white-space: nowrap;
+}
+
+.hero__amp {
+  // centrée sur la hauteur des capitales (Tusker 0.95em ; « & » Migra 0.68em)
+  font-size: 0.45em;
+  vertical-align: 0.72em;
+  color: var(--accent-on-dark);
+}
+
+// --- Intro + actions ---------------------------------------------------------
+.hero__intro {
+  max-width: 46ch;
+  font-size: var(--fs-lg);
+  line-height: 1.55;
+  color: var(--cream-2);
+}
+
+// mots composés : pas de coupure après le trait d'union (« e- / commerce »)
+.nb {
+  white-space: nowrap;
+}
+
+.hero__actions {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+}
+
+.hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+
+  .btn {
+    flex: auto; // mobile : les deux boutons remplissent la ligne
+  }
+
+  @include down(sm) {
+    width: 100%;
+  }
+}
+
+// Effet Swarm : pensé pour la souris, masqué sur écrans tactiles
+.hero__swarm {
+  display: none;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  color: var(--cream-2);
+  font-size: var(--fs-sm);
+  text-underline-offset: 0.3em;
+
+  @include hover {
     display: inline-flex;
-    align-items: center;
-    gap: 0;
-    white-space: nowrap;
-    will-change: transform;
   }
 
-  .button-text {
-    display: inline-block;
-    flex-shrink: 0;
-    padding: 0 15px 0 0;
-
-    // Typographie Neue Montreal - taille augmentée
-    font-family: 'Neue Montreal', sans-serif;
-    font-weight: 400;
-    font-size: 16px;
-    letter-spacing: 0.01em;
-    text-align: left;
-    line-height: 1.1;
-
-    @include mobile {
-      font-size: 14px;
-      padding: 0 12px 0 0;
-    }
-
-    @include tiny {
-      font-size: 13px;
-    }
+  &:hover:not(:disabled) {
+    color: var(--cream);
+    text-decoration: underline;
   }
 
-  // Animation au hover - défilement du texte dupliqué
-  &:hover {
-    .button-text-wrapper {
-      animation: scroll-seamless 3s linear infinite;
-    }
-  }
-
-  // Mobile button adjustments
-  @include mobile {
-    align-self: center;
-    width: auto;
-    min-width: 130px;
-    padding: 3px 2px 3px 10px !important;
-
-    // Hide duplicated text on mobile
-    .button-text:nth-child(2) {
-      display: none;
-    }
-
-    // Disable animation on mobile since we're hiding duplicated text
-    &:hover .button-text-wrapper {
-      animation: none;
-    }
-  }
-
-  @include tiny {
-    min-width: 120px;
+  &:disabled {
+    opacity: 0.7;
+    cursor: progress;
   }
 }
 
-// Animation seamless - translateX de 50% pour faire défiler vers le texte dupliqué
-@keyframes scroll-seamless {
-  0% {
-    transform: translateX(0);
+// --- Pied : indice de défilement + légende ---------------------------------
+.hero__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-6);
+  border-top: 1px solid var(--line-on-dark);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cream-2);
+}
+
+.hero__scroll {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 48px;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--cream);
   }
-  100% {
-    transform: translateX(-50%);
+}
+
+// Fil à plomb suspendu au filet : un trait clair y descend en boucle
+.hero__scroll-line {
+  align-self: stretch;
+  width: 1px;
+  overflow: hidden;
+  background: var(--line-on-dark);
+
+  &::after {
+    content: '';
+    display: block;
+    height: 100%;
+    background: var(--cream);
+    animation: hero-drop 2.2s var(--ease-in-out) infinite;
+  }
+}
+
+@keyframes hero-drop {
+  from {
+    translate: 0 -100%;
+  }
+  to {
+    translate: 0 100%;
+  }
+}
+
+.hero__fig {
+  color: var(--cream-3);
+
+  @include down(sm) {
+    display: none;
+  }
+}
+
+// Moins d'animations : ni parallaxe, ni pulsation, ni trait qui descend
+// (le fil reste à mi-course, immobile)
+@include reduced-motion {
+  .hero__img,
+  .hero__dot,
+  .hero__scroll-line::after {
+    animation: none;
+  }
+
+  .hero__scroll-line::after {
+    translate: 0 -50%;
   }
 }

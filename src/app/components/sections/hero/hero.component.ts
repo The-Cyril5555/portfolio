@@ -1,111 +1,47 @@
-// Hero Component
-// ===============
-// Section hero (première section) du portfolio avec effet parallax
+// Hero (#home) — première impression du site
+// ===========================================
+// Le plafond baroque en pleine page, voilé d'encre pour la lisibilité ;
+// en bas, le lettrage d'affiche « DESIGNER & DEVELOPER » à gauche, l'intro et
+// les appels à l'action à droite. Le bouton Swarm lance la reconstruction de la
+// page par une nuée de curseurs (souris uniquement, cf. SCSS).
 //
-// Affiche :
-// - Badge de disponibilité avec date actuelle
-// - Titre principal "DESIGNER & DEVELOPER"
-// - Description de profil
-// - Bouton CTA vers contact
-// - Effet parallax sur l'arrière-plan (via directive appParallax)
+// La <section id="home"> est fournie par app.html : ce composant ne rend que
+// son contenu. La parallaxe est en CSS pur (scroll-driven animation).
 
-import { Component, AfterViewInit, inject, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { AnimationService } from '../../../services/animation.service';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { RevealDirective } from '../../../directives/reveal.directive';
 import { ScrollService } from '../../../services/scroll.service';
-import { MotionParallaxDirective } from '../../../directives/motion-parallax.directive';
-import { ScrollRevealDirective } from '../../../directives/scroll-reveal.directive';
+import { SwarmService } from '../../../services/swarm.service';
 
-/**
- * Composant de la section Hero (première section du portfolio)
- *
- * Affiche la présentation principale avec :
- * - Badge de disponibilité dynamique (jour/mois)
- * - Titre principal en typographie Tusker
- * - Description du profil professionnel
- * - Call-to-action vers la section contact
- * - Effet parallax sur l'arrière-plan
- *
- * Optimisations :
- * - Utilise la directive appParallax au lieu de gestion manuelle du scroll
- * - AfterViewInit pour initialisation animations GSAP
- * - Pas de listeners scroll manuels (délégué à la directive)
- *
- * @component
- * @standalone
- */
+type HeroTarget = 'work' | 'contact';
+
 @Component({
   selector: 'app-hero',
-  standalone: true,
-  imports: [CommonModule, MotionParallaxDirective, ScrollRevealDirective],
+  imports: [RevealDirective],
   templateUrl: './hero.component.html',
   styleUrl: './hero.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeroComponent implements AfterViewInit {
-  /**
-   * Service de gestion des animations GSAP
-   * @private
-   */
-  private animationService = inject(AnimationService);
+export class HeroComponent {
+  private readonly scroll = inject(ScrollService);
+  private readonly swarm = inject(SwarmService);
+
+  /** Script en cours de chargement : bouton désactivé, libellé « Chargement… ». */
+  protected readonly swarmLoading = this.swarm.loading;
+  /** Rien à relancer tant que l'effet charge ou tourne. */
+  protected readonly swarmBusy = computed(() => this.swarm.loading() || this.swarm.running());
 
   /**
-   * Service de gestion du scroll et navigation
-   * @private
+   * Défilement doux vers une section. Les clics « ouvrir dans un nouvel
+   * onglet » (Ctrl/⌘/Maj, bouton du milieu) gardent le comportement du lien.
    */
-  private scrollService = inject(ScrollService);
-
-  // ========================================
-  // Propriétés - Badge de disponibilité
-  // ========================================
-
-  /**
-   * Jour actuel (1-31)
-   * Affiché dans le badge de disponibilité
-   * @readonly
-   */
-  readonly currentDay = new Date().getDate().toString();
-
-  /**
-   * Mois actuel en abrégé (jan, fév, mar, etc.)
-   * Format français avec toLocaleString
-   * @readonly
-   */
-  readonly currentMonth = new Date().toLocaleString('fr-FR', { month: 'short' });
-
-  /**
-   * Année actuelle (2024, 2025, etc.)
-   * Non utilisée actuellement mais disponible si besoin
-   * @readonly
-   */
-  readonly currentYear = new Date().toLocaleString('fr-FR', { year: 'numeric' });
-
-  // ========================================
-  // Lifecycle Hooks
-  // ========================================
-
-  /**
-   * Initialisation après rendu complet de la vue
-   *
-   * Note : Les animations Hero sont maintenant gérées par la directive
-   * ScrollRevealDirective appliquée directement dans le template HTML.
-   * Plus besoin d'appeler heroAnimation() manuellement.
-   */
-  ngAfterViewInit(): void {
-    // Animations gérées par ScrollRevealDirective dans le template
+  protected goTo(event: MouseEvent, id: HeroTarget): void {
+    if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    this.scroll.scrollToSection(id);
   }
 
-  // ========================================
-  // Méthodes publiques
-  // ========================================
-
-  /**
-   * Scroll fluide vers la section "work" (portfolio)
-   *
-   * Appelée lors du clic sur le bouton CTA.
-   * Utilise le ScrollService qui gère le smooth scroll avec GSAP.
-   */
-  scrollToWork(): void {
-    this.scrollService.scrollToSection('work');
+  protected startSwarm(): void {
+    void this.swarm.start();
   }
 }
