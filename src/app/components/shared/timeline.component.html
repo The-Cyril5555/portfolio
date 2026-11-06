@@ -1,28 +1,29 @@
-<div class="timeline-wrapper">
+<ol class="timeline" role="list" [attr.aria-labelledby]="labelledBy() || null">
+  @for (item of items(); track item.id) {
+    <li class="step" [class.step--experience]="item.kind === 'experience'" [appReveal]="$index * 90">
+      <span class="marker" aria-hidden="true"></span>
 
-  <!-- Timeline Track -->
-  <div class="timeline-track">
-
-    <!-- Timeline Line (visual continuous line) -->
-    <div class="timeline-line"></div>
-
-    <!-- Timeline Items -->
-    @for (item of items(); track item.id; let i = $index) {
-      <div class="timeline-item" [attr.data-index]="i">
-
-        <!-- Marker à gauche -->
-        <div class="timeline-marker">
-          <div class="marker-dot"></div>
-        </div>
-
-        <!-- Contenu à droite -->
-        <div class="timeline-content">
-          <div class="timeline-year">{{ item.year }}</div>
-          <div class="timeline-title">{{ item.title }}</div>
-        </div>
-
+      <div class="meta">
+        <p class="years display">
+          @if (item.end) {
+            <span class="sr-only">De </span><time [attr.datetime]="item.start">{{ item.start }}</time
+            ><span class="sep" aria-hidden="true">–</span><span class="sr-only"> à </span
+            ><time [attr.datetime]="item.end">{{ item.end }}</time>
+          } @else {
+            <time [attr.datetime]="item.start">{{ item.start }}</time>
+          }
+        </p>
+        <p class="chip kind">{{ kindLabel[item.kind] }}</p>
       </div>
-    }
-  </div>
 
-</div>
+      <div class="what">
+        <h4 class="title serif">{{ item.title }}</h4>
+        <p class="org">
+          {{ item.organization }}@if (item.location) {<span>, {{ item.location }}</span>}
+        </p>
+      </div>
+
+      <p class="desc">{{ item.description }}</p>
+    </li>
+  }
+</ol>
