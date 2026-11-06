@@ -56,31 +56,14 @@
 }
 
 // --- Pastilles (surcharge de .chip : plus hautes, fond papier) -------------
+// Étiquettes inertes (<li> sans lien) : aucun retour au survol — ni bordure,
+// ni élévation, ni ombre —, comme les pastilles des projets et de la frise.
 .tech {
   gap: var(--space-2);
   min-height: 44px;
   padding: var(--space-2) var(--space-4) var(--space-2) var(--space-3);
   background: var(--paper);
   font-size: var(--fs-sm);
-  transition:
-    border-color var(--dur-1) ease,
-    transform var(--dur-1) var(--ease-out),
-    box-shadow var(--dur-1) ease;
-
-  @include hover {
-    &:hover {
-      border-color: var(--ink-3);
-    }
-  }
-
-  @include motion-ok {
-    @include hover {
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-1);
-      }
-    }
-  }
 }
 
 // Icône monochrome : le SVG sert de masque, la couleur suit le libellé
