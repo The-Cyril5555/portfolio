@@ -1,142 +1,154 @@
-@use '../../../../styles/responsive' as *;
+// Section « À propos » — portrait puis parcours, sur le papier
+// ===========================================================
+//  < lg : en-tête, bio, peinture puis parcours, empilés
+//  ≥ lg : grille 12 colonnes — en-tête + bio (1-7) à gauche, peinture (8-12)
+//         à droite, qui accompagne la lecture (sticky) ; la frise réutilise
+//         la même grille via --grid-gap.
+@use 'bp' as *;
 
-// SECTION CONFIGURATION
-// =====================
+:host {
+  --grid-gap: clamp(var(--space-5), 3.4vw, var(--space-7));
 
-.about {
-  background-color: #F4E9E0 !important; // Beige background like Portfolio
-  color: #0A1119; // Black text
-
-  // Override brutalist-section--light if needed
-  &.brutalist-section--light {
-    background: #F4E9E0;
-    color: #0A1119;
-  }
+  display: block;
+  padding-block: var(--section-pad);
+  background: var(--paper);
 }
 
-// GRID LAYOUT (2 colonnes)
-// ========================
-
-.about-grid {
+// --- En-tête + bio -------------------------------------------------------------
+.head {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: center;
+  justify-items: start;
+  gap: var(--space-5);
+  margin-bottom: clamp(var(--space-6), 4vw, var(--space-7));
+}
 
-  @media (max-width: 1024px) {
-    gap: 60px;
+.bio {
+  display: grid;
+  gap: var(--space-5);
+
+  // mesure de lecture : ~62 à 70 signes par ligne (le « ch » de Neue Montreal,
+  // calé sur un zéro très large, donnerait des lignes de 90 signes)
+  .lead {
+    max-width: 36rem;
   }
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 40px;
-    align-items: start;
+  p:not(.lead) {
+    max-width: 33rem;
   }
 }
 
-// COLONNES
-// ========
+// --- Peinture encadrée : cadre fin, marie-louise, cartel ---------------------------
+.artwork {
+  margin-top: var(--space-8);
 
-.about-intro {
+  @include up(md) {
+    width: min(100%, 27rem);
+    margin-inline: auto;
+  }
+}
+
+.frame {
+  --mat: clamp(var(--space-4), 2.4vw, var(--space-6));
+
+  // marie-louise un peu plus haute en bas, comme un montage de musée
+  padding: var(--mat) var(--mat) calc(var(--mat) * 1.25);
+  border: 0.375rem solid var(--ink);
+  background: var(--cream);
+  // ombre portée du cadre sur la marie-louise + ombre sur le mur
+  box-shadow:
+    inset 0 3px 6px var(--line),
+    var(--shadow-2);
+
+  img {
+    width: 100%;
+    box-shadow: 0 0 0 1px var(--line); // biseau de la découpe
+  }
+}
+
+.cartel {
+  margin-top: var(--space-4);
+  font-size: var(--fs-xs);
+  line-height: 1.45;
+  color: var(--ink-3);
+
+  cite {
+    font-style: normal;
+  }
+}
+
+.artist {
+  color: var(--ink-2);
+}
+
+// titre + date passent à la ligne d'un seul bloc (pas de « 1680 » orphelin)
+.work {
+  display: inline-block;
+}
+
+// --- Parcours ----------------------------------------------------------------------
+.parcours {
+  margin-top: clamp(var(--space-8), 8vw, var(--space-10));
+}
+
+.parcours-head {
   display: flex;
-  flex-direction: column;
-  gap: 24px;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-5);
+  margin-bottom: clamp(var(--space-6), 4vw, var(--space-8));
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--line-strong);
 }
 
-.about-timeline-column {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+.parcours-title {
+  font-size: var(--fs-2xl);
 }
 
-// HEADINGS (Titres des colonnes)
-// ===============================
-
-.column-heading {
-  font-family: 'Manufacturing Consent', sans-serif;
-  font-size: 72px;
-  font-weight: 400;
-  letter-spacing: 0.02em;
-  color: #0A1119;
-  margin: 0;
-
-  @media (max-width: 1024px) {
-    font-size: 56px;
-  }
-
-  @media (max-width: 768px) {
-    font-size: 48px;
-  }
+.parcours-note {
+  font-size: var(--fs-sm);
+  color: var(--ink-3);
+  text-wrap: balance;
 }
 
-// BIO CONTENT
-// ===========
-
-.bio-content {
-  display: flex;
-  flex-direction: column;
-  gap: 24px; // Espacement entre paragraphes
-}
-
-.bio-paragraph {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 18px;
-  line-height: 1.75;
-  color: #0A1119;
-  margin: 0;
-
-  @media (max-width: 768px) {
-    font-size: 16px;
-    line-height: 1.6;
-  }
-}
-
-// TIMELINE WRAPPER
-// ================
-
-.timeline-wrapper {
-  margin-top: 0;
-
-  // Override timeline component CSS variables for light theme
-  --color-primary: #0A1119;
-  --color-background: #F4E9E0;
-  --color-text: #0A1119;
-  --color-text-rgb: 10, 17, 25;
-  --color-accent: #e11d48; // Red accent from project cards
-
-  :deep(.timeline-content) {
-    background: white;
-    border-color: #0A1119;
-    color: #0A1119;
+// --- Grand écran : deux colonnes ------------------------------------------------------
+@include up(lg) {
+  .portrait {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: auto 1fr;
+    column-gap: var(--grid-gap);
   }
 
-  :deep(.timeline-title),
-  :deep(.timeline-subtitle),
-  :deep(.timeline-description) {
-    color: #0A1119;
+  .head,
+  .bio {
+    grid-column: 1 / 8;
   }
 
-  :deep(.timeline-line) {
-    background: #0A1119;
+  .bio {
+    align-content: start;
   }
 
-  :deep(.marker-dot) {
-    background: #0A1119;
-    border-color: #0A1119;
-    box-shadow: 0 0 0 4px #F4E9E0;
+  .artwork {
+    grid-column: 8 / 13;
+    grid-row: 1 / span 2;
+    align-self: start;
+    width: auto;
+    margin: 0;
+
+    // la peinture accompagne la lecture, si l'écran est assez haut pour
+    // montrer cadre et cartel en entier
+    @media (min-height: 50rem) {
+      position: sticky;
+      top: calc(var(--nav-h) + var(--space-6));
+    }
   }
 }
 
-// RESPONSIVE SPACING ADJUSTMENTS
-// ==============================
-
-@media (max-width: 768px) {
-  .about {
-    padding: 80px 20px;
-  }
-
-  .section-container {
-    padding-left: 20px;
-    padding-right: 20px;
+// ≥ xl : les paragraphes s'alignent sur la colonne 3, comme les intitulés de la
+// frise (le chapeau reste au fer à gauche) ; 100 % = largeur des colonnes 1-7
+@include up(xl) {
+  .bio p:not(.lead) {
+    margin-inline-start: calc((100% - 6 * var(--grid-gap)) / 7 * 2 + 2 * var(--grid-gap));
   }
 }

@@ -1,28 +1,42 @@
-<section class="about brutalist-section brutalist-section--light">
-  <div class="section-container">
+<div class="container">
+  <div class="portrait">
+    <header class="head">
+      <p class="eyebrow" appReveal>N°&nbsp;03 — Portrait</p>
+      <h2 id="about-title" class="section-title" appReveal>À propos</h2>
+    </header>
 
-    <!-- Grid 2 colonnes -->
-    <div class="about-grid">
-
-      <!-- Colonne gauche : Introduction -->
-      <div class="about-intro">
-        <h2 class="column-heading">À propos</h2>
-        <div class="bio-content">
-          @for (paragraph of bioParagraphs(); track $index) {
-            <p class="bio-paragraph">{{ paragraph }}</p>
-          }
-        </div>
-      </div>
-
-      <!-- Colonne droite : Timeline -->
-      <div class="about-timeline-column">
-        <h2 class="column-heading">Timeline</h2>
-        <div class="timeline-wrapper">
-          <app-timeline [timelineItems]="timelineItems()"></app-timeline>
-        </div>
-      </div>
-
+    <div class="bio">
+      @for (paragraph of bio; track $index) {
+        <p [class.lead]="$first" [appReveal]="$index * 90">{{ paragraph }}</p>
+      }
     </div>
 
+    <figure class="artwork" [appReveal]="120">
+      <div class="frame">
+        <img
+          [src]="painting.src"
+          [attr.srcset]="painting.srcset"
+          [attr.sizes]="painting.sizes"
+          [width]="painting.width"
+          [height]="painting.height"
+          alt="Un navire de guerre aux voiles claires tire un coup de canon sur une mer d’huile, enveloppé de fumée blanche."
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <figcaption class="cartel">
+        <span class="artist">Willem van de Velde le Jeune</span> —
+        <span class="work"><cite>Le Coup de canon</cite>, vers&nbsp;1680</span>
+      </figcaption>
+    </figure>
   </div>
-</section>
+
+  <div class="parcours">
+    <div class="parcours-head" appReveal>
+      <h3 id="parcours-title" class="parcours-title serif">Parcours</h3>
+      <p class="parcours-note">Formation et expérience, du plus récent au plus ancien</p>
+    </div>
+
+    <app-timeline [items]="parcours" labelledBy="parcours-title" />
+  </div>
+</div>
