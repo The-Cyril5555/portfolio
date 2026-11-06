@@ -1,0 +1,28 @@
+<footer class="footer container">
+  <div class="footer__top">
+    <p class="footer__brand">
+      <span class="footer__name">Cyril Bizouarn</span>
+      <span class="footer__role">Développeur web <span class="nb">full-stack</span></span>
+    </p>
+
+    <nav class="footer__nav" aria-label="Plan du site">
+      <ul role="list">
+        @for (link of links; track link.id) {
+          <li>
+            <a [href]="link.href" (click)="goTo($event, link.id)">{{ link.label }}</a>
+          </li>
+        }
+      </ul>
+    </nav>
+  </div>
+
+  <ul class="footer__meta" role="list">
+    <li>©&nbsp;{{ year }} Cyril Bizouarn</li>
+    <li>Réalisé avec Angular, TypeScript et SCSS</li>
+    <li>
+      Effet Swarm d’après
+      <a href="https://califa.github.io/swarm-site/" target="_blank" rel="noopener noreferrer">Joel Califa<span class="sr-only"> (nouvel onglet)</span></a>
+    </li>
+    <li>Peintures&nbsp;: domaine public</li>
+  </ul>
+</footer>

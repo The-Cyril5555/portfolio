@@ -1,117 +1,56 @@
-<!--
-  Section Contact
-  ===============
-  Section finale du portfolio avec effet parallax sur le fond et le contenu.
+<!-- Fond : le plafond du hero, renversé, sous un voile d'encre (décoratif) -->
+<div class="contact__media" aria-hidden="true">
+  <picture>
+    <source type="image/webp" srcset="paint.webp" />
+    <img
+      class="contact__img"
+      src="paint.jpg"
+      alt=""
+      width="1440"
+      height="1352"
+      loading="lazy"
+      decoding="async" />
+  </picture>
+</div>
 
-  Structure :
-  1. Fond avec image paint.png retournée (parallax lent)
-  2. Contenu avec titre, email et liens sociaux (parallax très lent)
-  3. Footer avec navigation et stack technique
-
-  L'effet parallax est géré par le TypeScript qui applique des transformations
-  CSS dynamiques lors du scroll (voir contact.component.ts)
--->
-
-<div class="contact">
-  <!-- Couche de fond avec parallax -->
-  <!-- Effet parallax lent (20% vitesse scroll) avec image retournée verticalement -->
-  <!-- scaleY(-1) crée un effet artistique en miroir -->
-  <div
-    class="contact-background"
-    [appMotionParallax]="{ speed: 0.2, direction: 'vertical', transform: 'scaleY(-1)' }"
-    aria-hidden="true"
-  ></div>
-
-  <!-- Couche de contenu avec parallax -->
-  <!-- Défile très lentement (10% vitesse scroll) pour accentuer la profondeur -->
-  <div
-    class="contact-content"
-    [appMotionParallax]="{ speed: 0.1, direction: 'vertical' }"
-  >
-    <!-- Informations de contact centrées -->
-    <div class="contact-info">
-      <!-- Titre principal de la section -->
-      <h1 class="contact-title">Contact</h1>
-
-      <!-- Adresse email de contact -->
-      <!-- Affichée avec une grande taille pour la visibilité -->
-      <div class="contact-email">
-        {{ contactEmail() }}
-      </div>
-
-      <!-- Liens vers les réseaux sociaux -->
-      <!-- Chaque lien affiche une icône et le nom du réseau -->
-      <div class="contact-social">
-        @for (link of socialLinks(); track link.id) {
-          <a
-            [href]="link.url"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="social-link"
-            [attr.aria-label]="'Visiter mon profil ' + link.name"
-            [attr.title]="link.name"
-          >
-            <!-- Icône du réseau social (GitHub, LinkedIn, etc.) -->
-            <app-icon
-              [name]="link.icon"
-              [size]="32"
-              color="#F5EEE6"
-              [attr.aria-hidden]="true"
-            ></app-icon>
-
-            <!-- Nom du réseau affiché sous l'icône -->
-            <span class="social-name">{{ link.name }}</span>
-          </a>
-        }
-      </div>
+<div class="container">
+  <header class="section-head">
+    <div class="contact__top" appReveal>
+      <p class="eyebrow">N° 04 — Contact</p>
+      <p class="contact__fig" aria-hidden="true">Fig. 2 — Plafond baroque, renversé</p>
     </div>
+    <h2 id="contact-title" class="section-title" appReveal>Contact</h2>
+    <p class="lead" [appReveal]="120">
+      Un poste, un projet, une question&nbsp;? Écrivez-moi, je réponds rapidement.
+    </p>
+  </header>
+
+  <div class="contact__body">
+    <p class="contact__mail" [appReveal]="200">
+      <a class="contact__email" [href]="'mailto:' + email">
+        <span class="sr-only">Écrire à </span>{{ emailUser }}<wbr />&#64;{{ emailDomain }}
+      </a>
+    </p>
+
+    <div class="contact__copy" [appReveal]="260">
+      @if (canCopy) {
+        <button type="button" class="btn btn--sm btn--ghost-light" (click)="copyEmail()">
+          <app-icon [name]="copied() ? 'check' : 'copy'" [size]="16" />
+          Copier l’adresse
+        </button>
+      }
+      <p class="contact__status" role="status" aria-live="polite">{{ copyStatus() }}</p>
+    </div>
+
+    <ul class="contact__social" role="list" aria-label="Profils" [appReveal]="320">
+      @for (link of socialLinks; track link.id) {
+        <li>
+          <a class="btn btn--ghost-light" [href]="link.url" target="_blank" rel="noopener noreferrer">
+            <app-icon [name]="link.icon" [size]="18" />
+            {{ link.name }}<span class="sr-only"> (nouvel onglet)</span>
+          </a>
+        </li>
+      }
+    </ul>
   </div>
-
-  <!-- Footer du portfolio -->
-  <!-- Contient la navigation, la stack technique et le copyright -->
-  <footer class="contact-footer">
-    <!-- Contenu principal du footer (navigation + stack) -->
-    <div class="footer-content">
-      <!-- Navigation vers les sections du portfolio -->
-      <!-- Affichée à gauche sur desktop, centrée sur mobile -->
-      <nav class="footer-nav" aria-label="Navigation secondaire">
-        @for (navLink of footerNavLinks; track navLink.id) {
-          <a
-            [href]="navLink.href"
-            [attr.aria-label]="'Aller à la section ' + navLink.label"
-          >
-            {{ navLink.label }}
-          </a>
-        }
-      </nav>
-
-      <!-- Stack technique utilisée pour ce portfolio -->
-      <!-- Affichée à droite sur desktop, centrée sur mobile -->
-      <div class="footer-stack">
-        <!-- Label "Built with" au-dessus des icônes -->
-        <span class="stack-label">Built with</span>
-
-        <!-- Icônes des technologies avec leurs noms -->
-        <div class="stack-icons">
-          @for (tech of techStack(); track tech.id) {
-            <div class="stack-item">
-              <!-- Icône Devicon de la technologie -->
-              <i
-                [class]="tech.icon"
-                [attr.aria-label]="tech.name"
-                role="img"
-              ></i>
-
-              <!-- Nom de la technologie sous l'icône -->
-              <span class="stack-name">{{ tech.name }}</span>
-            </div>
-          }
-        </div>
-      </div>
-    </div>
-
-    <!-- Copyright avec année dynamique -->
-    <!-- L'année est calculée automatiquement dans le TypeScript -->
-    <p class="footer-copyright">&copy; {{ currentYear }} Cyril Bizouarn</p>
-  </footer>
 </div>
