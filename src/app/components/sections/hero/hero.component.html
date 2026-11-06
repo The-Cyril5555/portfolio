@@ -14,13 +14,13 @@
 </div>
 
 <div class="hero__inner container">
-  <p class="hero__status" appReveal>
+  <p class="hero__status">
     <span class="hero__dot" aria-hidden="true"></span>
     Disponible — à l’écoute d’opportunités
   </p>
 
   <div class="hero__grid">
-    <h1 class="hero__title" appReveal>
+    <h1 class="hero__title">
       <span class="sr-only">Cyril Bizouarn — </span>
       <span class="hero__kicker serif" lang="en">creative</span>
       <span class="hero__display display" lang="en">
@@ -30,19 +30,20 @@
     </h1>
 
     <div class="hero__side">
-      <p class="hero__intro" [appReveal]="120">
+      <p class="hero__intro">
         Développeur web <span class="nb">full-stack</span> junior, spécialisé en React, Node.js et SQL.
         Je conçois des applications web, des sites <span class="nb">e-commerce</span> et des plateformes
         métiers, du <span class="nb">front-end</span> au <span class="nb">back-end</span>.
       </p>
 
-      <div class="hero__actions" [appReveal]="240">
+      <div class="hero__actions">
         <div class="hero__ctas">
           <a class="btn btn--light" href="#work" (click)="goTo($event, 'work')">Voir les projets</a>
           <a class="btn btn--ghost-light" href="#contact" (click)="goTo($event, 'contact')">Me contacter</a>
         </div>
 
         <button
+          #swarmButton
           type="button"
           class="hero__swarm"
           title="Une nuée de curseurs reconstruit la page — Échap pour quitter"
@@ -59,7 +60,7 @@
     </div>
   </div>
 
-  <div class="hero__foot" [appReveal]="360">
+  <div class="hero__foot">
     <a class="hero__scroll" href="#work" (click)="goTo($event, 'work')">
       <span class="hero__scroll-line" aria-hidden="true"></span>
       Défiler<span class="sr-only"> jusqu’aux projets</span>
