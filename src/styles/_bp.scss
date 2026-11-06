@@ -3,6 +3,7 @@
 // Utilisation dans un composant :  @use 'bp' as *;
 // (le dossier src/styles est dans stylePreprocessorOptions.includePaths)
 
+@use 'sass:list';
 @use 'sass:map';
 
 $breakpoints: (
@@ -24,6 +25,19 @@ $breakpoints: (
   @media (max-width: (map.get($breakpoints, $bp) - 0.02px)) {
     @content;
   }
+}
+
+/// Grille commune de 12 colonnes (gouttière --grid-gap, cf. _tokens.scss).
+/// Convention de mise en page : contenu principal en 1 / 8, colonne de droite
+/// (chapeau, adresse de contact, peinture…) en 8 / 13. Toutes les sections qui
+/// l'utilisent partagent ainsi le même bord gauche pour la colonne de droite.
+$col-main: list.slash(1, 8);
+$col-side: list.slash(8, 13);
+
+@mixin grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--grid-gap);
 }
 
 /// Animations autorisées (l'utilisateur ne demande pas moins d'animations)

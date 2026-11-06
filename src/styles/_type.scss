@@ -27,13 +27,14 @@
   text-transform: uppercase;
   color: var(--ink-3);
 
-  // petit filet avant le texte, comme un cartel de musée
+  // petit filet avant le texte, comme un cartel de musée. Il porte le rouge au
+  // repos sur le papier : l'accent du hero revient à chaque tête de section
+  // (version claire en zone sombre, cf. .section--dark dans _ui.scss).
   &::before {
     content: '';
     width: 2rem;
     height: 1px;
-    background: currentColor;
-    opacity: 0.6;
+    background: var(--eyebrow-mark, var(--accent));
   }
 }
 

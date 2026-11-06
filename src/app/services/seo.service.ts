@@ -1,380 +1,67 @@
-// SEO Service
-// ============
+import { DOCUMENT, Injectable, inject } from '@angular/core';
+import { CONTACT_EMAIL, SOCIAL_LINKS } from '../data/contact.data';
+import { TECHNOLOGIES } from '../data/technologies.data';
+import { JsonLdSchema } from '../models/seo.model';
 
-import { Injectable, inject, Inject, PLATFORM_ID } from '@angular/core';
-import { Title, Meta } from '@angular/platform-browser';
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { SeoConfig, JsonLdSchema } from '../models/seo.model';
+/** Adresse publique du site (identique au canonical de src/index.html). */
+export const SITE_URL = 'https://the-cyril5555.github.io/portfolio/';
+
+/** Signature unique du site (titre, og:title, jobTitle…). */
+export const SITE_ROLE = 'Développeur web full-stack';
 
 /**
- * Service de gestion SEO
+ * Données structurées (JSON-LD) de la page unique.
  *
- * Gère les meta tags dynamiques, structured data JSON-LD,
- * et configurations SEO par section du portfolio.
+ * Titre, description, canonical et balises Open Graph / Twitter sont STATIQUES
+ * dans src/index.html : il n'y a qu'une URL, et les robots de partage
+ * n'exécutent pas le JavaScript. On ne les réécrit donc jamais au défilement.
  *
- * Fonctionnalités :
- * - Mise à jour dynamique du titre de page
- * - Gestion des meta tags (description, keywords, og:*, twitter:*)
- * - Injection de structured data (JSON-LD)
- * - Configurations SEO optimisées par section
- *
- * Utilisation :
- * ```typescript
- * constructor(private seoService: SeoService) {}
- *
- * ngOnInit() {
- *   const config = this.seoService.getSectionSeoConfig('home');
- *   this.seoService.updateTags(config);
- *   this.seoService.addStructuredData(this.seoService.createPersonSchema());
- * }
- * ```
+ * Seul le JSON-LD est produit ici, à partir des mêmes constantes que les
+ * sections Contact et Compétences : e-mail, profils et technologies ne peuvent
+ * plus diverger de ce que la page affiche.
  */
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class SeoService {
-  private readonly title = inject(Title);
-  private readonly meta = inject(Meta);
   private readonly document = inject(DOCUMENT);
-  private readonly isBrowser: boolean;
 
-  constructor(@Inject(PLATFORM_ID) platformId: Object) {
-    this.isBrowser = isPlatformBrowser(platformId);
+  /** Ajoute (ou remplace) les schémas Person et WebSite dans <head>. */
+  addStructuredData(): void {
+    this.inject('person-schema', this.createPersonSchema());
+    this.inject('website-schema', this.createWebSiteSchema());
   }
 
-  /**
-   * Met à jour tous les meta tags SEO selon la configuration
-   *
-   * @param config Configuration SEO à appliquer
-   */
-  updateTags(config: SeoConfig): void {
-    const {
-      title,
-      description,
-      image = 'https://the-cyril5555.github.io/portfolio/og-image.jpg',
-      url = 'https://the-cyril5555.github.io/portfolio/',
-      type = 'website',
-      keywords,
-      robots = 'index, follow',
-      canonical
-    } = config;
-
-    // Update page title
-    this.title.setTitle(title);
-
-    // Update meta tags in groups (helper methods for better readability)
-    this.updateStandardTags(description, keywords, robots);
-    this.updateOgTags(title, description, image, url, type);
-    this.updateTwitterTags(title, description, image);
-
-    // Update canonical URL if provided
-    if (canonical) {
-      this.updateCanonicalUrl(canonical);
-    }
-  }
-
-  /**
-   * Met à jour les meta tags standards (description, keywords, robots)
-   *
-   * @param description Description de la page
-   * @param keywords Mots-clés de la page
-   * @param robots Directives pour les robots (index, follow)
-   * @private
-   */
-  private updateStandardTags(description: string, keywords: string[], robots: string): void {
-    const standardTags = [
-      { name: 'description', content: description },
-      { name: 'keywords', content: keywords.join(', ') },
-      { name: 'robots', content: robots }
-    ];
-
-    standardTags.forEach(tag => this.meta.updateTag(tag));
-  }
-
-  /**
-   * Met à jour les meta tags Open Graph (Facebook, LinkedIn)
-   *
-   * @param title Titre de la page
-   * @param description Description de la page
-   * @param image URL de l'image de preview
-   * @param url URL de la page
-   * @param type Type de contenu (website, article, etc.)
-   * @private
-   */
-  private updateOgTags(
-    title: string,
-    description: string,
-    image: string,
-    url: string,
-    type: string
-  ): void {
-    const ogTags = [
-      { property: 'og:title', content: title },
-      { property: 'og:description', content: description },
-      { property: 'og:image', content: image },
-      { property: 'og:url', content: url },
-      { property: 'og:type', content: type }
-    ];
-
-    ogTags.forEach(tag => this.meta.updateTag(tag));
-  }
-
-  /**
-   * Met à jour les meta tags Twitter Card
-   *
-   * @param title Titre de la page
-   * @param description Description de la page
-   * @param image URL de l'image de preview
-   * @private
-   */
-  private updateTwitterTags(title: string, description: string, image: string): void {
-    const twitterTags = [
-      { name: 'twitter:title', content: title },
-      { name: 'twitter:description', content: description },
-      { name: 'twitter:image', content: image }
-    ];
-
-    twitterTags.forEach(tag => this.meta.updateTag(tag));
-  }
-
-  /**
-   * Met à jour l'URL canonique de la page
-   *
-   * @param url URL canonique
-   */
-  updateCanonicalUrl(url: string): void {
-    if (!this.isBrowser) return;
-
-    // Find existing canonical link or create new one
-    let link: HTMLLinkElement | null = this.document.querySelector('link[rel="canonical"]');
-
-    if (!link) {
-      link = this.document.createElement('link');
-      link.setAttribute('rel', 'canonical');
-      this.document.head.appendChild(link);
-    }
-
-    link.setAttribute('href', url);
-  }
-
-  /**
-   * Ajoute un script de structured data JSON-LD au DOM
-   *
-   * @param schema Schéma JSON-LD à injecter
-   * @param id Identifiant unique pour le script
-   */
-  addStructuredData(schema: JsonLdSchema, id: string = 'structured-data'): void {
-    if (!this.isBrowser) return;
-
-    // Remove existing script with same ID
-    this.removeStructuredData(id);
-
-    // Create new script element
-    const script = this.document.createElement('script');
-    script.type = 'application/ld+json';
-    script.id = id;
-    script.text = JSON.stringify(schema);
-
-    this.document.head.appendChild(script);
-  }
-
-  /**
-   * Supprime un script de structured data du DOM
-   *
-   * @param id Identifiant du script à supprimer
-   */
-  removeStructuredData(id: string): void {
-    if (!this.isBrowser) return;
-
-    const existingScript = this.document.getElementById(id);
-    if (existingScript) {
-      existingScript.remove();
-    }
-  }
-
-  /**
-   * Crée le schema Person pour le propriétaire du portfolio
-   *
-   * @returns Schema JSON-LD de type Person
-   */
   createPersonSchema(): JsonLdSchema {
     return {
       '@context': 'https://schema.org',
       '@type': 'Person',
-      'name': 'Cyril Bizouarn',
-      'jobTitle': 'Développeur Web Full-Stack',
-      'url': 'https://the-cyril5555.github.io/portfolio/',
-      'sameAs': [
-        'https://github.com/The-Cyril5555',
-        'https://linkedin.com/in/cyrilbizouarn'
-      ],
-      'knowsAbout': [
-        'React',
-        'Node.js',
-        'TypeScript',
-        'Angular',
-        'SQL',
-        'JavaScript',
-        'HTML',
-        'CSS',
-        'Express',
-        'MongoDB'
-      ],
-      'email': 'contact@cyril-bizouarn.com',
-      'alumniOf': {
-        '@type': 'EducationalOrganization',
-        'name': 'MyDigitalSchool'
-      }
+      name: 'Cyril Bizouarn',
+      jobTitle: SITE_ROLE,
+      url: SITE_URL,
+      email: CONTACT_EMAIL,
+      sameAs: SOCIAL_LINKS.map((link) => link.url),
+      knowsAbout: TECHNOLOGIES.filter((t) => t.group !== 'tools').map((t) => t.name),
+      alumniOf: { '@type': 'EducationalOrganization', name: 'MyDigitalSchool' },
     };
   }
 
-  /**
-   * Crée le schema WebSite pour le portfolio
-   *
-   * @returns Schema JSON-LD de type WebSite
-   */
   createWebSiteSchema(): JsonLdSchema {
     return {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      'name': 'Cyril Bizouarn - Portfolio',
-      'url': 'https://the-cyril5555.github.io/portfolio/',
-      'description': 'Portfolio de Cyril Bizouarn, développeur web full-stack spécialisé en React, Node.js et SQL. Découvrez mes projets d\'applications web, sites e-commerce et plateformes métiers.',
-      'author': {
-        '@type': 'Person',
-        'name': 'Cyril Bizouarn'
-      },
-      'potentialAction': {
-        '@type': 'SearchAction',
-        'target': {
-          '@type': 'EntryPoint',
-          'urlTemplate': 'https://the-cyril5555.github.io/portfolio/#work'
-        }
-      }
+      name: 'Cyril Bizouarn',
+      url: SITE_URL,
+      inLanguage: 'fr',
+      author: { '@type': 'Person', name: 'Cyril Bizouarn' },
     };
   }
 
-  /**
-   * Crée le schema BreadcrumbList pour une section
-   *
-   * Permet à Google d'afficher un fil d'Ariane dans les résultats de recherche,
-   * améliorant ainsi la navigation et le CTR.
-   *
-   * @param sectionId ID de la section (work, skills, about, contact)
-   * @param sectionName Nom affiché de la section
-   * @returns Schema JSON-LD de type BreadcrumbList
-   *
-   * @example
-   * ```typescript
-   * const breadcrumb = this.seoService.createBreadcrumbSchema('work', 'Projets');
-   * this.seoService.addStructuredData(breadcrumb, 'breadcrumb-work');
-   * ```
-   */
-  createBreadcrumbSchema(sectionId: string, sectionName: string): JsonLdSchema {
-    return {
-      '@context': 'https://schema.org',
-      '@type': 'BreadcrumbList',
-      'itemListElement': [
-        {
-          '@type': 'ListItem',
-          'position': 1,
-          'name': 'Accueil',
-          'item': 'https://the-cyril5555.github.io/portfolio/'
-        },
-        {
-          '@type': 'ListItem',
-          'position': 2,
-          'name': sectionName,
-          'item': `https://the-cyril5555.github.io/portfolio/#${sectionId}`
-        }
-      ]
-    };
-  }
-
-  /**
-   * Obtient la configuration SEO pour une section donnée
-   *
-   * @param sectionId Identifiant de la section (home, work, skills, about, contact)
-   * @returns Configuration SEO de la section
-   */
-  getSectionSeoConfig(sectionId: string): SeoConfig {
-    const configs: Record<string, SeoConfig> = {
-      home: {
-        title: 'Cyril Bizouarn - Développeur Web Full-Stack',
-        description: 'Portfolio de Cyril Bizouarn, développeur web full-stack spécialisé en React, Node.js et SQL. Découvrez mes projets d\'applications web, sites e-commerce et plateformes métiers.',
-        keywords: [
-          'Cyril Bizouarn',
-          'développeur web',
-          'full-stack',
-          'React',
-          'Node.js',
-          'SQL',
-          'Angular',
-          'TypeScript',
-          'portfolio',
-          'développeur junior'
-        ],
-        canonical: 'https://the-cyril5555.github.io/portfolio/'
-      },
-      work: {
-        title: 'Projets - Cyril Bizouarn',
-        description: 'Découvrez mes projets web : applications React, sites e-commerce WordPress, plateformes de recrutement et applications métiers. Expertise en développement front-end et back-end.',
-        keywords: [
-          'projets web',
-          'portfolio développeur',
-          'applications React',
-          'sites e-commerce',
-          'WordPress',
-          'WooCommerce',
-          'applications métiers'
-        ],
-        canonical: 'https://the-cyril5555.github.io/portfolio/#work'
-      },
-      skills: {
-        title: 'Compétences - Cyril Bizouarn',
-        description: 'Technologies maîtrisées : React, Angular, Node.js, Express, SQL, MongoDB, TypeScript, JavaScript, HTML, CSS. Stack technique complète pour développement web full-stack.',
-        keywords: [
-          'compétences développeur',
-          'React',
-          'Angular',
-          'Node.js',
-          'TypeScript',
-          'SQL',
-          'MongoDB',
-          'stack technique',
-          'technologies web'
-        ],
-        canonical: 'https://the-cyril5555.github.io/portfolio/#skills'
-      },
-      about: {
-        title: 'À propos - Cyril Bizouarn',
-        description: 'Développeur web full-stack avec 7+ années d\'expérience. Parcours de formation en développement web (Bachelor CDA, BTS SIO) et expériences professionnelles variées.',
-        keywords: [
-          'à propos',
-          'parcours développeur',
-          'formation développement web',
-          'expérience professionnelle',
-          'Bachelor CDA',
-          'BTS SIO',
-          'MyDigitalSchool'
-        ],
-        canonical: 'https://the-cyril5555.github.io/portfolio/#about'
-      },
-      contact: {
-        title: 'Contact - Cyril Bizouarn',
-        description: 'Contactez-moi pour discuter de vos projets web. Disponible pour collaborations, missions freelance et opportunités d\'emploi en développement web full-stack.',
-        keywords: [
-          'contact développeur',
-          'recrutement développeur',
-          'freelance web',
-          'collaboration projet',
-          'mission développeur',
-          'emploi développeur web'
-        ],
-        canonical: 'https://the-cyril5555.github.io/portfolio/#contact'
-      }
-    };
-
-    return configs[sectionId] || configs['home'];
+  private inject(id: string, schema: JsonLdSchema): void {
+    const doc = this.document;
+    doc.getElementById(id)?.remove();
+    const script = doc.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = id;
+    script.text = JSON.stringify(schema);
+    doc.head.appendChild(script);
   }
 }

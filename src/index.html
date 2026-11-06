@@ -2,34 +2,38 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-  <title>Cyril Bizouarn - Portfolio</title>
+  <title>Cyril Bizouarn — Développeur web full-stack</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- SEO Meta Tags -->
+  <!-- SEO : balises statiques, lues sans exécuter le JS (une seule URL, un seul
+       jeu de balises). Le JSON-LD est généré par SeoService depuis les données
+       de contact (source unique). -->
   <link rel="canonical" href="https://the-cyril5555.github.io/portfolio/">
   <meta name="description" content="Portfolio de Cyril Bizouarn, développeur web full-stack junior spécialisé en React, Node.js et SQL. Découvrez mes projets d'applications web, sites e-commerce et plateformes métiers.">
-  <meta name="keywords" content="développeur web, full-stack, React, Node.js, SQL, Angular, TypeScript, portfolio, projets web">
   <meta name="author" content="Cyril Bizouarn">
   <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#f4e9e0">
+  <!-- Barre d'adresse mobile fondue dans le hero (encre) -->
+  <meta name="theme-color" content="#0a1119">
 
-  <!-- Open Graph Meta Tags (Facebook, LinkedIn) -->
-  <meta property="og:title" content="Cyril Bizouarn - Développeur Web Full-Stack">
-  <meta property="og:description" content="Développeur web full-stack junior spécialisé en React, Node.js et SQL. Création d'applications web, sites e-commerce et plateformes métiers.">
+  <!-- Open Graph (LinkedIn, Slack, Facebook…) -->
+  <meta property="og:site_name" content="Cyril Bizouarn">
+  <meta property="og:title" content="Cyril Bizouarn — Développeur web full-stack">
+  <meta property="og:description" content="Développeur web full-stack junior spécialisé en React, Node.js et SQL. Applications web, sites e-commerce et plateformes métiers, de la conception à la mise en production.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://the-cyril5555.github.io/portfolio/">
   <meta property="og:image" content="https://the-cyril5555.github.io/portfolio/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Portfolio de Cyril Bizouarn, développeur web full-stack">
   <meta property="og:locale" content="fr_FR">
 
-  <!-- Twitter Card Meta Tags -->
+  <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Cyril Bizouarn - Développeur Web Full-Stack">
+  <meta name="twitter:title" content="Cyril Bizouarn — Développeur web full-stack">
   <meta name="twitter:description" content="Portfolio de développeur web full-stack junior spécialisé en React, Node.js et SQL.">
   <meta name="twitter:image" content="https://the-cyril5555.github.io/portfolio/og-image.jpg">
-  <meta name="twitter:creator" content="@cyrilbizouarn">
+  <meta name="twitter:image:alt" content="Portfolio de Cyril Bizouarn, développeur web full-stack">
 
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="icon" type="image/svg+xml" href="favicon.svg" sizes="any">
@@ -41,5 +45,22 @@
 </head>
 <body>
   <app-root></app-root>
+
+  <!-- Sans JavaScript (ou pour les robots qui ne l'exécutent pas) : l'essentiel -->
+  <noscript>
+    <main class="container" style="padding-block: 6rem">
+      <h1 class="section-title">Cyril Bizouarn</h1>
+      <p class="lead" style="margin-block: 1.5rem">
+        Développeur web full-stack junior, spécialisé en React, Node.js et SQL : applications web,
+        sites e-commerce et plateformes métiers, de la conception à la mise en production.
+      </p>
+      <p>Ce portfolio a besoin de JavaScript pour afficher les projets. En attendant&nbsp;:</p>
+      <ul style="margin: 1rem 0 0 1.25rem">
+        <li><a href="mailto:cyril.bizouarn@gmail.com">cyril.bizouarn@gmail.com</a></li>
+        <li><a href="https://github.com/The-Cyril5555">GitHub — The-Cyril5555</a></li>
+        <li><a href="https://linkedin.com/in/cyril-bizouarn">LinkedIn — cyril-bizouarn</a></li>
+      </ul>
+    </main>
+  </noscript>
 </body>
 </html>

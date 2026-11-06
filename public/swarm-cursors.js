@@ -1,4 +1,4 @@
-/*
+/*!
  * Swarm Cursors (website embed build)
  *
  * Wipes the page to a blank canvas, then lets a swarm of multiplayer cursors
@@ -33,13 +33,25 @@
  *             match, e.g. "/,/about,/blog/*" (default: every page it's loaded on)
  *   reducedMotion  "skip" (default) = trigger=auto does nothing for visitors who
  *             prefer reduced motion; "ignore" = run anyway
+ *   sound     false = son coupé au départ (Portfolio ; window.SwarmCursorsConfig)
+ *   tour      true = « Visite » activée au départ (Portfolio ; window.SwarmCursorsConfig)
  *
  * API: SwarmCursors.start() / .stop(reveal) / .toggle() / .isRunning()
  *
  * Portfolio de Cyril Bizouarn : copie de swarm-cursors/assets/swarm-cursors.js
- * (github.com/harshit403-pixel/reveal-cursors). Seule modification : les
- * libellés visibles du HUD sont traduits en français. Chargé à la demande par
- * src/app/services/swarm.service.ts.
+ * (github.com/harshit403-pixel/reveal-cursors), chargée à la demande par
+ * src/app/services/swarm.service.ts. Modifications (marquées « Portfolio ») :
+ *   - libellés visibles du HUD traduits en français ;
+ *   - capture : `isolation: isolate` crée un contexte d'empilement (un enfant
+ *     en z-index:-1 reste au-dessus du fond de son parent, comme à l'écran) ;
+ *     un <picture> à boîte vide (<img> en position absolue) est capturé par
+ *     son <img> ; une image en miroir (`scale: 1 -1`) le reste ;
+ *   - HUD : tient dans un écran étroit, anneau de focus clavier, nom accessible,
+ *     fin de construction annoncée aux lecteurs d'écran ; la copie dessinée de
+ *     la page (décor) est masquée aux lecteurs d'écran (aria-hidden) ;
+ *   - réglages `sound` (false = son coupé au départ) et `tour` (true = Visite
+ *     activée) ; son, Visite et vitesse sont repris par « Rejouer », le son
+ *     pour la session ; « Rejouer » repart de la position de lancement.
  */
 (() => {
   "use strict";
@@ -869,9 +881,15 @@
         const m = document.createElement("img");
         m.src = src;
         m.decoding = "async";
-        m.setAttribute("style", fit + "display:block;");
+        // Portfolio : image en miroir par la propriété `scale` (ex. `scale: 1 -1`,
+        // le plafond renversé du contact) ; la boîte capturée est la même.
+        const sc = cs.scale && cs.scale !== "none" ? cs.scale.split(" ").map(Number) : null;
+        const sx = sc ? sc[0] : 1;
+        const sy = sc ? (sc.length > 1 ? sc[1] : sc[0]) : 1;
+        const mirror = (sx < 0 || sy < 0) && Math.abs(Math.abs(sx) - 1) < 0.02 && Math.abs(Math.abs(sy) - 1) < 0.02;
+        m.setAttribute("style", fit + (mirror ? `transform:scale(${Math.sign(sx)},${Math.sign(sy)});` : "") + "display:block;");
         m.draggable = false;
-        return { el: m, sig: src };
+        return { el: m, sig: src + (mirror ? `#${sx},${sy}` : "") };
       }
       if (tag === "svg") {
         const m = cloneStyled(el);
@@ -1107,6 +1125,10 @@
           if (zTop == null) zTop = parseInt(cs.zIndex, 10) || 0;
         } else if (pos !== "static") posd = true;
       }
+      // Portfolio : `isolation: isolate` crée aussi un contexte d'empilement. Les
+      // z-index des descendants (ex. une peinture en z-index:-1 sous le texte)
+      // restent dedans : sans ça, l'image passerait sous le fond de son parent.
+      if (zTop == null && cs.isolation === "isolate") zTop = 0;
       const keyFn = () => (zTop || 0) * 1e7 + (posd ? 5e6 : 0) + order++;
       if (layer === "over" && ctx.layer !== "over" && r.top <= 4 && r.width >= vw * 0.8 && r.height > 20 && r.height <= 200) {
         bars.push({ node: null, r, start: items.length, key: (zTop || 0) * 1e7 + (posd ? 5e6 : 0) + order - 0.5 });
@@ -1125,6 +1147,15 @@
       (parent ? parent.kids : roots).push(node);
 
       if (REPLACED.has(tag) || FORMS.has(tag)) {
+        // Portfolio : un <picture> dont l'<img> est en position absolue (peinture
+        // plein cadre du hero et du contact) a une boîte vide : on capture alors
+        // l'<img> elle-même, avec sa propre boîte.
+        if (tag === "picture" && !sized) {
+          const img = el.querySelector(":scope > img");
+          if (img) walk(img, { ...ctx, op, layer, clip, zTop, posd }, node);
+          node.end = items.length;
+          return;
+        }
         if (emit) {
           if (FORMS.has(tag)) emitForm(el, cs, r, { ...ctx, layer, clip, op }, keyFn());
           else emitMedia(el, cs, r, { ...ctx, layer, clip, op }, keyFn());
@@ -1553,8 +1584,11 @@
 .intro.gone{opacity:0;transform:translate(-50%,-50%) scale(.9)}
 .intro img{display:block;width:60px;height:60px;object-fit:contain;filter:grayscale(1);opacity:.42;border-radius:14px}
 .intro .mono{width:60px;height:60px;border-radius:16px;background:#D7DADE;color:#fff;font:700 30px/60px Inter,system-ui,sans-serif;text-align:center}
-.hud{position:absolute;left:50%;bottom:20px;transform:translate(-50%,18px);opacity:0;display:flex;align-items:center;gap:10px;padding:6px 6px 6px 10px;background:rgba(30,30,30,.94);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.28),inset 0 0 0 1px rgba(255,255,255,.07);font:500 12px/1 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;pointer-events:auto;transition:opacity .45s ease,transform .45s cubic-bezier(.2,.8,.2,1);white-space:nowrap;user-select:none;z-index:5}
-.hud.on{opacity:1;transform:translate(-50%,0)}
+.hud{position:absolute;left:8px;right:8px;bottom:20px;width:fit-content;max-width:calc(100% - 16px);margin:0 auto;transform:translateY(18px);opacity:0;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 10px;padding:6px 6px 6px 10px;background:rgba(30,30,30,.94);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.28),inset 0 0 0 1px rgba(255,255,255,.07);font:500 12px/1 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;pointer-events:auto;transition:opacity .45s ease,transform .45s cubic-bezier(.2,.8,.2,1);white-space:nowrap;user-select:none;z-index:5}
+.hud.on{opacity:1;transform:none}
+.hud button:focus-visible{outline:2px solid #0D99FF;outline-offset:2px}
+.hud .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media (max-width:520px){.hud .dots,.hud .bar{display:none}}
 .hud .dots{display:flex;padding-left:5px}
 .hud .dots i{display:block;width:18px;height:18px;margin-left:-5px;border-radius:50%;border:2px solid #1e1e1e;font:700 9px/14px Inter,system-ui,sans-serif;font-style:normal;text-align:center;color:#fff;transition:background .3s}
 .hud .txt,.hud .status{display:flex;align-items:center;gap:7px;color:#cfcfcf;font-variant-numeric:tabular-nums}
@@ -1659,16 +1693,17 @@
       const root = host.attachShadow({ mode: "open" });
       this.root = root;
       root.innerHTML = `<style>${STYLE}</style>
-<div class="bg"></div>
-<div class="layer under"></div>
-<div class="port"><div class="world"></div></div>
-<div class="layer over"></div>
-<div class="intro"></div>
-<svg class="ov"></svg>
-<div class="badges"></div>
-<div class="cursors"></div>
-<div class="rulers"></div>
-<div class="hud">
+<div class="bg" aria-hidden="true"></div>
+<div class="layer under" aria-hidden="true"></div>
+<div class="port" aria-hidden="true"><div class="world"></div></div>
+<div class="layer over" aria-hidden="true"></div>
+<div class="intro" aria-hidden="true"></div>
+<svg class="ov" aria-hidden="true"></svg>
+<div class="badges" aria-hidden="true"></div>
+<div class="cursors" aria-hidden="true"></div>
+<div class="rulers" aria-hidden="true"></div>
+<div class="hud" role="group" aria-label="Effet Swarm">
+  <span class="sr" role="status"></span>
   <div class="dots"></div>
   <div class="txt"><span class="status">Analyse de la page…</span></div>
   <div class="bar"><i></i></div>
@@ -1692,6 +1727,7 @@
       this.rulers = $(".rulers");
       this.hud = $(".hud");
       this.status = $(".status");
+      this.live = $(".sr");
       this.barFill = $(".bar i");
       this.dots = $(".dots");
       this.cursorEls = new Map();
@@ -3092,7 +3128,17 @@
   const PENTA = [0, 2, 4, 7, 9]; // E F# G# B C#
   const E2 = 40;
   const mtof = (m) => 440 * Math.pow(2, (m - 69) / 12);
-  let soundPref = true;
+  // Portfolio : réglages d'intégration (window.SwarmCursorsConfig) et choix du
+  // visiteur repris d'un lancement à l'autre (« Rejouer »), le son pour la session.
+  const EMBED = window.SwarmCursorsConfig || {};
+  const SOUND_KEY = "swarm-cursors-sound";
+  let soundPref = EMBED.sound !== false;
+  try {
+    const saved = sessionStorage.getItem(SOUND_KEY);
+    if (saved) soundPref = saved === "1";
+  } catch (_) {}
+  let tourPref = EMBED.tour === true;
+  let speedPref = 0;
   const SPK_ICON = '<svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6v4h2.5l3.5 3V3L5 6z" fill="currentColor"/>';
 
   class Sound {
@@ -3176,6 +3222,9 @@
 
     setOn(on) {
       this.on = soundPref = on;
+      try {
+        sessionStorage.setItem(SOUND_KEY, on ? "1" : "0");
+      } catch (_) {}
       if (!this.ctx) return;
       const t = this.ctx.currentTime;
       this.out.gain.cancelScheduledValues(t);
@@ -3494,11 +3543,11 @@
     constructor() {
       this.dead = false;
       this.t0 = performance.now();
-      this.tour = false;
+      this.tour = tourPref;
       this.tourV = 0;
       this.tourAcc = 0;
       this.speeds = [1, 2, 3];
-      this.speedIx = 0;
+      this.speedIx = speedPref;
       this.complete = false;
       this.timing = {};
     }
@@ -3522,6 +3571,7 @@
 
     async run() {
       this.env = detectEnv();
+      this.startAt = this.env.geom(); // Portfolio : point de départ de « Rejouer »
       const shotP = this.loadShot();
       this.view = new View(this.env);
       this.engine = new Engine(this.view);
@@ -3531,6 +3581,7 @@
       this.engine.onStart = () => this.view.intro.classList.add("gone");
       this.engine.onComplete = () => this.onComplete();
       this.bind();
+      this.syncHudPrefs();
       this.last = performance.now();
       this.raf = requestAnimationFrame((t) => this.frame(t));
       await nextFrame();
@@ -3640,7 +3691,7 @@
         else if (a === "live") stop(true);
         else if (a === "replay") restart();
         else if (a === "tour") {
-          this.tour = !this.tour;
+          this.tour = tourPref = !this.tour;
           b.classList.toggle("on", this.tour);
           b.textContent = this.tour ? "Visite…" : "Visite";
           if (this.tour) this.engine.start();
@@ -3649,11 +3700,20 @@
           else this.sfx.setOn(!this.sfx.on);
           setTimeout(() => this.renderSoundBtn(), 60);
         } else if (a === "speed") {
-          this.speedIx = (this.speedIx + 1) % this.speeds.length;
+          this.speedIx = speedPref = (this.speedIx + 1) % this.speeds.length;
           this.engine.speed = this.speeds[this.speedIx];
           b.textContent = this.speeds[this.speedIx] + "×";
         }
       });
+    }
+
+    // Portfolio : boutons Visite et vitesse dans l'état repris au lancement
+    syncHudPrefs() {
+      const tour = this.view.root.querySelector('[data-a="tour"]');
+      tour.classList.toggle("on", this.tour);
+      tour.textContent = this.tour ? "Visite…" : "Visite";
+      this.engine.speed = this.speeds[this.speedIx];
+      this.view.root.querySelector('[data-a="speed"]').textContent = this.speeds[this.speedIx] + "×";
     }
 
     unlockSound() {
@@ -3673,8 +3733,8 @@
       b.classList.toggle("tap", tap);
       const waves = '<path d="M11 5.5a3.5 3.5 0 0 1 0 5M12.8 3.6a6 6 0 0 1 0 8.8"/>';
       const mute = '<path d="M11 6l4 4M15 6l-4 4"/>';
-      b.innerHTML = `${SPK_ICON}${key === "off" ? mute : waves}</svg>${tap ? "<span>Tap for sound</span>" : ""}`;
-      b.title = key === "off" ? "Son coupé (M)" : "Son activé (M)";
+      b.innerHTML = `${SPK_ICON}${key === "off" ? mute : waves}</svg>${tap ? "<span>Activer le son</span>" : ""}`;
+      b.title = key === "off" ? "Activer le son (M)" : tap ? "Son bloqué par le navigateur : cliquer pour l’activer" : "Couper le son (M)";
     }
 
     frame(now) {
@@ -3750,6 +3810,7 @@
       const workers = E.cursors.filter((c) => c.worked).length + E.retired;
       const secs = (E.endTime - E.startTime).toFixed(1);
       v.status.innerHTML = `Reconstruit par <b>${workers}</b> agents en <b>${secs.replace(".", ",")} s</b>`;
+      v.live.textContent = `Page reconstruite par ${workers} agents. « Revenir au site » ou Échap pour quitter.`;
       v.barFill.style.width = "100%";
       v.dots.innerHTML = "";
       v.root.querySelector('[data-a="live"]').hidden = false;
@@ -3847,6 +3908,9 @@
       if (a.sfx) a.sfx.close(0.1);
       // rebuild from where the first run started so screenshot crops line up again
       if (lastShot) a.env.scrollTo(lastShot.at.sy, lastShot.at.sx);
+      // Portfolio : sans capture d'onglet (extension), même chose avec la position
+      // notée au lancement (sinon, après une Visite, on repartirait du pied de page)
+      else if (a.startAt) a.env.scrollTo(a.startAt.sy, a.startAt.sx);
     }
     start();
   }

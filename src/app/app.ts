@@ -1,7 +1,8 @@
-// Composant racine : assemble les sections de la page unique et démarre
-// le scroll-spy (section active → nav + balises SEO) et l'effet Swarm via ?swarm.
+// Composant racine : assemble les sections de la page unique, ajoute le JSON-LD,
+// démarre le scroll-spy (section active → nav) et l'effet Swarm via ?swarm.
+// Titre et balises de partage sont statiques (src/index.html) : une seule URL.
 
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, effect, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { HeaderNavComponent } from './components/navigation/header-nav.component';
 import { HeroComponent } from './components/sections/hero/hero.component';
 import { PortfolioComponent } from './components/sections/portfolio/portfolio.component';
@@ -33,18 +34,8 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
   private readonly seo = inject(SeoService);
   private readonly swarm = inject(SwarmService);
 
-  constructor() {
-    // Titre / description suivent la section visible
-    effect(() => {
-      const section = this.scroll.activeSection();
-      if (section) this.seo.updateTags(this.seo.getSectionSeoConfig(section));
-    });
-  }
-
   ngOnInit(): void {
-    this.seo.updateTags(this.seo.getSectionSeoConfig('home'));
-    this.seo.addStructuredData(this.seo.createPersonSchema(), 'person-schema');
-    this.seo.addStructuredData(this.seo.createWebSiteSchema(), 'website-schema');
+    this.seo.addStructuredData();
   }
 
   ngAfterViewInit(): void {
