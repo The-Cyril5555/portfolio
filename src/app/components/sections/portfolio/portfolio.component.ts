@@ -3,36 +3,71 @@ import { PROJECTS } from '../../../data/projects.data';
 import { Project } from '../../../models/project.model';
 import { RevealDirective } from '../../../directives/reveal.directive';
 
-/** Largeur de chaque carte (sur 12 colonnes, ≥ 1024px), dans l'ordre de PROJECTS. */
-const SPANS = [7, 5, 4, 4, 4, 5] as const;
+/**
+ * Accrochage à 12 colonnes (≥ 1280px) : largeur de chaque carte, dans l'ordre
+ * de PROJECTS. Rangées 7 + 5, 4 + 4 + 4, puis 7 + carte GitHub en 5 : une œuvre
+ * reste toujours plus large que l'appel « hors catalogue ».
+ * De 768 à 1279px, deux colonnes : seule la première carte prend toute la ligne.
+ */
+const SPANS = [7, 5, 4, 4, 4, 7] as const;
 
-/** Largeur rendue de l'image selon la colonne occupée (attribut `sizes`). */
-const SIZES: Record<number, string> = {
-  7: '(min-width: 1024px) min(58vw, 780px), 94vw',
-  5: '(min-width: 1024px) min(42vw, 560px), (min-width: 768px) 46vw, 94vw',
-  4: '(min-width: 1024px) min(34vw, 450px), (min-width: 768px) 46vw, 94vw',
+/** Largeur de la carte dans l'accrochage à 12 colonnes (conteneur plafonné à 1320px). */
+const XL_WIDTH: Record<number, string> = {
+  7: 'min(58vw, 780px)',
+  5: 'min(42vw, 560px)',
+  4: 'min(34vw, 450px)',
 };
+
+/**
+ * Attribut `sizes` : largeur RENDUE de la peinture pour chaque mise en page.
+ * Elle est en `object-fit: cover` ; une peinture paysage dans une boîte haute
+ * déborde donc la carte : largeur rendue = max(largeur de carte, hauteur × ratio).
+ * Les hauteurs (px, majorées) suivent portfolio.component.scss :
+ * - cadre plein (carte ≥ 30rem) : la peinture couvre tout le cadre, --frame-h ou plus ;
+ * - cadre étroit : rangée de peinture (13rem au moins) + --overlap (6rem).
+ */
+function sizesFor(span: number, fullRow: boolean, featured: boolean, ratio: number): string {
+  const slot = (width: string, boxHeight: number) =>
+    `max(${width}, ${Math.round(boxHeight * ratio)}px)`;
+  const half = fullRow ? '94vw' : '46vw';
+  return [
+    // 12 colonnes : les cartes en 4 sont étroites, les autres en cadre plein
+    `(min-width: 1280px) ${slot(XL_WIDTH[span], span === 4 ? 368 : featured ? 660 : 600)}`,
+    // 2 colonnes, cartes ≥ 30rem : cadre plein
+    `(min-width: 1040px) ${slot(half, 600)}`,
+    // 2 colonnes, demi-cartes étroites (la première carte reste en cadre plein)
+    `(min-width: 768px) ${slot(half, fullRow ? 620 : 460)}`,
+    // 1 colonne, carte ≥ 30rem : cadre plein
+    `(min-width: 520px) ${slot('94vw', 660)}`,
+    // mobile : 13rem + 6rem
+    slot('94vw', 320),
+  ].join(', ');
+}
 
 interface WorkCard {
   project: Project;
   /** Titre affiché : pas de coupure de ligne après un trait d'union (« e-commerce »). */
   heading: string;
   span: number;
+  /** Seule sur sa ligne dans la grille à deux colonnes. */
+  fullRow: boolean;
   src: string;
   srcset: string;
   sizes: string;
 }
 
 function toCard(project: Project, index: number): WorkCard {
-  const { base, widths } = project.image;
+  const { base, widths, ratio } = project.image;
   const span = SPANS[index] ?? 4;
+  const fullRow = index === 0;
   return {
     project,
     heading: project.title.replace(/-/g, '-\u2060'),
     span,
+    fullRow,
     src: `${base}-${widths[0]}.webp`,
     srcset: widths.map((w) => `${base}-${w}.webp ${w}w`).join(', '),
-    sizes: SIZES[span],
+    sizes: sizesFor(span, fullRow, project.featured, ratio),
   };
 }
 
