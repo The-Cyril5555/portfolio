@@ -27,6 +27,11 @@ $breakpoints: (
 }
 
 /// Animations autorisées (l'utilisateur ne demande pas moins d'animations)
+/// ⚠ Dans un composant, n'écris pas `animation: <nom>` À L'INTÉRIEUR de ce mixin
+/// (ni d'un @media/@supports) : en production l'encapsulation d'Angular renomme le
+/// @keyframes mais pas cette référence, et l'animation ne joue plus. Déclare
+/// `animation` au niveau de la règle et coupe-la avec `animation: none` sous
+/// reduced-motion.
 @mixin motion-ok {
   @media (prefers-reduced-motion: no-preference) {
     @content;

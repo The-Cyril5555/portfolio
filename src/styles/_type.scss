@@ -41,7 +41,7 @@
   font-size: var(--fs-lg);
   line-height: 1.55;
   color: var(--ink-2);
-  max-width: 60ch;
+  max-width: 36rem; // ≈ 60-65 signes (60ch serait trop large : le « 0 » de Neue Montreal est large)
 }
 
 .display {

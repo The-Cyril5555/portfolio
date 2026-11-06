@@ -52,7 +52,9 @@ export class SwarmService {
       // sinon la photo de la page contiendrait des blocs transparents.
       this.reveal.revealAll();
       (document.activeElement as HTMLElement | null)?.blur();
-      const api = await this.load();
+      // Les peintures hors écran sont en loading="lazy" : on les charge avant
+      // la photo, sinon les cartes seraient reconstruites sans leur image.
+      const [api] = await Promise.all([this.load(), loadLazyImages()]);
       await nextFrame();
       await nextFrame();
       api.start();
@@ -95,6 +97,17 @@ export class SwarmService {
     });
     return this.loadPromise;
   }
+}
+
+/** Passe les images différées en chargement immédiat et attend leur décodage (3 s max). */
+function loadLazyImages(timeoutMs = 3000): Promise<void> {
+  const images = Array.from(document.querySelectorAll<HTMLImageElement>('img[loading="lazy"]'));
+  const decoded = images.map((img) => {
+    img.loading = 'eager';
+    return img.decode().catch(() => undefined);
+  });
+  const timeout = new Promise<void>((resolve) => setTimeout(resolve, timeoutMs));
+  return Promise.race([Promise.all(decoded).then(() => undefined), timeout]);
 }
 
 function nextFrame(): Promise<void> {

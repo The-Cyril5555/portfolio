@@ -4,6 +4,7 @@
 // Pour ajouter une section : une entrée ici (id = id de la <section> dans app.html).
 
 import { NavLink } from '../models/contact.model';
+import { CONTACT_EMAIL } from './contact.data';
 
 /** Liens principaux, dans l'ordre de la page (de haut en bas). */
 export const NAV_LINKS: NavLink[] = [
@@ -14,9 +15,5 @@ export const NAV_LINKS: NavLink[] = [
   { id: 'contact', label: 'Contact', href: '#contact' },
 ];
 
-/**
- * Adresse affichée en bas du menu mobile.
- * (Même valeur que CONTACT_EMAIL de contact.data.ts, gardée ici pour que la nav
- * ne dépende pas des données d'une section.)
- */
-export const NAV_EMAIL = 'cyril.bizouarn@gmail.com';
+/** Adresse affichée en bas du menu mobile (une seule source : contact.data.ts). */
+export const NAV_EMAIL = CONTACT_EMAIL;
