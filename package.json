@@ -4,9 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build && node fix-paths.js",
+    "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "optimize-images": "node scripts/optimize-images.mjs"
   },
   "prettier": {
     "printWidth": 100,
@@ -26,26 +27,18 @@
     "@angular/common": "^21.0.0",
     "@angular/compiler": "^21.0.0",
     "@angular/core": "^21.0.0",
-    "@angular/forms": "^21.0.0",
     "@angular/platform-browser": "^21.0.0",
-    "@angular/router": "^21.0.0",
     "@motionone/dom": "^10.18.0",
-    "@types/node": "^25.0.3",
-    "gsap": "^3.14.2",
-    "html2canvas": "^1.4.1",
-    "lucide-angular": "^0.562.0",
     "rxjs": "~7.8.0",
-    "three": "^0.183.2",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@angular/build": "^21.0.4",
     "@angular/cli": "^21.0.4",
     "@angular/compiler-cli": "^21.0.0",
-    "@squoosh/cli": "^0.7.1",
-    "@types/three": "^0.183.1",
+    "@types/node": "^25.0.3",
     "jsdom": "^27.1.0",
-    "sharp-cli": "^5.2.0",
+    "sharp": "^0.34.2",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }

@@ -41,9 +41,6 @@
           },
           "configurations": {
             "production": {
-              "allowedCommonJsDependencies": [
-                "html2canvas"
-              ],
               "budgets": [
                 {
                   "type": "initial",

@@ -33,9 +33,7 @@ jobs:
         run: npm ci
 
       - name: Build Angular application
-        run: |
-          npx ng build --base-href="/portfolio/"
-          node fix-paths.js
+        run: npx ng build --base-href="/portfolio/"
 
       - name: Add .nojekyll file
         run: touch dist/portfolio-angular/browser/.nojekyll
