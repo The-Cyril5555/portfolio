@@ -7,7 +7,7 @@
         <p class="years display">
           @if (item.end) {
             <span class="sr-only">De </span><time [attr.datetime]="item.start">{{ item.start }}</time
-            ><span class="sep" aria-hidden="true">–</span><span class="sr-only"> à </span
+            ><span class="sep" aria-hidden="true">—</span><span class="sr-only"> à </span
             ><time [attr.datetime]="item.end">{{ item.end }}</time>
           } @else {
             <time [attr.datetime]="item.start">{{ item.start }}</time>

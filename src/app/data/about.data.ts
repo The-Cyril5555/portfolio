@@ -3,11 +3,15 @@
 
 import { TimelineItem } from '../models/about.model';
 
-/** Biographie en trois paragraphes ; le premier est affiché en chapeau (.lead). */
+/**
+ * Biographie en trois paragraphes ; le premier est affiché en chapeau (.lead).
+ * `-\u2060` : gluon (word joiner) après le trait d'union des mots composés,
+ * pour qu'ils ne se coupent pas en fin de ligne (« front- / end »).
+ */
 export const BIO_PARAGRAPHS: readonly string[] = [
-  'Développeur web full-stack, je conçois des applications modernes qui allient performance, clarté du code et expérience utilisateur. J’interviens aussi bien sur le front-end que sur le back-end, avec une spécialisation en React, Node.js et SQL.',
-  'Plateformes métiers, sites e-commerce, applications connectées à des API : au fil de mes projets, j’ai pris en charge des fonctionnalités complètes, de la conception à la mise en production. Je veille particulièrement à la structure des applications, à la maintenabilité du code et à la fluidité des interfaces.',
-  'Curieux et orienté solutions, j’aime comprendre les besoins techniques comme fonctionnels pour proposer des implémentations efficaces et évolutives. Habitué au travail en équipe et aux méthodes agiles, je recherche aujourd’hui un poste de développeur web au sein d’une équipe où continuer à progresser, contribuer activement aux projets et partager une culture de qualité et de collaboration.',
+  'Développeur web full-\u2060stack, je conçois des applications modernes qui allient performance, clarté du code et expérience utilisateur. J’interviens aussi bien sur le front-\u2060end que sur le back-\u2060end, avec une spécialisation en React, Node.js et SQL.',
+  'Plateformes métiers, sites e-\u2060commerce, applications connectées à des API : au fil de mes projets, j’ai pris en charge des fonctionnalités complètes, de la conception à la mise en production. Je veille particulièrement à la structure des applications, à la maintenabilité du code et à la fluidité des interfaces.',
+  'Curieux et orienté solutions, j’aime comprendre les besoins techniques comme fonctionnels pour proposer des implémentations efficaces et évolutives. Habitué au travail en équipe et aux méthodes agiles, je recherche aujourd’hui un poste de développeur web où continuer à progresser, contribuer activement aux projets et partager une culture de qualité et de collaboration.',
 ];
 
 /** Formation et expérience réunies, du plus récent au plus ancien. */

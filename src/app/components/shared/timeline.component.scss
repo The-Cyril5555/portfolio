@@ -17,7 +17,8 @@
   --mark: 0.8125rem;
   --rail-w: 1rem;
   --rail-x: calc(var(--rail-w) / 2);
-  // centre des chiffres (Tusker : capitales de 0.945em, ligne de 1em)
+  // < md, le marqueur est sur la ligne des années : centre des chiffres
+  // (Tusker : chiffres de 0.949em, ligne de base à 0.9em du haut de la ligne)
   --mark-y: calc(var(--year-fs) * 0.43);
 
   display: block;
@@ -92,9 +93,10 @@
   white-space: nowrap;
 }
 
-// tiret demi-cadratin, aéré (l'espace de Tusker est très étroite)
+// Tiret d'intervalle : le demi-cadratin de Tusker (0.19em) se confond avec le
+// trait d'union, on affiche donc le cadratin (décoratif, aria-hidden)
 .sep {
-  margin-inline: 0.14em;
+  margin-inline: 0.1em;
 }
 
 // Badge : mini-marqueur identique à celui du filet
@@ -136,6 +138,9 @@
   :host {
     --meta-w: 8.5rem;
     --rail-x: calc(var(--meta-w) + var(--space-5) + var(--rail-w) / 2);
+    // ≥ md, le marqueur est la puce de l'intitulé : centre optique de la ligne
+    // en Migra (ligne de base commune à 0.9em des années, capitales de 0.675em)
+    --mark-y: calc(var(--year-fs) * 0.9 - var(--fs-xl) * 0.32);
   }
 
   .step {
@@ -161,8 +166,9 @@
 // --- Grand écran : grille 12 colonnes ---------------------------------------------------
 @include up(lg) {
   :host {
-    // milieu de la gouttière entre les colonnes 2 et 3 (100 % = largeur de l'étape)
-    --rail-x: calc((100% - 11 * var(--g)) / 6 + 1.5 * var(--g));
+    // milieu de la gouttière entre les colonnes 2 et 3, mais jamais à moins de
+    // 1.5rem de l'intitulé (100 % = largeur de l'étape ; colonne 3 à 2 col. + 2 g)
+    --rail-x: calc((100% - 11 * var(--g)) / 6 + 2 * var(--g) - max(var(--g) / 2, 1.5rem));
   }
 
   .step {
