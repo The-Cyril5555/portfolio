@@ -9,6 +9,12 @@ export interface ProjectImage {
   base: string;
   /** Largeurs disponibles (px) : chaque fichier est `<base>-<largeur>.webp`. */
   widths: number[];
+  /**
+   * Proportions de la peinture (largeur / hauteur). La carte la recadre en
+   * `object-fit: cover` : une peinture paysage dans une boîte haute est rendue
+   * plus large que la boîte, et l'attribut `sizes` doit en tenir compte.
+   */
+  ratio: number;
   /** Cadrage dans la carte (valeur CSS `object-position`). */
   position?: string;
 }
@@ -33,7 +39,7 @@ export interface Project {
   year: number;
   /** Résumé court (≤ 220 caractères). */
   description: string;
-  /** Technologies, sans doublon. */
+  /** Technologies principales, sans doublon : 4 au plus, par ordre d'importance. */
   tags: string[];
   image: ProjectImage;
   painting: Painting;
