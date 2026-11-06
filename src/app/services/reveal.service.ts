@@ -9,12 +9,15 @@ import { Injectable, OnDestroy } from '@angular/core';
  *
  * `revealAll()` affiche immédiatement tout ce qui ne l'est pas encore :
  * utilisé avant l'effet Swarm, qui photographie la page entière et
- * reconstruirait sinon des blocs invisibles.
+ * reconstruirait sinon des blocs invisibles, et avant l'impression (sinon les
+ * sections pas encore atteintes au défilement sortiraient en pages blanches ;
+ * styles/_ui.scss a aussi une règle @media print).
  */
 @Injectable({ providedIn: 'root' })
 export class RevealService implements OnDestroy {
   private readonly pending = new Set<Element>();
   private observer?: IntersectionObserver;
+  private readonly onBeforePrint = () => this.revealAll();
 
   /** false si l'utilisateur demande moins d'animations (ou environnement sans matchMedia). */
   readonly motionAllowed =
@@ -46,9 +49,11 @@ export class RevealService implements OnDestroy {
   ngOnDestroy(): void {
     this.observer?.disconnect();
     this.pending.clear();
+    window.removeEventListener('beforeprint', this.onBeforePrint);
   }
 
   private getObserver(): IntersectionObserver {
+    if (!this.observer) window.addEventListener('beforeprint', this.onBeforePrint);
     this.observer ??= new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {

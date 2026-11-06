@@ -73,6 +73,17 @@ describe('RevealService', () => {
     }
   });
 
+  it('révèle tout avant l’impression (sinon pages blanches)', () => {
+    stubMatchMedia(false);
+    const service = TestBed.inject(RevealService);
+    const el = document.createElement('div');
+    service.observe(el);
+
+    window.dispatchEvent(new Event('beforeprint'));
+
+    expect(el.classList.contains('is-visible')).toBe(true);
+  });
+
   it("n'observe rien quand l'utilisateur demande moins d'animations", () => {
     stubMatchMedia(true);
     const service = TestBed.inject(RevealService);

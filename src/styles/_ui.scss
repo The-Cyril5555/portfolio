@@ -1,13 +1,16 @@
 // Composants UI partagés (classes globales)
 // =========================================
 // .container                 largeur max + marges latérales
-// .section / .section--dark  rythme vertical commun ; variante fond encre
+// .section--dark             zone fond encre (couleurs de texte, focus, accent)
 // .section-head              bloc eyebrow + titre + intro en tête de section
-// .btn (+ --primary --ghost --light --sm)   boutons pilule
+// .btn (+ --primary --light --ghost-light --sm)   boutons pilule
 // .chip (+ --on-dark)        pastilles de techno
+// .cartel (+ --on-dark)      légende d'œuvre sous un cadre : artiste — titre, date
 // .link-arrow                lien texte avec flèche ↗
+// .nb                        mot composé insécable (« full-stack », « e-commerce »)
 // .reveal / .is-visible      apparition au scroll (pilotée par [appReveal])
 // .skip-link, .sr-only       accessibilité
+// Impression : tout le contenu révélé, sans lien d'évitement (fin de fichier)
 @use 'bp' as *;
 
 .container {
@@ -15,11 +18,6 @@
   max-width: calc(var(--container) + 2 * var(--gutter));
   margin-inline: auto;
   padding-inline: var(--gutter);
-}
-
-.section {
-  position: relative;
-  padding-block: var(--section-pad);
 }
 
 .section--dark {
@@ -34,6 +32,7 @@
   }
 
   .eyebrow {
+    --eyebrow-mark: var(--accent-on-dark);
     color: var(--cream-3);
   }
 
@@ -42,23 +41,36 @@
   }
 }
 
+// ≥ lg : grille commune de 12 colonnes. Sur-titre et titre en 1 / 8, chapeau en
+// 8 / 13 : il tombe sur la même colonne que les cartes, la peinture d'À propos
+// ou les profils de Contact. Le chapeau occupe les deux rangées (à côté du
+// sur-titre puis du titre) : quand il passe sur 3-4 lignes, il monte au lieu de
+// pousser le titre loin de son sur-titre.
 .section-head {
   display: grid;
   gap: var(--space-5);
   margin-bottom: clamp(var(--space-7), 5vw, var(--space-9));
 
   @include up(lg) {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+    @include grid-12;
     align-items: end;
-    column-gap: var(--space-8);
 
-    > .eyebrow {
-      grid-column: 1 / -1;
+    > .eyebrow,
+    > .section-title {
+      grid-column: $col-main;
+    }
+
+    > .section-title {
+      align-self: start; // toujours collé à son sur-titre
     }
 
     > .lead {
-      justify-self: end;
+      grid-column: $col-side;
       padding-bottom: 0.6em; // aligne la ligne de base avec le bas du titre gothique
+    }
+
+    > .eyebrow + .section-title + .lead {
+      grid-row: 1 / span 2;
     }
   }
 }
@@ -122,18 +134,6 @@
   }
 }
 
-.btn--ghost {
-  --btn-border: var(--line-strong);
-
-  @include hover {
-    &:hover {
-      --btn-bg: var(--ink);
-      --btn-fg: var(--cream);
-      --btn-border: var(--ink);
-    }
-  }
-}
-
 // Sur fond sombre / peinture
 .btn--light {
   --btn-bg: var(--cream);
@@ -166,6 +166,18 @@
   min-height: 38px;
   padding: 0 1rem;
   font-size: var(--fs-xs);
+
+  // Au doigt (sous 1024px ou pointeur grossier), la pilule passe à 44px : la
+  // compacité qui justifiait 13px disparaît, le libellé revient à 15px.
+  @include down(lg) {
+    min-height: 44px;
+    font-size: var(--fs-sm);
+  }
+
+  @media (pointer: coarse) {
+    min-height: 44px;
+    font-size: var(--fs-sm);
+  }
 }
 
 // --- Pastilles -------------------------------------------------------------
@@ -177,7 +189,7 @@
   padding: 0.3rem 0.75rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-pill);
-  background: rgb(255 255 255 / 0.35);
+  background: var(--chip-bg);
   color: var(--ink-2);
   font-size: var(--fs-xs);
   line-height: 1.2;
@@ -186,7 +198,7 @@
 
 .chip--on-dark {
   border-color: var(--line-on-dark);
-  background: rgb(245 238 230 / 0.08);
+  background: var(--chip-bg-on-dark);
   color: var(--cream);
 }
 
@@ -195,6 +207,31 @@
   flex-wrap: wrap;
   gap: var(--space-2);
   list-style: none;
+}
+
+// --- Cartel : légende d'une œuvre, sous son cadre ---------------------------------
+// <p class="cartel"><span class="cartel__artist">Artiste</span> — <cite>Titre</cite>, date</p>
+.cartel {
+  margin-top: var(--space-3);
+  font-size: var(--fs-caption);
+  line-height: 1.45;
+  color: var(--ink-3);
+
+  cite {
+    font-style: normal;
+  }
+}
+
+.cartel__artist {
+  color: var(--ink-2);
+}
+
+.cartel--on-dark {
+  color: var(--cream-2);
+
+  .cartel__artist {
+    color: var(--cream);
+  }
 }
 
 // --- Lien flèche -------------------------------------------------------------
@@ -222,6 +259,11 @@
       }
     }
   }
+}
+
+// Mot composé : pas de coupure après le trait d'union (« e- / commerce »)
+.nb {
+  white-space: nowrap;
 }
 
 // --- Apparition au scroll (directive appReveal) ----------------------------
@@ -270,4 +312,20 @@
 
 .sr-only {
   @include visually-hidden;
+}
+
+// --- Impression -------------------------------------------------------------
+// Imprimé sans avoir défilé, le contenu encore « à révéler » sortirait blanc
+// (prefers-reduced-motion: no-preference s'applique aussi à l'impression).
+// RevealService révèle tout sur « beforeprint » ; ceci couvre le reste.
+@media print {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .skip-link {
+    display: none;
+  }
 }

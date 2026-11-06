@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- lastmod est réécrit au déploiement avec la date du dernier commit (deploy.yml) -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://the-cyril5555.github.io/portfolio/</loc>
-    <lastmod>2026-02-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <lastmod>2026-11-06</lastmod>
   </url>
 </urlset>

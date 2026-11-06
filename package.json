@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "postbuild": "esbuild dist/portfolio-angular/browser/swarm-cursors.js --minify --legal-comments=inline --allow-overwrite --outfile=dist/portfolio-angular/browser/swarm-cursors.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "optimize-images": "node scripts/optimize-images.mjs"
@@ -23,6 +24,9 @@
   },
   "private": true,
   "packageManager": "npm@10.9.2",
+  "engines": {
+    "node": "^20.19.0 || ^22.12.0 || >=24.0.0"
+  },
   "dependencies": {
     "@angular/common": "^21.0.0",
     "@angular/compiler": "^21.0.0",
