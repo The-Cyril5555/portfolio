@@ -46,6 +46,8 @@
  *     en z-index:-1 reste au-dessus du fond de son parent, comme à l'écran) ;
  *     un <picture> à boîte vide (<img> en position absolue) est capturé par
  *     son <img> ; une image en miroir (`scale: 1 -1`) le reste ;
+ *   - HUD au doigt : boutons d'au moins 44 px (pointer: coarse), HUD décalé
+ *     au-dessus de la barre d'accueil de l'iPhone (safe-area) ;
  *   - HUD : tient dans un écran étroit, anneau de focus clavier, nom accessible,
  *     fin de construction annoncée aux lecteurs d'écran ; la copie dessinée de
  *     la page (décor) est masquée aux lecteurs d'écran (aria-hidden) ;
@@ -1584,7 +1586,7 @@
 .intro.gone{opacity:0;transform:translate(-50%,-50%) scale(.9)}
 .intro img{display:block;width:60px;height:60px;object-fit:contain;filter:grayscale(1);opacity:.42;border-radius:14px}
 .intro .mono{width:60px;height:60px;border-radius:16px;background:#D7DADE;color:#fff;font:700 30px/60px Inter,system-ui,sans-serif;text-align:center}
-.hud{position:absolute;left:8px;right:8px;bottom:20px;width:fit-content;max-width:calc(100% - 16px);margin:0 auto;transform:translateY(18px);opacity:0;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 10px;padding:6px 6px 6px 10px;background:rgba(30,30,30,.94);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.28),inset 0 0 0 1px rgba(255,255,255,.07);font:500 12px/1 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;pointer-events:auto;transition:opacity .45s ease,transform .45s cubic-bezier(.2,.8,.2,1);white-space:nowrap;user-select:none;z-index:5}
+.hud{position:absolute;left:8px;right:8px;bottom:max(20px,env(safe-area-inset-bottom));width:fit-content;max-width:calc(100% - 16px);margin:0 auto;transform:translateY(18px);opacity:0;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 10px;padding:6px 6px 6px 10px;background:rgba(30,30,30,.94);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.28),inset 0 0 0 1px rgba(255,255,255,.07);font:500 12px/1 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;pointer-events:auto;transition:opacity .45s ease,transform .45s cubic-bezier(.2,.8,.2,1);white-space:nowrap;user-select:none;z-index:5}
 .hud.on{opacity:1;transform:none}
 .hud button:focus-visible{outline:2px solid #0D99FF;outline-offset:2px}
 .hud .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
@@ -1607,6 +1609,8 @@
 .hud button.snd.off{color:#8a8a8a}
 .hud button.snd.tap{background:#0D99FF;animation:hudpulse 1.6s ease-in-out infinite}
 @keyframes hudpulse{50%{box-shadow:0 0 0 4px rgba(13,153,255,.28)}}
+/* Portfolio : au doigt, cibles de 44 px (après les règles de base du HUD) */
+@media (pointer:coarse){.hud{gap:8px;padding:8px}.hud button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 14px;font-size:14px;box-sizing:border-box}}
 `;
 
   // -------------------------------------------------------------------- env

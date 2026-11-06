@@ -36,7 +36,8 @@ const FAILED_MS = 4000;
  *
  * Le script (≈157 Ko) n'est PAS chargé avec la page : `preload()` le récupère
  * au survol / focus du bouton du hero, `start()` au clic, ou `?swarm` dans
- * l'URL (lien partageable, ignoré au doigt et en « moins d'animations »).
+ * l'URL (lien partageable, ignoré en « moins d'animations »). Souris et doigt :
+ * la « Visite » fait défiler la page seule, et le HUD a un bouton ✕ pour sortir.
  *
  * Pendant l'effet, la vraie page (app-root) est rendue `inert` : le clavier
  * reste dans le HUD du script (ajouté sous <html>, hors de app-root). À la
@@ -105,9 +106,8 @@ export class SwarmService {
 
   /**
    * `?swarm` dans l'URL : lance l'effet une fois la page affichée.
-   * Pas de lancement automatique pour qui demande moins d'animations, ni sur
-   * écran tactile (l'effet et son HUD sont pensés pour la souris et la touche
-   * Échap ; le bouton du hero y est d'ailleurs masqué).
+   * Pas de lancement automatique pour qui demande moins d'animations (le bouton
+   * du hero est alors masqué lui aussi).
    */
   startFromUrlIfRequested(): void {
     const params = new URLSearchParams(window.location.search);
@@ -190,13 +190,10 @@ export class SwarmService {
   }
 }
 
-/** `?swarm` ne démarre seul qu'avec une souris et sans « moins d'animations ». */
+/** `?swarm` démarre seul (souris ou doigt), sauf en « moins d'animations ». */
 function autoStartAllowed(): boolean {
   if (typeof window.matchMedia !== 'function') return false;
-  return (
-    !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
-    window.matchMedia('(hover: hover) and (pointer: fine)').matches
-  );
+  return !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
 /** La vraie page, sous l'effet, ne doit être ni focalisable ni lue. */

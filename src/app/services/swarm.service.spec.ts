@@ -15,6 +15,7 @@ function stubMatchMedia(...matching: string[]): void {
 }
 
 const FINE_POINTER = '(hover: hover) and (pointer: fine)';
+const COARSE_POINTER = '(pointer: coarse)';
 const REDUCED = '(prefers-reduced-motion: reduce)';
 
 describe('SwarmService', () => {
@@ -168,8 +169,12 @@ describe('SwarmService', () => {
       expect(run(FINE_POINTER, REDUCED)).not.toHaveBeenCalled();
     });
 
-    it('ne démarre pas sur écran tactile (HUD inaccessible au doigt)', () => {
-      expect(run()).not.toHaveBeenCalled();
+    it('démarre aussi sur écran tactile', () => {
+      expect(run(COARSE_POINTER)).toHaveBeenCalledTimes(1);
+    });
+
+    it('ne démarre pas au doigt en « moins d’animations »', () => {
+      expect(run(COARSE_POINTER, REDUCED)).not.toHaveBeenCalled();
     });
   });
 });

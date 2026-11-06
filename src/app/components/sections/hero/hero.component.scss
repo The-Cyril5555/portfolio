@@ -219,8 +219,8 @@ picture {
   }
 }
 
-// Effet Swarm : pensé pour la souris, masqué sur écrans tactiles — et quand
-// l'utilisateur demande moins d'animations (l'effet n'est que mouvement)
+// Effet Swarm (souris comme doigt) : masqué seulement quand l'utilisateur
+// demande moins d'animations, l'effet n'étant que mouvement
 .hero__swarm {
   display: none;
   align-items: center;
@@ -229,15 +229,16 @@ picture {
   color: var(--cream-2);
   font-size: var(--fs-sm);
 
-  @include hover {
-    @include motion-ok {
-      display: inline-flex;
-    }
+  @include motion-ok {
+    display: inline-flex;
   }
 
-  &:hover:not(:disabled) {
-    color: var(--cream);
-    text-decoration: underline;
+  // survol réel uniquement : pas de soulignement « collé » après un tap
+  @include hover {
+    &:hover:not(:disabled) {
+      color: var(--cream);
+      text-decoration: underline;
+    }
   }
 
   &:disabled {
