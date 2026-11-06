@@ -19,8 +19,9 @@
     </ol>
   </nav>
 
-  <div class="foot" [style.--i]="links().length">
-    <p class="eyebrow">Écrivez-moi</p>
+  <!-- Repère à part : la page derrière est inert, l'adresse doit rester trouvable -->
+  <aside class="foot" aria-labelledby="menu-mail-title" [style.--i]="links().length">
+    <p class="eyebrow" id="menu-mail-title">Écrivez-moi</p>
     <a class="foot__mail link-arrow" [href]="'mailto:' + email">{{ email }}</a>
-  </div>
+  </aside>
 </div>
