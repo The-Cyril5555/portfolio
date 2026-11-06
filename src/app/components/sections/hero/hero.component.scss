@@ -30,7 +30,7 @@
     inset: 0;
     background:
       linear-gradient(90deg, color-mix(in srgb, var(--ink) 50%, transparent), transparent 70%),
-      var(--scrim) color-mix(in srgb, var(--ink) 40%, transparent);
+      var(--scrim) color-mix(in srgb, var(--ink) 30%, transparent);
 
     @include up(lg) {
       background-color: color-mix(in srgb, var(--ink) 12%, transparent);
@@ -102,7 +102,7 @@
   border: 1px solid var(--line-on-dark);
   border-radius: var(--radius-pill);
   background: color-mix(in srgb, var(--ink) 50%, transparent);
-  backdrop-filter: blur(12px) saturate(140%);
+  backdrop-filter: blur(12px);
   font-size: var(--fs-xs);
 }
 
@@ -149,6 +149,11 @@
   font-size: max(4.5rem, min(32vw, 13svh + 5vw));
   line-height: 1;
 
+  // tablette portrait : la hauteur disponible permet un lettrage plus ample
+  @include up(md) {
+    font-size: min(30vw, 20svh);
+  }
+
   @include up(lg) {
     font-size: clamp(4.5rem, min(16vw, 26svh), 18rem);
   }
@@ -160,8 +165,9 @@
 }
 
 .hero__amp {
-  font-size: 0.4em;
-  vertical-align: 0.7em;
+  // centrée sur la hauteur des capitales (Tusker 0.95em ; « & » Migra 0.68em)
+  font-size: 0.45em;
+  vertical-align: 0.72em;
   color: var(--accent-on-dark);
 }
 
@@ -282,10 +288,15 @@
 }
 
 // Moins d'animations : ni parallaxe, ni pulsation, ni trait qui descend
+// (le fil reste à mi-course, immobile)
 @include reduced-motion {
   .hero__img,
   .hero__dot,
   .hero__scroll-line::after {
     animation: none;
+  }
+
+  .hero__scroll-line::after {
+    translate: 0 -50%;
   }
 }
