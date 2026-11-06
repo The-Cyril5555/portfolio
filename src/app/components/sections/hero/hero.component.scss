@@ -2,23 +2,25 @@
 // ============
 // Calque peinture (absolu) + voile d'encre ; contenu en flux, ancré en bas.
 // Aucune position à nombre magique : seuls la grille et le flex placent le texte.
-// (Budget : < 4 kB compilé — déclarations volontairement sobres.)
+// Ce qui fait tenir le premier écran partout (écrans bas, paysage, texte élargi
+// par l'utilisateur) est dans hero.fit.scss.
+// (Budget : < 4 kB compilé par feuille — déclarations volontairement sobres.)
 @use 'bp' as *;
 
 :host {
   --focus: var(--cream);
   position: relative;
-  isolation: isolate;
   display: block;
   background: var(--ink); // tant que la peinture n'est pas chargée
   color: var(--cream);
 }
 
 // --- Peinture + voile --------------------------------------------------------
+// Sous le contenu par l'ordre du DOM (.hero__inner, positionné, vient après) et
+// non par un z-index négatif, que Swarm reconstruirait sous le fond d'encre.
 .hero__media {
   position: absolute;
   inset: 0;
-  z-index: -1;
   overflow: hidden;
 
   // Voile : --scrim (plus dense en bas) + dégradé d'encre à gauche. Empilé
@@ -36,6 +38,12 @@
       background-color: color-mix(in srgb, var(--ink) 12%, transparent);
     }
   }
+}
+
+// <picture> s'efface : sinon boîte de 0 px de haut (l'<img> est absolue), que
+// Swarm, qui capture les <picture> par leur boîte, ignore — plafond jamais reconstruit.
+picture {
+  display: contents;
 }
 
 .hero__img {
@@ -68,10 +76,11 @@
 
 // --- Mise en page --------------------------------------------------------------
 .hero__inner {
+  position: relative;
   display: flex;
   flex-direction: column;
   min-height: 100svh;
-  padding-top: calc(var(--nav-h) + 3rem);
+  padding-top: calc(var(--nav-h) + clamp(1rem, 6svh, 3rem)); // moins haut : moins d'air
   padding-bottom: var(--space-4);
 }
 
@@ -82,6 +91,9 @@
 }
 
 .hero__grid {
+  // piste bornée : le lettrage (nowrap) ne peut pas élargir la colonne, donc
+  // ni l'intro ni les CTA (espacement du texte forcé, police de secours)
+  grid-template-columns: minmax(0, 1fr);
   margin-top: auto; // ancre le contenu en bas
   padding-top: var(--space-6);
 
@@ -115,7 +127,7 @@
   height: 8px;
   border-radius: 50%;
   background: var(--ok);
-  animation: hero-pulse 2.4s var(--ease-out) infinite;
+  animation: hero-pulse 2.4s var(--ease-out) 2; // 4,8 s puis immobile (WCAG 2.2.2)
 }
 
 @keyframes hero-pulse {
@@ -143,7 +155,7 @@
 // Tusker : capitales hautes de 0.95em (au-delà de l'ascendante) — un interligne
 // de 1 donne déjà un empilement serré (≈ 0.05em entre les lignes).
 // Taille bornée par la largeur ET la hauteur : rien ne passe sous la nav, et
-// sur téléphone les CTA restent visibles sans défiler.
+// sur téléphone les CTA restent visibles sans défiler (écrans bas : hero.fit.scss).
 .hero__display {
   margin: 0.08em 0 -0.1em; // haut : place des capitales ; bas : boîte = ligne de base
   font-size: max(4.5rem, min(32vw, 13svh + 5vw));
@@ -159,6 +171,7 @@
   }
 }
 
+// une ligne chacune (passage à la ligne si le texte est élargi : hero.fit.scss)
 .hero__line {
   display: block;
   white-space: nowrap;
@@ -204,7 +217,8 @@
   }
 }
 
-// Effet Swarm : pensé pour la souris, masqué sur écrans tactiles
+// Effet Swarm : pensé pour la souris, masqué sur écrans tactiles — et quand
+// l'utilisateur demande moins d'animations (l'effet n'est que mouvement)
 .hero__swarm {
   display: none;
   align-items: center;
@@ -215,7 +229,9 @@
   text-underline-offset: 0.3em;
 
   @include hover {
-    display: inline-flex;
+    @include motion-ok {
+      display: inline-flex;
+    }
   }
 
   &:hover:not(:disabled) {
@@ -254,7 +270,8 @@
   }
 }
 
-// Fil à plomb suspendu au filet : un trait clair y descend en boucle
+// Fil à plomb suspendu au filet : un trait clair, posé à mi-course, tombe et
+// revient d'en haut — deux fois (4,4 s, WCAG 2.2.2), puis reste immobile
 .hero__scroll-line {
   align-self: stretch;
   width: 1px;
@@ -266,16 +283,18 @@
     display: block;
     height: 100%;
     background: var(--cream);
-    animation: hero-drop 2.2s var(--ease-in-out) infinite;
+    translate: 0 -50%;
+    animation: hero-drop 2.2s var(--ease-in-out) 2;
   }
 }
 
+// début et fin implicites = mi-course ; le saut de 40 % se fait hors champ
 @keyframes hero-drop {
-  from {
-    translate: 0 -100%;
-  }
-  to {
+  40% {
     translate: 0 100%;
+  }
+  40.1% {
+    translate: 0 -100%;
   }
 }
 
@@ -294,9 +313,5 @@
   .hero__dot,
   .hero__scroll-line::after {
     animation: none;
-  }
-
-  .hero__scroll-line::after {
-    translate: 0 -50%;
   }
 }

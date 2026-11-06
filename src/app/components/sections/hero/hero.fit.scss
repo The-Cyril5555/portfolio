@@ -1,0 +1,80 @@
+// Hero — tout tient dans le premier écran
+// =======================================
+// Complète hero.component.scss (chargée après elle) : les CTA restent visibles
+// sans défiler sur les écrans bas et en paysage, le lettrage ne saute pas à
+// l'arrivée de sa police, et le texte élargi par l'utilisateur ne sort pas de
+// l'écran. Feuille à part : chaque feuille de composant a son budget de 4 kB
+// (angular.json).
+@use 'bp' as *;
+
+// 320 px : les deux CTA sur une seule ligne
+@include down(sm) {
+  .hero__ctas .btn {
+    padding-inline: var(--space-4);
+  }
+}
+
+// --- Écrans bas (petit téléphone, paysage) -----------------------------------
+// Tout ce qui précède les CTA se resserre (vérifié de 320×568 à 932×430).
+// Le bureau (≥ lg) tient déjà.
+@include down(lg) {
+  @media (max-height: 640px) {
+    .hero__status {
+      padding-block: var(--space-1);
+    }
+
+    .hero__grid {
+      padding-top: var(--space-4);
+    }
+
+    .hero__grid,
+    .hero__side {
+      row-gap: var(--space-4);
+    }
+
+    .hero__intro {
+      font-size: var(--fs-base);
+      line-height: 1.5;
+    }
+
+    // le lettrage prend la hauteur qui reste (≈ 50svh − 12rem, mesuré)
+    .hero__display {
+      font-size: max(4rem, min(32vw, 13svh + 5vw, 50svh - 12rem));
+    }
+  }
+
+  // Paysage : titre à gauche, texte à droite (comme ≥ lg), lettrage borné par la hauteur
+  @media (orientation: landscape) and (max-height: 500px) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      align-items: end;
+      column-gap: var(--space-7);
+    }
+
+    .hero__display {
+      font-size: min(16vw, 27svh);
+    }
+  }
+}
+
+// --- Police du lettrage --------------------------------------------------------
+// Tant que Tusker n'est pas arrivée (classe posée par le composant, 3 s au plus),
+// le lettrage reste invisible, comme avec font-display: block : la police de
+// secours, bien plus large et autrement calée, le ferait sauter à l'arrivée (CLS).
+.hero__display {
+  opacity: 0;
+}
+
+:host(.is-font-ready) {
+  .hero__display {
+    opacity: 1;
+  }
+
+  // Texte élargi par l'utilisateur (WCAG 1.4.12) : le lettrage passe à la ligne
+  // s'il ne tient plus (pas avant : la police de secours le casserait partout).
+  .hero__line {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    hyphens: auto; // « DEVEL-OPER » (lang="en") plutôt qu'une coupure au hasard
+  }
+}
