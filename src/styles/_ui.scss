@@ -208,6 +208,7 @@
 
   &::after {
     content: '↗';
+    content: '↗' / ''; // décorative : non lue par les lecteurs d'écran
     font-size: 0.9em;
     transition: transform var(--dur-1) ease;
   }

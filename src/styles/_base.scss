@@ -11,6 +11,9 @@
 }
 
 html {
+  // La barre de défilement garde sa place : rien ne bouge quand le menu mobile
+  // ouvert coupe le défilement (barres « classiques » Windows/Linux).
+  scrollbar-gutter: stable;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   // Les ancres (#work…) s'arrêtent sous la nav fixe
