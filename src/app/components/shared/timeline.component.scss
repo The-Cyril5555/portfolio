@@ -1,139 +1,193 @@
-// Timeline Component Styles
-// ==========================
+// Frise verticale du parcours
+// ===========================
+// Un filet vertical relie les marqueurs (plein = formation, anneau = expérience).
+// Chaque étape trace le segment qui la relie à la suivante : il part de son
+// marqueur (--mark-y) et mesure la hauteur de l'étape, donc il s'arrête pile
+// sur le marqueur suivant ; la dernière étape n'en a pas.
+//
+//  < md : filet à gauche, contenu empilé à droite
+//  ≥ md : années à gauche du filet, contenu à droite
+//  ≥ lg : grille 12 colonnes alignée sur celle de la section (années 1-2,
+//         intitulé 3-7, description 8-12 sous la peinture)
+@use 'bp' as *;
 
-@use '../../../styles/responsive' as *;
+:host {
+  --g: var(--grid-gap, var(--space-6));
+  --year-fs: clamp(2.25rem, 1.75rem + 1.3vw, 3rem);
+  --mark: 0.8125rem;
+  --rail-w: 1rem;
+  --rail-x: calc(var(--rail-w) / 2);
+  // < md, le marqueur est sur la ligne des années : centre des chiffres
+  // (Tusker : chiffres de 0.949em, ligne de base à 0.9em du haut de la ligne)
+  --mark-y: calc(var(--year-fs) * 0.43);
 
-// TIMELINE WRAPPER
-// ================
-
-.timeline-wrapper {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
+  display: block;
 }
 
-// TIMELINE TRACK
-// ==============
-
-.timeline-track {
-  position: relative;
-  padding: 40px 0 40px 40px;
-
-  @media (max-width: 768px) {
-    padding: 30px 0 30px 30px;
-  }
+.timeline {
+  list-style: none;
 }
 
-// TIMELINE LINE (Vertical)
-// =========================
-
-.timeline-line {
-  position: absolute;
-  left: 55px;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: var(--color-primary, #0A1119);
-  z-index: 1;
-
-  @media (max-width: 768px) {
-    left: 41px;
-  }
-}
-
-// TIMELINE ITEM
-// =============
-
-.timeline-item {
+.step {
   position: relative;
   display: grid;
-  grid-template-columns: 32px 1fr;
-  gap: 24px;
-  margin-bottom: 70px;
-  align-items: start;
+  grid-template-columns: var(--rail-w) minmax(0, 1fr);
+  column-gap: var(--space-4);
+  padding-bottom: var(--space-7);
 
   &:last-child {
+    padding-bottom: 0;
+  }
+
+  // segment de filet vers l'étape suivante
+  &:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    top: var(--mark-y);
+    left: var(--rail-x);
+    width: 1px;
+    height: 100%;
+    background: var(--line-strong);
+    transform: translateX(-50%);
+  }
+}
+
+.marker {
+  position: absolute;
+  top: var(--mark-y);
+  left: var(--rail-x);
+  width: var(--mark);
+  height: var(--mark);
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 0 0 5px var(--paper); // coupe le filet autour du marqueur
+  transform: translate(-50%, -50%);
+
+  .step--experience & {
+    border: 2px solid var(--ink);
+    background: var(--paper);
+  }
+}
+
+// --- Années + badge -------------------------------------------------------------
+.meta,
+.what,
+.desc {
+  grid-column: 2;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.years {
+  font-size: var(--year-fs);
+  line-height: 1;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+// Tiret d'intervalle : le demi-cadratin de Tusker (0.19em) se confond avec le
+// trait d'union, on affiche donc le cadratin (décoratif, aria-hidden)
+.sep {
+  margin-inline: 0.1em;
+}
+
+// Badge : mini-marqueur identique à celui du filet
+.kind {
+  &::before {
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--ink);
+  }
+
+  .step--experience &::before {
+    border: 1.5px solid var(--ink);
+    background: transparent;
+  }
+}
+
+// --- Intitulé, établissement, description --------------------------------------------
+.title {
+  font-size: var(--fs-xl);
+  line-height: 1.15;
+}
+
+.org {
+  margin-top: var(--space-1);
+  font-size: var(--fs-sm);
+  color: var(--ink-3);
+}
+
+.desc {
+  max-width: 46ch;
+  margin-top: var(--space-3);
+  color: var(--ink-2);
+}
+
+// --- Tablette : années à gauche du filet -----------------------------------------------
+@include up(md) {
+  :host {
+    --meta-w: 8.5rem;
+    --rail-x: calc(var(--meta-w) + var(--space-5) + var(--rail-w) / 2);
+    // ≥ md, le marqueur est la puce de l'intitulé : centre optique de la ligne
+    // en Migra (ligne de base commune à 0.9em des années, capitales de 0.675em)
+    --mark-y: calc(var(--year-fs) * 0.9 - var(--fs-xl) * 0.32);
+  }
+
+  .step {
+    grid-template-columns: var(--meta-w) var(--rail-w) minmax(0, 1fr);
+    column-gap: var(--space-5);
+    align-items: baseline;
+  }
+
+  .what,
+  .desc {
+    grid-column: 3;
+  }
+
+  .meta {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    flex-direction: column;
+    align-items: flex-start;
     margin-bottom: 0;
   }
-
-  @media (max-width: 768px) {
-    grid-template-columns: 24px 1fr;
-    gap: 16px;
-    margin-bottom: 50px;
-  }
 }
 
-// TIMELINE MARKER
-// ===============
-
-.timeline-marker {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-
-  @media (max-width: 768px) {
-    width: 24px;
-    height: 24px;
-  }
-}
-
-.marker-dot {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #0A1119;
-  border: none;
-  box-shadow: none;
-  transition: transform 0.3s ease;
-
-  // Hover effect
-  .timeline-item:hover & {
-    transform: scale(1.2);
+// --- Grand écran : grille 12 colonnes ---------------------------------------------------
+@include up(lg) {
+  :host {
+    // milieu de la gouttière entre les colonnes 2 et 3, mais jamais à moins de
+    // 1.5rem de l'intitulé (100 % = largeur de l'étape ; colonne 3 à 2 col. + 2 g)
+    --rail-x: calc((100% - 11 * var(--g)) / 6 + 2 * var(--g) - max(var(--g) / 2, 1.5rem));
   }
 
-  @media (max-width: 768px) {
-    width: 14px;
-    height: 14px;
+  .step {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--g);
   }
-}
 
-// TIMELINE CONTENT
-// ================
-
-.timeline-content {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding-top: 4px;
-}
-
-.timeline-year {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.875rem; // 14px
-  font-weight: 500;
-  color: var(--color-text, #0A1119);
-  opacity: 0.6;
-  line-height: 1.2;
-  margin: 0;
-
-  @media (max-width: 768px) {
-    font-size: 0.8125rem; // 13px
+  .meta {
+    grid-column: 1 / 3;
+    grid-row: 1;
   }
-}
 
-.timeline-title {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 1.125rem; // 18px
-  font-weight: 600;
-  color: var(--color-text, #0A1119);
-  line-height: 1.3;
-  margin: 0;
+  .what {
+    grid-column: 3 / 8;
+  }
 
-  @media (max-width: 768px) {
-    font-size: 1rem; // 16px
+  .desc {
+    grid-column: 8 / 13;
+    grid-row: 1;
+    margin-top: 0;
   }
 }

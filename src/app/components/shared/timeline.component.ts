@@ -1,22 +1,28 @@
-// Timeline Component
-// ===================
+// Frise verticale du parcours
+// ===========================
+// Liste ordonnée d'étapes (formation / expérience) reliées par un filet :
+// point plein pour une formation, anneau pour une expérience.
 
-import { Component, Input, signal, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TimelineItem } from '../../models/about.model';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { RevealDirective } from '../../directives/reveal.directive';
+import { TimelineItem, TimelineKind } from '../../models/about.model';
 
 @Component({
   selector: 'app-timeline',
-  standalone: true,
-  imports: [CommonModule],
+  imports: [RevealDirective],
   templateUrl: './timeline.component.html',
   styleUrl: './timeline.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimelineComponent {
-  @Input() set timelineItems(items: TimelineItem[]) {
-    this.items.set(items);
-  }
+  /** Étapes, dans l'ordre d'affichage. */
+  readonly items = input.required<readonly TimelineItem[]>();
 
-  items = signal<TimelineItem[]>([]);
+  /** id du titre qui nomme la liste (aria-labelledby). */
+  readonly labelledBy = input<string>();
+
+  protected readonly kindLabel: Record<TimelineKind, string> = {
+    formation: 'Formation',
+    experience: 'Expérience',
+  };
 }
