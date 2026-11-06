@@ -6,6 +6,8 @@ import { HeroComponent } from './hero.component';
 describe('HeroComponent', () => {
   const loading = signal(false);
   const running = signal(false);
+  const failed = signal(false);
+  const preload = vi.fn();
   let start: ReturnType<typeof vi.fn>;
 
   beforeEach(async () => {
@@ -18,7 +20,7 @@ describe('HeroComponent', () => {
     });
     await TestBed.configureTestingModule({
       imports: [HeroComponent],
-      providers: [{ provide: SwarmService, useValue: { loading, running, start } }],
+      providers: [{ provide: SwarmService, useValue: { loading, running, failed, preload, start } }],
     }).compileComponents();
   });
 
@@ -58,5 +60,17 @@ describe('HeroComponent', () => {
 
     expect(document.activeElement).toBe(button);
     host.remove();
+  });
+
+  it('propose de réessayer quand le script Swarm n’a pas pu être chargé', async () => {
+    failed.set(true);
+    const fixture = TestBed.createComponent(HeroComponent);
+    await fixture.whenStable();
+    const button: HTMLButtonElement = fixture.nativeElement.querySelector('.hero__swarm');
+
+    expect(button.textContent).toContain('Échec du chargement — réessayer');
+    button.dispatchEvent(new Event('pointerenter'));
+    expect(preload).toHaveBeenCalled();
+    failed.set(false);
   });
 });

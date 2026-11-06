@@ -17,7 +17,7 @@ export const PROJECTS: readonly Project[] = [
     tags: ['React', 'TypeScript', 'Node.js', 'Socket.io'],
     image: {
       base: `${PAINTINGS}/boecklin-autoportrait`,
-      widths: [800, 1400],
+      widths: [800, 1100, 1400],
       ratio: 0.807,
       position: '50% 16%',
     },
@@ -38,7 +38,7 @@ export const PROJECTS: readonly Project[] = [
     tags: ['Next.js 15', 'TypeScript', 'PostgreSQL', 'Prisma'],
     image: {
       base: `${PAINTINGS}/leighton-god-speed`,
-      widths: [800, 1400],
+      widths: [800, 1100, 1400],
       ratio: 0.726,
       position: '50% 28%',
     },
@@ -59,7 +59,7 @@ export const PROJECTS: readonly Project[] = [
     tags: ['React', 'Node.js', 'Express', 'API REST'],
     image: {
       base: `${PAINTINGS}/matejko-stanczyk`,
-      widths: [800, 1400],
+      widths: [800, 1100, 1400],
       ratio: 1.345,
       position: '50% 50%',
     },
@@ -95,7 +95,7 @@ export const PROJECTS: readonly Project[] = [
     tags: ['WordPress', 'WooCommerce', 'PHP', 'SEO'],
     image: {
       base: `${PAINTINGS}/martin-pandemonium`,
-      widths: [800, 1400],
+      widths: [800, 1100, 1400],
       ratio: 1.517,
       position: '62% 50%',
     },
@@ -113,7 +113,7 @@ export const PROJECTS: readonly Project[] = [
     tags: ['React', 'API REST', 'React Hooks'],
     image: {
       base: `${PAINTINGS}/van-utrecht-nature-morte`,
-      widths: [800, 1400],
+      widths: [800, 1100, 1400],
       ratio: 1.328,
       position: '30% 50%',
     },
