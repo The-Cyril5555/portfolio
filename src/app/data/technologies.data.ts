@@ -1,140 +1,61 @@
 // Technologies Data
 // ==================
+// Icônes : SVG locaux issus de devicon 2.16.0 (licence MIT, cf.
+// public/assets/svg/tech-icons/LICENSE-devicon.txt), rendus en masque
+// monochrome dans la section Compétences. Pour une graisse homogène à 20px,
+// mysql/laravel/express sont épaissis d'un contour et vuejs est recomposé
+// à partir de la variante « original » (deux bandes séparées).
+// androidstudio.svg reprend le robot Android (android-plain) : le logo
+// compas + robot d'Android Studio devient une tache illisible à 20px.
 
-import { Technology } from '../models/technology.model';
+import { Technology, TechnologyGroup, TechnologyGroupInfo } from '../models/technology.model';
+
+const ICONS = 'assets/svg/tech-icons/';
+
+const tech = (id: string, name: string, group: TechnologyGroup): Technology => ({
+  id,
+  name,
+  icon: `${ICONS}${id}.svg`,
+  group,
+});
+
+/** Ordre d'affichage des colonnes. */
+export const TECHNOLOGY_GROUPS: TechnologyGroupInfo[] = [
+  { id: 'front', title: 'Front-end' },
+  { id: 'back', title: 'Back-end & données' },
+  { id: 'tools', title: 'CMS & outils' },
+];
 
 export const TECHNOLOGIES: Technology[] = [
-  // Frontend
-  {
-    id: 'react',
-    name: 'React',
-    iconClass: 'devicon-react-original',
-    category: 'frontend'
-  },
-  {
-    id: 'angular',
-    name: 'Angular',
-    iconClass: 'devicon-angular-plain',
-    category: 'frontend'
-  },
-  {
-    id: 'vuejs',
-    name: 'Vue.js',
-    iconClass: 'devicon-vuejs-plain',
-    category: 'frontend'
-  },
-  {
-    id: 'javascript',
-    name: 'JavaScript',
-    iconClass: 'devicon-javascript-plain',
-    category: 'frontend'
-  },
-  {
-    id: 'typescript',
-    name: 'TypeScript',
-    iconClass: 'devicon-typescript-plain',
-    category: 'frontend'
-  },
-  {
-    id: 'html5',
-    name: 'HTML5',
-    iconClass: 'devicon-html5-plain',
-    category: 'frontend'
-  },
-  {
-    id: 'css3',
-    name: 'CSS3',
-    iconClass: 'devicon-css3-plain',
-    category: 'frontend'
-  },
+  // Front-end
+  tech('react', 'React', 'front'),
+  tech('nextjs', 'Next.js', 'front'),
+  tech('angular', 'Angular', 'front'),
+  tech('vuejs', 'Vue.js', 'front'),
+  tech('typescript', 'TypeScript', 'front'),
+  tech('javascript', 'JavaScript', 'front'),
+  tech('html5', 'HTML5', 'front'),
+  tech('css3', 'CSS3', 'front'),
+  tech('tailwindcss', 'Tailwind CSS', 'front'),
+  tech('vitejs', 'Vite', 'front'),
 
-  // Backend
-  {
-    id: 'nodejs',
-    name: 'Node.js',
-    iconClass: 'devicon-nodejs-plain',
-    category: 'backend'
-  },
-  {
-    id: 'vitejs',
-    name: 'Vite.js',
-    iconClass: 'devicon-vitejs-plain',
-    category: 'frontend'
-  },
-  {
-    id: 'php',
-    name: 'PHP',
-    iconClass: 'devicon-php-plain',
-    category: 'backend'
-  },
-  {
-    id: 'laravel',
-    name: 'Laravel',
-    iconClass: 'devicon-laravel-original',
-    category: 'backend'
-  },
-  {
-    id: 'symfony',
-    name: 'Symfony',
-    iconClass: 'devicon-symfony-original',
-    category: 'backend'
-  },
-  {
-    id: 'mysql',
-    name: 'MySQL',
-    iconClass: 'devicon-mysql-original',
-    category: 'backend'
-  },
-  {
-    id: 'python',
-    name: 'Python',
-    iconClass: 'devicon-python-plain',
-    category: 'backend'
-  },
+  // Back-end & données
+  tech('nodejs', 'Node.js', 'back'),
+  tech('express', 'Express', 'back'),
+  tech('php', 'PHP', 'back'),
+  tech('laravel', 'Laravel', 'back'),
+  tech('symfony', 'Symfony', 'back'),
+  tech('python', 'Python', 'back'),
+  tech('postgresql', 'PostgreSQL', 'back'),
+  tech('mysql', 'MySQL', 'back'),
+  tech('socketio', 'Socket.io', 'back'),
 
-  // CMS & E-commerce
-  {
-    id: 'wordpress',
-    name: 'WordPress',
-    iconClass: 'devicon-wordpress-plain',
-    category: 'cms'
-  },
-  {
-    id: 'woocommerce',
-    name: 'WooCommerce',
-    iconClass: 'devicon-woocommerce-plain',
-    category: 'cms'
-  },
-
-  // Tools & Design
-  {
-    id: 'git',
-    name: 'Git',
-    iconClass: 'devicon-git-plain',
-    category: 'tools'
-  },
-  {
-    id: 'docker',
-    name: 'Docker',
-    iconClass: 'devicon-docker-plain',
-    category: 'tools'
-  },
-  {
-    id: 'figma',
-    name: 'Figma',
-    iconClass: 'devicon-figma-plain',
-    category: 'design'
-  },
-  {
-    id: 'androidstudio',
-    name: 'Android Studio',
-    iconClass: 'devicon-androidstudio-plain',
-    category: 'tools'
-  },
-  {
-    id: 'linux',
-    name: 'Linux',
-    iconClass: 'devicon-linux-plain',
-    category: 'tools'
-  }
+  // CMS & outils
+  tech('wordpress', 'WordPress', 'tools'),
+  tech('woocommerce', 'WooCommerce', 'tools'),
+  tech('git', 'Git', 'tools'),
+  tech('docker', 'Docker', 'tools'),
+  tech('figma', 'Figma', 'tools'),
+  tech('linux', 'Linux', 'tools'),
+  tech('androidstudio', 'Android Studio', 'tools'),
 ];
