@@ -1,6 +1,8 @@
+# NB : servi sous /portfolio/robots.txt, ce fichier n'est lu par aucun robot
+# (ils ne consultent que la racine de l'hôte). Pour qu'il compte, le copier à la
+# racine du site utilisateur the-cyril5555.github.io, et déclarer le sitemap
+# dans Google Search Console.
 User-agent: *
 Allow: /
 
 Sitemap: https://the-cyril5555.github.io/portfolio/sitemap.xml
-
-Crawl-delay: 1
