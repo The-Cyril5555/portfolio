@@ -13,7 +13,7 @@ export const PROJECTS: readonly Project[] = [
     category: 'Jeu web temps réel',
     year: 2026,
     description:
-      'Adaptation numérique du jeu de société à rôles cachés\u00a0: Ombres, Chasseurs et Neutres s’affrontent en temps réel. Rôles secrets, cartes Ermite et Destin, victoire par camp.',
+      'Adaptation numérique du jeu de société à rôles cachés\u00a0: parties multijoueurs en temps réel entre Ombres, Chasseurs et Neutres, rôles secrets, cartes Ermite et Destin, victoire par camp.',
     tags: ['React', 'TypeScript', 'Node.js', 'Socket.io'],
     image: { base: `${PAINTINGS}/boecklin-autoportrait`, widths: [800, 1400], position: '50% 16%' },
     painting: { artist: 'Arnold Böcklin', title: 'Autoportrait avec la Mort jouant du violon', year: 1872 },

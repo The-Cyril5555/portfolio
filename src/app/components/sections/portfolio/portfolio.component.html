@@ -33,8 +33,8 @@
             />
           </div>
           <div class="work-card__body">
-            <p class="eyebrow work-card__meta">{{ p.year }} · {{ p.category }}</p>
             <h3 class="serif work-card__title" [id]="'work-' + p.id">{{ card.heading }}</h3>
+            <p class="eyebrow work-card__meta">{{ p.year }} · {{ p.category }}</p>
             <p class="work-card__desc">{{ p.description }}</p>
             <ul class="chip-list" role="list" aria-label="Technologies">
               @for (tag of p.tags; track tag) {
