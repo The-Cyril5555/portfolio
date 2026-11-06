@@ -23,8 +23,9 @@ export class AboutComponent {
     srcset:
       'assets/images/paintings/van-de-velde-coup-de-canon-700.webp 700w, ' +
       'assets/images/paintings/van-de-velde-coup-de-canon-1200.webp 1200w',
-    // largeur réelle de l'image dans son cadre (voir about.component.scss)
-    sizes: '(min-width: 1440px) 450px, (min-width: 1024px) 31vw, (min-width: 768px) 25rem, calc(100vw - 5rem)',
+    // largeur réelle de l'image dans son cadre : colonnes 8-12 dès 768px, pleine
+    // largeur en dessous (voir about.component.scss)
+    sizes: '(min-width: 1440px) 450px, (min-width: 768px) 31vw, calc(100vw - 5rem)',
     width: 700,
     height: 832,
   } as const;
