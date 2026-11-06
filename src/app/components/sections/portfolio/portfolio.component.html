@@ -1,96 +1,94 @@
-<section class="portfolio brutalist-section">
-  <div class="section-container">
-    <!-- Titre TRAVAUX -->
-    <div class="section-header">
-      <h2 class="work-title">Projet</h2>
-    </div>
+<div class="container">
+  <header class="section-head">
+    <p class="eyebrow" appReveal>N° 01 — Réalisations</p>
+    <h2 id="work-title" class="section-title" appReveal>Projets</h2>
+    <p class="lead" [appReveal]="90">
+      Une sélection de projets menés de la conception à la mise en production&nbsp;: applications
+      full-&#8288;stack, e-&#8288;commerce et plateformes métiers.
+    </p>
+  </header>
 
-    <!-- Projects Grid -->
-    <div class="carousel-wrapper">
-      <div class="carousel-track"
-           [appScrollReveal]="{ animation: 'fadeInUp', duration: 600, stagger: true, staggerDelay: 150 }">
-      @for (project of displayedProjects(); track project.id) {
-        <article class="project-card"
-                 [class.project-card--coming-soon]="!(project.links.live || project.links.github) && !project.featured"
-                 [style.--accent-color]="project.color || '#000'"
-                 [style.background-image]="'url(' + project.images.thumbnail + ')'">
-
-          <!-- Project Content -->
-          <div class="project-content">
-            <div class="project-header">
-              <h3 class="project-title">{{ project.title }}</h3>
-              @if (project.client) {
-                <span class="project-client">{{ project.client }}</span>
+  <div class="work-grid">
+    @for (card of cards; track card.project.id) {
+      @let p = card.project;
+      <article
+        class="work-card"
+        [class.work-card--featured]="p.featured"
+        [class.work-card--wide]="card.span === 7"
+        [style.--span]="card.span"
+        [attr.aria-labelledby]="'work-' + p.id"
+        [appReveal]="($index % 3) * 90"
+      >
+        <div class="work-card__frame">
+          <div class="work-card__media">
+            <img
+              class="work-card__img"
+              [src]="card.src"
+              [attr.srcset]="card.srcset"
+              [attr.sizes]="card.sizes"
+              [style.object-position]="p.image.position"
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div class="work-card__body">
+            <p class="eyebrow work-card__meta">{{ p.year }} · {{ p.category }}</p>
+            <h3 class="serif work-card__title" [id]="'work-' + p.id">{{ card.heading }}</h3>
+            <p class="work-card__desc">{{ p.description }}</p>
+            <ul class="chip-list" role="list" aria-label="Technologies">
+              @for (tag of p.tags; track tag) {
+                <li class="chip chip--on-dark">{{ tag }}</li>
               }
-            </div>
-
-            <p class="project-description">{{ project.description }}</p>
-
-            <!-- Services -->
-            <div class="project-services">
-              @for (service of project.services; track service) {
-                <span class="service-tag">{{ service }}</span>
-              }
-            </div>
-
-            <!-- Tech Tags -->
-            <div class="project-tags">
-              @for (tag of project.tags; track tag) {
-                <span class="tech-tag brutalist-badge">{{ tag }}</span>
-              }
-            </div>
-
-            <!-- Links -->
-            @if (project.links.live || project.links.github) {
-              <div class="project-links">
-                @if (project.links.live) {
-                  <a
-                    [href]="project.links.live"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="project-link brutalist-button brutalist-button--small"
-                  >
-                    <span class="button-text-wrapper">
-                      <span class="button-text">VOIR LE SITE</span>
-                      <span class="button-text" aria-hidden="true">VOIR LE SITE</span>
-                    </span>
+            </ul>
+            @if (p.links.live || p.links.github) {
+              <div class="work-card__links">
+                @if (p.links.live; as live) {
+                  <a class="btn btn--sm btn--light" [href]="live" target="_blank" rel="noopener noreferrer">
+                    Voir le site
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                      <path d="M4.5 11.5l7-7M6 4.5h5.5V10" />
+                    </svg>
+                    <span class="sr-only"> : {{ p.title }} (nouvel onglet)</span>
                   </a>
                 }
-                @if (project.links.github) {
-                  <a
-                    [href]="project.links.github"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="project-link brutalist-button brutalist-button--secondary brutalist-button--small"
-                  >
-                    <span class="button-text-wrapper">
-                      <span class="button-text">VERS LE CODE</span>
-                      <span class="button-text" aria-hidden="true">VERS LE CODE</span>
-                    </span>
+                @if (p.links.github; as github) {
+                  <a class="btn btn--sm btn--ghost-light" [href]="github" target="_blank" rel="noopener noreferrer">
+                    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                      <path [attr.d]="githubPath" />
+                    </svg>
+                    Code source
+                    <span class="sr-only"> : {{ p.title }} (nouvel onglet)</span>
                   </a>
                 }
               </div>
             }
           </div>
+        </div>
+        <p class="work-card__cartel">
+          <span class="sr-only">Illustration : </span>
+          <span class="work-card__artist">{{ p.painting.artist }}</span> —
+          <cite>{{ p.painting.title }}</cite>, {{ p.painting.year }}
+        </p>
+      </article>
+    }
 
-          <!-- Featured Badge -->
-          @if (project.featured) {
-            <div class="featured-badge">
-              <img [appLazyImage]="'/star.png'" alt="Featured" class="badge-star" />
-            </div>
-          }
-
-          <!-- Coming Soon Badge -->
-          @if (!(project.links.live || project.links.github) && !project.featured) {
-            <div class="coming-soon-overlay">
-              <div class="coming-soon-badge">
-                <span class="badge-text">À VENIR</span>
-              </div>
-            </div>
-          }
-        </article>
-      }
+    <div class="work-more" [appReveal]="270">
+      <p class="eyebrow">Hors catalogue</p>
+      <p class="work-more__handle" aria-hidden="true">The-Cyril5555</p>
+      <div class="work-more__body">
+        <h3 class="serif work-more__title">D’autres projets sur GitHub</h3>
+        <p class="work-more__text">
+          Expérimentations, exercices et projets en cours&nbsp;: le reste de l’atelier est en accès libre.
+        </p>
+        <a class="btn btn--primary" [href]="githubProfile" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+            <path [attr.d]="githubPath" />
+          </svg>
+          Voir mon GitHub
+          <span class="sr-only">(nouvel onglet)</span>
+        </a>
       </div>
     </div>
   </div>
-</section>
+</div>
