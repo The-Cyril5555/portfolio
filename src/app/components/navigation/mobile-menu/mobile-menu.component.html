@@ -1,5 +1,6 @@
 <div class="panel">
-  <nav aria-label="Menu">
+  <nav aria-labelledby="menu-title">
+    <p class="eyebrow head" id="menu-title">Sommaire</p>
     <ol class="list" role="list">
       @for (link of links(); track link.id; let i = $index) {
         @let current = active() === link.id;
