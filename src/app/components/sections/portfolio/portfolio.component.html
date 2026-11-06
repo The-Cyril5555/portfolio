@@ -14,7 +14,7 @@
       <article
         class="work-card"
         [class.work-card--featured]="p.featured"
-        [class.work-card--wide]="card.span === 7"
+        [class.work-card--wide]="card.fullRow"
         [style.--span]="card.span"
         [attr.aria-labelledby]="'work-' + p.id"
         [appReveal]="($index % 3) * 90"
@@ -68,14 +68,15 @@
         <p class="work-card__cartel">
           <span class="sr-only">Illustration : </span>
           <span class="work-card__artist">{{ p.painting.artist }}</span> —
-          <cite>{{ p.painting.title }}</cite>, {{ p.painting.year }}
+          <span class="work-card__work"><cite>{{ p.painting.title }}</cite>, {{ p.painting.year }}</span>
         </p>
       </article>
     }
 
     <div class="work-more" [appReveal]="270">
       <p class="eyebrow">Hors catalogue</p>
-      <p class="work-more__handle" aria-hidden="true">The-Cyril5555</p>
+      <!-- lettrage en filigrane, purement décoratif : écrit en CSS (::before) -->
+      <div class="work-more__handle" aria-hidden="true"></div>
       <div class="work-more__body">
         <h3 class="serif work-more__title">D’autres projets sur GitHub</h3>
         <p class="work-more__text">
