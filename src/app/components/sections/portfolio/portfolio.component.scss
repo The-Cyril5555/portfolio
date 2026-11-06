@@ -1,500 +1,220 @@
-@use '../../../../styles/responsive' as *;
+@use 'bp' as *;
 
-// Portfolio Section
-.portfolio {
-  padding-top: 0px !important;
-
-  @include mobile {
-    padding-top: 0px !important;
-  }
-
-  .section-container {
-    padding-top: 0 !important;
-  }
-
-  .section-header {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
+:host {
+  display: block;
+  padding-block: var(--section-pad);
 }
 
-// Titre TRAVAUX avec Manufacturing Consent
-.work-title {
-  font-family: 'Manufacturing Consent', sans-serif;
-  font-size: 120px;
-  font-weight: 400;
-  text-align: center;
-  margin: 0 0 30px;
-  letter-spacing: 0.02em;
-  color: black;
-
-  @include mobile {
-    font-size: 60px;
-    margin: 0 0 20px;
-  }
-}
-
-// Projects Grid - SOLUTION COMPLÈTE
-.carousel-wrapper {
-  width: 100%;
-  padding: 0 0 40px;
-}
-
-.carousel-track {
+// --- Accrochage ---------------------------------------------------------------
+// Chaque carte occupe deux rangées (peinture, puis cartel) en subgrid : les
+// cadres d'une même ligne ont la même hauteur même si les cartels diffèrent.
+.work-grid {
+  --frame-h: 28rem;
+  --card-gap: var(--space-7); // entre deux lignes de cartes (sous le cartel)
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
+  column-gap: clamp(var(--space-4), 2vw, var(--space-6));
+  row-gap: var(--space-3);
 
-  // CORRECTION: Utiliser 1fr au lieu de auto pour forcer la même hauteur
-  grid-auto-rows: 1fr;
-  align-items: stretch;
-
-  @include custom-breakpoint(1200px) {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
+  // ≥ md, la dernière ligne est Wiki + carte GitHub : on annule la marge
+  // sous son cartel pour que le bas de section égale le haut.
+  @include up(md) {
+    --frame-h: 32rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-bottom: calc(-1 * var(--card-gap));
   }
 
-  // Mobile: Keep 2 columns (CHANGED from 1 column)
-  @include mobile {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px; // Reduced gap for tighter mobile layout
-  }
-
-  // Very small screens: Single column
-  @include tiny {
-    grid-template-columns: 1fr;
-    gap: 20px;
+  @include up(lg) {
+    --frame-h: 35rem;
+    --card-gap: var(--space-8);
+    grid-template-columns: repeat(12, minmax(0, 1fr));
   }
 }
 
-.project-card {
-  position: relative;
-  // Note: Initial state (opacity: 0, transform) is handled by ScrollRevealDirective
-  // Applied to children when stagger=true on parent .carousel-track
+.work-card {
+  grid-row: span 2;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  grid-template-rows: subgrid;
+  margin-bottom: var(--card-gap);
 
-  // Flexbox pour le contenu interne
-  display: flex;
-  flex-direction: column;
-
-  // CRITIQUE: La card doit remplir la cellule du grid
-  height: 100%;
-
-  // Border radius
-  border-radius: 16px;
-
-  // Overflow pour respecter border-radius
-  overflow: hidden;
-
-  // Transition smooth
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
-
-  // Background image
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-
-  // Box shadow par défaut
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-
-  // HOVER: Effet de levée verticale
-  &:hover {
-    transform: translateY(-12px);
-    box-shadow:
-      0 28px 50px rgba(0, 0, 0, 0.4),
-      0 14px 25px rgba(0, 0, 0, 0.3);
+  @include up(md) {
+    &--wide {
+      grid-column: 1 / -1;
+    }
   }
 
-  // Overlay sombre via pseudo-élément
-  &::before {
+  @include up(lg) {
+    grid-column: span var(--span);
+
+    &--featured {
+      --frame-h: 37.5rem;
+    }
+  }
+}
+
+// --- Cadre : peinture + voile + texte ------------------------------------------
+// Carte étroite : la peinture occupe le haut (au moins 13rem) et se fond dans
+// l'encre sous le texte. Carte large : elle remplit tout le cadre.
+// Le conteneur (unités cqi) est ici et non sur l'article, dont la containment
+// annulerait le subgrid.
+.work-card__frame {
+  --focus: var(--cream);
+  --card-pad: clamp(var(--space-5), 6cqi, var(--space-7));
+  --overlap: var(--space-9);
+  container-type: inline-size;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-rows: minmax(13rem, 1fr) auto;
+  min-height: var(--frame-h);
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--ink);
+  box-shadow: var(--shadow-1);
+  color: var(--cream-2);
+}
+
+.work-card__media {
+  grid-area: 1 / 1;
+  position: relative;
+  z-index: -1;
+  margin-bottom: calc(-1 * var(--overlap));
+
+  &::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.4) 0%,
-      rgba(0, 0, 0, 0.7) 100%
-    );
-    z-index: 1;
-    pointer-events: none;
-    transition: background 0.3s ease;
-  }
-
-  &:hover::before {
-    background: linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.3) 0%,
-      rgba(0, 0, 0, 0.6) 100%
-    );
-  }
-
-  // Contenu au-dessus de l'overlay
-  .project-content {
-    position: relative;
-    z-index: 2;
-    color: #F4E9E0;
-    padding: 40px;
-
-    // IMPORTANT: flex: 1 pour remplir toute la hauteur
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    height: 100%;
-
-    // Reduce padding on mobile for 2-column layout
-    @include mobile {
-      padding: 25px;
-    }
-
-    // Restore for single column
-    @include tiny {
-      padding: 30px;
-    }
-  }
-
-  .project-header {
-    margin-bottom: 20px;
-
-    // Reduce margin on mobile
-    @include mobile {
-      margin-bottom: 15px;
-    }
-  }
-
-  .project-title {
-    font-family: 'Migra', sans-serif;
-    color: #F4E9E0;
-    font-weight: 700;
-    font-size: 28px;
-    margin-bottom: 8px;
-    line-height: 1.2;
-
-    // Smaller title for 2-column mobile layout
-    @include mobile {
-      font-size: 20px;
-      margin-bottom: 6px;
-    }
-
-    // Restore size for single column
-    @include tiny {
-      font-size: 24px;
-    }
-  }
-
-  .project-client {
-    color: #F4E9E0;
-    opacity: 0.8;
-    font-size: 14px;
-
-    // Smaller client text on mobile
-    @include mobile {
-      font-size: 12px;
-    }
-  }
-
-  .project-description {
-    font-family: 'Montserrat', sans-serif;
-    color: #F4E9E0;
-    opacity: 0.95;
-    margin-bottom: 20px;
-    line-height: 1.6;
-
-    // Adjust description spacing
-    @include mobile {
-      margin-bottom: 15px;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    @include tiny {
-      font-size: 15px;
-    }
-  }
-
-  .project-services {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 16px;
-
-    // Reduce gap on mobile
-    @include mobile {
-      gap: 6px;
-      margin-bottom: 12px;
-    }
-
-    .service-tag {
-      color: #F4E9E0;
-      border: 1px solid rgba(244, 233, 224, 0.4);
-      background: rgba(244, 233, 224, 0.1);
-      padding: 4px 12px;
-      font-size: 12px;
-      border-radius: 4px;
-
-      // Smaller tags on mobile
-      @include mobile {
-        padding: 3px 8px;
-        font-size: 10px;
-      }
-
-      @include tiny {
-        font-size: 11px;
-      }
-    }
-  }
-
-  .project-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 20px;
-
-    // Reduce gap on mobile
-    @include mobile {
-      gap: 6px;
-      margin-bottom: 15px;
-    }
-
-    .tech-tag {
-      color: #F4E9E0;
-      border: 1px solid rgba(244, 233, 224, 0.4);
-      background: rgba(244, 233, 224, 0.1);
-      padding: 6px 12px;
-      border-radius: 12px;
-      font-size: 13px;
-      font-weight: 500;
-      backdrop-filter: blur(4px);
-
-      // Smaller tech tags on mobile
-      @include mobile {
-        padding: 4px 8px;
-        font-size: 10px;
-      }
-
-      @include tiny {
-        font-size: 11px;
-      }
-    }
-  }
-
-  .project-links {
-    // IMPORTANT: margin-top auto pousse les liens en bas
-    margin-top: auto;
-    display: flex;
-    gap: 10px;
-
-    // Adjust link layout on mobile
-    @include mobile {
-      gap: 8px;
-      flex-wrap: wrap; // Allow wrapping if needed
-    }
-
-    .project-link {
-      position: relative;
-      display: inline-block;
-      padding: 0px 4px;
-      background: transparent;
-      color: #F4E9E0;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      text-decoration: none;
-      border: 1px solid #F4E9E0;
-      border-radius: 50px;
-      overflow: hidden;
-      cursor: pointer;
-      width: fit-content;
-      max-width: 135px;
-      transition: all 0.3s ease;
-
-      // Smaller buttons on mobile
-      @include mobile {
-        font-size: 11px;
-        max-width: 110px;
-        padding: 0px 3px;
-      }
-
-      @include tiny {
-        font-size: 13px;
-        max-width: 120px;
-      }
-
-      &:hover {
-        background: rgba(244, 233, 224, 0.15);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        box-shadow: 0 8px 32px rgba(244, 233, 224, 0.1);
-
-        .button-text-wrapper {
-          animation: scroll-text 3.5s linear infinite;
-        }
-      }
-
-      .button-text-wrapper {
-        display: inline-flex;
-        gap: 0;
-
-        .button-text {
-          display: inline-block;
-          white-space: nowrap;
-          padding-right: 40px;
-
-          // Reduce padding on mobile
-          @include mobile {
-            padding-right: 30px;
-          }
-        }
-      }
-    }
-  }
-
-  .featured-badge {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 3;
-
-    // Smaller badge on mobile
-    @include mobile {
-      top: 15px;
-      right: 15px;
-    }
-
-    .badge-star {
-      width: 40px;
-      height: 40px;
-      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
-
-      // Smaller star on mobile
-      @include mobile {
-        width: 30px;
-        height: 30px;
-      }
-
-      @include tiny {
-        width: 35px;
-        height: 35px;
-      }
-    }
-  }
-
-  @include mobile {
-    height: 100%;
-
-    .project-content {
-      padding: 30px;
-    }
-
-    .project-title {
-      font-size: 24px;
-    }
+    inset: 0;
+    background: var(--scrim);
   }
 }
 
-// ========================================
-// Coming Soon State
-// ========================================
-
-.project-card--coming-soon {
-  // Overlay gris léger
-  &::before {
-    background: linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.3) 0%,
-      rgba(0, 0, 0, 0.5) 100%
-    ) !important;
-  }
-
-  // Désactiver hover pour projets non-cliquables
-  &:hover {
-    transform: translateY(0) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-
-    &::before {
-      background: linear-gradient(
-        180deg,
-        rgba(0, 0, 0, 0.3) 0%,
-        rgba(0, 0, 0, 0.5) 100%
-      ) !important;
-    }
-  }
-
-  .project-content {
-    opacity: 0.85;
-  }
-}
-
-// Overlay "À VENIR"
-.coming-soon-overlay {
+.work-card__img {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 4;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.work-card__body {
+  grid-area: 2 / 1;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--card-pad) var(--card-pad);
+  background: linear-gradient(transparent, var(--ink) var(--overlap));
+}
 
-  .coming-soon-badge {
-    padding: 20px 50px;
-    background: rgba(31, 41, 55, 0.95);
-    border: 3px solid #F4E9E0;
-    border-radius: 8px;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+// Carte large : second voile sous le texte seulement, qui garantit le contraste
+// même sur une zone claire de la peinture sans éteindre le haut du tableau.
+@container (min-width: 30rem) {
+  .work-card__media {
+    grid-row: 1 / -1;
+    margin-bottom: 0;
+  }
 
-    @include mobile {
-      padding: 15px 35px;
-      border: 2px solid #F4E9E0;
-    }
+  .work-card__body {
+    padding-top: var(--overlap);
+    background: linear-gradient(transparent, color-mix(in srgb, var(--ink) 60%, transparent) var(--overlap));
+  }
+}
 
-    @include tiny {
-      padding: 12px 25px;
-    }
+.work-card__meta {
+  letter-spacing: 0.12em;
+  color: var(--cream-2);
 
-    .badge-text {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 24px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: #F4E9E0;
+  &::before {
+    content: none;
+  }
+}
 
-      @include mobile {
-        font-size: 18px;
-        letter-spacing: 0.12em;
-      }
+.work-card__title {
+  font-size: clamp(var(--fs-xl), 7.5cqi, var(--fs-2xl));
+  line-height: 1.05;
+  color: var(--cream);
+}
 
-      @include tiny {
-        font-size: 16px;
-      }
+.work-card__desc {
+  max-width: 52ch;
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+}
+
+.work-card__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+
+  .btn {
+    @include down(lg) {
+      min-height: 44px;
     }
   }
 }
 
-// Animation de défilement du texte
-@keyframes scroll-text {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
+// --- Cartel, sur le papier -------------------------------------------------------
+.work-card__cartel {
+  font-size: var(--fs-xs);
+  line-height: 1.45;
+  color: var(--ink-3);
+
+  cite {
+    font-style: normal;
   }
 }
 
-// Reduced Motion Support (Accessibility)
-@include reduced-motion {
-  .project-card {
-    &:hover {
-      transform: translateY(-6px) !important;
-      transition: all 0.3s ease !important;
+.work-card__artist {
+  color: var(--ink-2);
+}
+
+// --- Survol : la peinture avance doucement ----------------------------------------
+@include motion-ok {
+  .work-card__img {
+    transition: transform calc(var(--dur-3) * 1.6) var(--ease-out);
+  }
+
+  @include hover {
+    .work-card__frame:hover .work-card__img {
+      transform: scale(1.04);
     }
   }
+}
+
+// --- Carte d'appel GitHub ----------------------------------------------------------
+.work-more {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding: clamp(var(--space-5), 4vw, var(--space-7));
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper-2);
+
+  @include up(lg) {
+    grid-column: span 7;
+  }
+}
+
+.work-more__handle {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 19cqi, 9rem);
+  line-height: 0.82;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--ink);
+}
+
+.work-more__title {
+  margin-bottom: var(--space-4);
+  font-size: var(--fs-2xl);
+  line-height: 1.05;
+}
+
+.work-more__text {
+  max-width: 44ch;
+  margin-bottom: var(--space-6);
 }
