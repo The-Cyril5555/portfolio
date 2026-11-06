@@ -94,25 +94,35 @@
   text-wrap: balance;
 }
 
-// --- Corps : e-mail en grand, puis copie | profils ---------------------------
+// --- Corps : e-mail en grand, « Copier » dessous, profils à droite ----------
+// Dès 1024 px, même grille que .section-head : l'adresse et « Copier » dans la
+// colonne du titre, les profils dans celle du chapeau, à hauteur de l'adresse.
+$mail-size: clamp(1.75rem, 1rem + 3.5vw, 4.25rem);
+
 .contact__body {
   display: grid;
   gap: var(--space-5);
   align-items: center;
 
   @include up(lg) {
+    container-type: inline-size;
     grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr); // = .section-head
     column-gap: var(--space-8);
   }
 }
 
 .contact__mail {
-  grid-column: 1 / -1;
   font-family: var(--font-serif);
-  font-size: clamp(1.75rem, 1rem + 3.5vw, 4.25rem);
+  font-size: $mail-size;
   line-height: 1.15;
   letter-spacing: -0.015em;
   overflow-wrap: anywhere; // filet de sécurité (zoom fort) : jamais de débordement
+
+  // L'adresse mesure ≈ 10,7 em en Migra : elle reste dans la 1re colonne,
+  // (100cqi − gouttière) / 1,8, avec ~2 rem d'air avant les profils.
+  @include up(lg) {
+    font-size: min(#{$mail-size}, calc((100cqi - var(--space-8)) / 19.3 - 0.2rem));
+  }
 }
 
 .contact__email {
@@ -137,21 +147,28 @@
   }
 }
 
+// Le message s'inscrit à côté du bouton (sur 2 lignes au besoin) : rien ne bouge
 .contact__copy {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-3) var(--space-4);
+  gap: var(--space-4);
 
-  @include down(lg) {
-    .btn {
-      min-height: 44px;
-    }
+  @include up(lg) {
+    grid-row: 2;
+  }
+}
+
+// Cible de 44px au doigt (téléphone, tablette, y compris en paysage)
+@media (max-width: 1023.98px), (pointer: coarse) {
+  .contact__copy .btn {
+    min-height: 44px;
   }
 }
 
 .contact__status {
+  min-width: 0;
   font-size: var(--fs-xs);
+  line-height: 1.4;
   color: var(--cream-2);
 }
 
@@ -160,6 +177,10 @@
   flex-wrap: wrap;
   gap: var(--space-3);
   list-style: none;
+
+  @include up(lg) {
+    grid-area: 1 / 2;
+  }
 
   @include down(lg) {
     margin-top: var(--space-6);
